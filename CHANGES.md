@@ -1,6 +1,6 @@
 # Changements dans Fengari
 
-## Non publié
+## Version 0.3.0
 
 ### Nouvelles fonctionnalités
 - **`<const>` et `<close>` (Lua 5.4)** : la grammaire `local x <const> = v` / `local x <close> = v` est analysée pour de bon (la version 0.2.0 annonçait ce support sans qu'aucun de ces programmes ne se compile). La forme préfixe `local <const> x, y = 1, 2` de la spécification 5.5 du fork est aussi acceptée. `const` et `close` restent des noms ordinaires.
