@@ -54,3 +54,7 @@ dist
 
 # Reproducible Lua reference builds and differential work files
 .lua55-build/
+
+# Agent tooling state
+.opencode/
+.coord-session
