@@ -62,7 +62,7 @@ npm run test:extended
 ## Documentation
 
 - [Lua 5.5.1 Reference Manual](https://www.lua.org/manual/5.5/)
-- [Fengari Lua 5.5.1 Compliance Docs](docs/lua-5.5.1/)
+- [Fengari Lua 5.5.1 Compliance Docs](https://github.com/datamoc/fengari/tree/master/docs/lua-5.5.1)
 
 ## License
 

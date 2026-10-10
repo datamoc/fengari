@@ -3,13 +3,8 @@
   "version": "0.1.5",
   "description": "A Lua VM (latest version) written in JS ES6, targeting the browser and Node.js",
   "main": "src/fengari.js",
-  "module": "dist/fengari.esm.js",
-  "types": "dist/fengari.d.ts",
   "files": [
-    "src/",
-    "dist/",
-    "test/",
-    "docs/lua-5.5.1/"
+    "src/"
   ],
   "directories": {
     "lib": "src",
