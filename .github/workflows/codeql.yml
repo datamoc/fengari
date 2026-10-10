@@ -1,0 +1,26 @@
+name: CodeQL
+
+# Code scanning for a VM that parses untrusted input. The scheduled variant of
+# this workflow never runs on a fork (scheduled workflows are disabled there by
+# default), so the push and pull_request triggers below are the live gates.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      # required to upload the results to code scanning
+      security-events: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript'
