@@ -15,6 +15,7 @@
     "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint && npm run test && npm run build",
     "test": "jest",
     "test:extended": "jest test/lauxlib-extended.test.js",
+    "bench:build": "node tools/build-benchmark.js",
     "build": "echo 'Build step for ESM and TypeScript definitions'",
     "prepack": "npm run build"
   },

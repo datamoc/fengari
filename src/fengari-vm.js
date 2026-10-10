@@ -3,6 +3,8 @@
 const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').fengari;
 
 const MAX_DEPTH = 128;
+const HOOK_GRANULARITY = 1000; /* instructions Lua entre deux vérifications des limites */
+const now = () => (typeof performance === 'object' ? performance.now() : Date.now());
 const INTEGER_KEY = /^-?\d+$/;
 const MIN_SAFE = BigInt(Number.MIN_SAFE_INTEGER);
 const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
@@ -83,6 +85,18 @@ class LuaError extends Error {
 }
 
 /**
+ * Un script a dépassé sa limite d'instructions ou de temps (voir l'option `limits`).
+ * `limit` vaut 'instructions' ou 'time'.
+ */
+class LimitError extends LuaError {
+    constructor(limit, message, traceback) {
+        super(message, traceback);
+        this.name = 'LimitError';
+        this.limit = limit;
+    }
+}
+
+/**
  * Référence vers une valeur Lua qui n'a pas d'équivalent JavaScript
  * (fonction ou thread), ancrée dans le registre Lua.
  */
@@ -155,7 +169,7 @@ class Coroutine {
         this.active = true;
         let result;
         try {
-            result = lua.lua_resume(T, vm.thread ?? vm.state, args.length);
+            result = vm.guarded(() => lua.lua_resume(T, vm.thread ?? vm.state, args.length));
         } finally {
             this.active = false;
         }
@@ -171,7 +185,7 @@ class Coroutine {
         const trace = to_jsstring(lua.lua_tostring(vm.state, -1));
         lua.lua_pop(vm.state, 1);
         lua.lua_settop(T, 0);
-        throw new LuaError(message, trace);
+        throw vm.luaError(message, trace);
     }
 
     /**
@@ -190,6 +204,14 @@ class Coroutine {
         vm.lua.lua_settop(this.thread, 0);
     }
 }
+
+/* Préréglage `sandbox` : bibliothèques sans accès au système, au débogage ni aux modules. */
+const SANDBOX_LIBS = ['base', 'coroutine', 'table', 'string', 'utf8', 'math'];
+const SANDBOX_FORBIDDEN_LIBS = ['os', 'io', 'debug', 'package'];
+const SANDBOX_REMOVE = ['dofile', 'loadfile', 'string.dump'];
+/* `load` ne doit jamais accepter de bytecode (un chunk binaire forgé peut corrompre la VM) ; `...` garde l'absence d'`env`. */
+const SANDBOX_TEXT_ONLY_LOAD = `local load = load
+function _G.load(chunk, chunkname, mode, ...) return load(chunk, chunkname, 't', ...) end`;
 
 /* Bibliothèques sélectionnables via l'option `libs` (nom → nom de table globale). */
 const LIBRARIES = {
@@ -211,6 +233,18 @@ class FengariVm {
    *   utf8, math, os, debug, package, io, fengari. Par défaut : toutes (luaL_openlibs).
    * @param {string[]} [options.remove] - Chemins pointillés de globals à retirer après
    *   ouverture (ex. ['load', 'dofile', 'os.execute']).
+   * @param {boolean} [options.sandbox] - Préréglage pour du code Lua non fiable : seulement base,
+   *   coroutine, table, string, utf8 et math ; ni os, io, debug, package ni require ; dofile,
+   *   loadfile et string.dump retirés ; load n'accepte que du texte. `libs` peut restreindre
+   *   davantage mais pas ajouter os, io, debug ou package ; `remove` s'ajoute. Ne limite ni le
+   *   temps ni la mémoire, et les fonctions hôtes définies (dont `__fs_read`/`__fs_list`, qui
+   *   servent `files`) restent appelables par le script.
+   * @param {Object} [options.limits] - Budget par appel de haut niveau (run, call, callRef, Coroutine#resume),
+   *   remis à zéro à chaque appel. `instructions` : nombre d'instructions Lua (approximatif, vérifié
+   *   toutes les 1000 instructions au plus) ; `timeMs` : durée réelle en ms, JS hôte inclus. Un
+   *   dépassement lève une LimitError et ne peut pas être rattrapé par le script (pcall inclus).
+   *   N'agit que sur la VM créée ici : un script qui dispose de `debug.sethook` peut retirer le
+   *   hook, donc combiner avec `sandbox`. Voir aussi setLimits.
    * @param {boolean} [options.preserveFloats] - Lire les flottants Lua de valeur entière (5.0)
    *   comme des LuaFloat plutôt que comme des nombres (5). Par défaut : false.
    */
@@ -230,8 +264,19 @@ class FengariVm {
         this.to_luastring = to_luastring;
 
         this.preserveFloats = options.preserveFloats === true;
-        this.openLibraries(options.libs);
-        for (const path of options.remove ?? []) this.removeGlobal(path);
+        this.limits = null;
+        this.limitDepth = 0; /* appels de haut niveau imbriqués en cours */
+        this.limitHit = null; /* 'instructions' ou 'time' une fois la limite dépassée */
+        this.limitedThreads = new Set(); /* threads passés en mode « un contrôle par instruction » */
+        const sandbox = options.sandbox === true;
+        const libs = options.libs ?? (sandbox ? SANDBOX_LIBS : undefined);
+        if (sandbox) {
+            const forbidden = (libs ?? []).filter((name) => SANDBOX_FORBIDDEN_LIBS.includes(name));
+            if (forbidden.length > 0) throw new Error(`Library not allowed in a sandbox: ${forbidden.join(', ')}`);
+        }
+        this.openLibraries(libs);
+        if (sandbox) this.run(SANDBOX_TEXT_ONLY_LOAD, '=sandbox'); /* avant les retraits : `remove` peut viser `load` */
+        for (const path of [...(sandbox ? SANDBOX_REMOVE : []), ...(options.remove ?? [])]) this.removeGlobal(path);
 
         // Définir les fonctions hôtes de base
         this.defineFunction('print', (...args) => {
@@ -241,6 +286,76 @@ class FengariVm {
         this.defineFunction('__random', () => this.nextRandom());
         this.defineFunction('__fs_read', (path) => this.files.read(String(path)));
         this.defineFunction('__fs_list', (path) => this.files.list(String(path)));
+
+        if (options.limits) this.setLimits(options.limits);
+    }
+
+    /**
+   * Installe, remplace ou retire (`null`) les limites d'exécution (voir l'option `limits`).
+   * Les threads existants gardent l'ancien hook : à appeler avant de créer des coroutines.
+   */
+    setLimits(limits) {
+        const { lua } = this;
+        if (limits === null || limits === undefined) {
+            this.limits = null;
+            lua.lua_sethook(this.state, null, 0, 0);
+            return;
+        }
+        for (const key of ['instructions', 'timeMs']) {
+            if (limits[key] !== undefined && !(limits[key] > 0)) throw new RangeError(`limits.${key} must be a positive number`);
+        }
+        if (limits.instructions === undefined && limits.timeMs === undefined) throw new RangeError('limits needs instructions and/or timeMs');
+        this.limits = { instructions: limits.instructions, timeMs: limits.timeMs };
+        this.hookCount = Math.max(1, Math.min(HOOK_GRANULARITY, Math.floor(limits.instructions ?? HOOK_GRANULARITY)));
+        this.limitHook = (L) => this.checkLimits(L);
+        lua.lua_sethook(this.state, this.limitHook, lua.LUA_MASKCOUNT, this.hookCount);
+    }
+
+    /**
+   * Exécute `fn` (un appel dans Lua) avec un budget neuf s'il s'agit d'un appel de haut niveau.
+   */
+    guarded(fn) {
+        if (this.limits === null) return fn();
+        if (this.limitDepth++ === 0) this.armLimits();
+        try {
+            return fn();
+        } finally {
+            this.limitDepth--;
+        }
+    }
+
+    armLimits() {
+        this.remaining = this.limits.instructions ?? Infinity;
+        this.deadline = this.limits.timeMs === undefined ? Infinity : now() + this.limits.timeMs;
+        this.limitHit = null;
+        for (const thread of this.limitedThreads) this.lua.lua_sethook(thread, this.limitHook, this.lua.LUA_MASKCOUNT, this.hookCount);
+        this.limitedThreads.clear();
+    }
+
+    /**
+   * Hook de comptage : une fois la limite dépassée, il lève une erreur à chaque instruction du thread
+   * courant, de sorte qu'un pcall (ou un resume) qui l'attrape ne laisse jamais le script continuer.
+   */
+    checkLimits(L) {
+        if (this.limitDepth === 0) return;
+        if (this.limitHit === null) {
+            this.remaining -= this.hookCount;
+            if (this.remaining <= 0) this.limitHit = 'instructions';
+            else if (now() > this.deadline) this.limitHit = 'time';
+        }
+        if (this.limitHit === null) return;
+        if (L.basehookcount !== 1) {
+            this.lua.lua_sethook(L, this.limitHook, this.lua.LUA_MASKCOUNT, 1);
+            this.limitedThreads.add(L);
+        }
+        this.lauxlib.luaL_error(L, this.to_luastring(`${this.limitHit} limit exceeded`));
+    }
+
+    /**
+   * Construit l'erreur JavaScript pour un échec Lua : LimitError si une limite a été dépassée.
+   */
+    luaError(message, traceback) {
+        return this.limitHit === null ? new LuaError(message, traceback) : new LimitError(this.limitHit, message, traceback);
     }
 
     /**
@@ -261,7 +376,8 @@ class FengariVm {
     }
 
     /**
-   * Met à nil un global désigné par un chemin pointillé (ex. 'os.execute').
+   * Met à nil un global désigné par un chemin pointillé (ex. 'os.execute'). Retirer un global de
+   * premier niveau le retire aussi de package.loaded et package.preload.
    */
     removeGlobal(path) {
         const L = this.state;
@@ -270,6 +386,8 @@ class FengariVm {
         if (parts.length === 0) {
             this.lua.lua_pushnil(L);
             this.lua.lua_setglobal(L, this.to_luastring(last));
+            /* sinon require('os') ou package.loaded.os redonnerait l'accès */
+            for (const registry of ['package.loaded', 'package.preload']) this.removeGlobal(`${registry}.${last}`);
             return;
         }
         this.pushPath(L, parts.join('.'));
@@ -318,9 +436,11 @@ class FengariVm {
         } else if (typeof value === 'function') {
             this.lua.lua_pushcfunction(L, this.wrap(value));
         } else if (value instanceof LuaRef) {
+            if (value.vm !== this) throw new Error('Lua reference belongs to another FengariVm');
             if (value.id === null) throw new Error('Lua reference was released');
             this.lua.lua_rawgeti(L, this.lua.LUA_REGISTRYINDEX, value.id);
         } else if (value instanceof Coroutine) {
+            if (value.vm !== this) throw new Error('Coroutine belongs to another FengariVm');
             this.lua.lua_pushthread(value.thread);
             this.lua.lua_xmove(value.thread, L, 1);
         } else if (value instanceof Map) {
@@ -395,7 +515,10 @@ class FengariVm {
             } else {
                 const key = this.lua.lua_type(L, -2) === this.lua.LUA_TSTRING
                     ? this.readString(L, -2) : String(this.lua.lua_tointeger(L, -2));
-                result[key] = this.read(-1, depth + 1, L, seen);
+                const entry = this.read(-1, depth + 1, L, seen);
+                /* "__proto__" doit rester une clé ordinaire, pas changer le prototype de l'objet */
+                if (key === '__proto__') Object.defineProperty(result, key, { value: entry, enumerable: true, writable: true, configurable: true });
+                else result[key] = entry;
             }
             this.lua.lua_pop(L, 1);
         }
@@ -655,11 +778,11 @@ class FengariVm {
    */
     protectedCall(argCount, base, handler, all = false) {
         const L = this.state;
-        const status = this.lua.lua_pcall(L, argCount, all ? this.lua.LUA_MULTRET : 1, handler);
+        const status = this.guarded(() => this.lua.lua_pcall(L, argCount, all ? this.lua.LUA_MULTRET : 1, handler));
         if (status !== this.lua.LUA_OK) {
             const trace = this.errorMessage(L, -1);
             this.lua.lua_settop(L, base);
-            throw new LuaError(trace.split('\n')[0], trace);
+            throw this.luaError(trace.split('\n')[0], trace);
         }
         let value;
         if (all) {
@@ -689,4 +812,4 @@ class FengariVm {
 
 }
 
-module.exports = { FengariVm, LuaError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine };
+module.exports = { FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine };

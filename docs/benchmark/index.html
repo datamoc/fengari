@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fengari vs JavaScript benchmark</title>
+<meta name="description" content="Live benchmark of Lua running in Fengari against the same algorithms in plain JavaScript, measured in your own browser.">
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --panel: #f6f8fa;
+  --js: #d4a000; --lua: #2c4fa3; --ok: #1a7f37; --bad: #cf222e; --accent: #2c4fa3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --line: #30363d; --panel: #161b22;
+    --js: #e3b341; --lua: #6d8fe0; --ok: #3fb950; --bad: #f85149; --accent: #6d8fe0;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+h1 { font-size: 1.8rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
+p { margin: .5rem 0; }
+a { color: var(--accent); }
+.muted { color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; margin: 1.25rem 0; }
+button, select { font: inherit; padding: .45rem .9rem; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
+button:disabled { opacity: .55; cursor: progress; }
+button.secondary { cursor: pointer; }
+#status { min-height: 1.5em; color: var(--muted); }
+.summary { display: none; margin: 1rem 0; padding: 1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.summary strong { font-size: 1.4rem; }
+table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+th, td { text-align: left; padding: .55rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .85rem; color: var(--muted); font-weight: 600; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+th.num { text-align: right; }
+.bench-name { font-weight: 600; }
+.bench-what { font-size: .85rem; color: var(--muted); }
+.bars { min-width: 11rem; }
+.bar { height: .6rem; border-radius: 3px; margin: .3rem 0; min-width: 2px; }
+.bar.js { background: var(--js); }
+.bar.lua { background: var(--lua); }
+.legend { display: flex; gap: 1.25rem; font-size: .85rem; color: var(--muted); margin-top: .5rem; }
+.legend span::before { content: ""; display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+.legend .js::before { background: var(--js); }
+.legend .lua::before { background: var(--lua); }
+.ok { color: var(--ok); } .bad { color: var(--bad); font-weight: 700; }
+details { border: 1px solid var(--line); border-radius: 8px; margin: .6rem 0; background: var(--panel); }
+summary { cursor: pointer; padding: .6rem .9rem; font-weight: 600; }
+.code { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid var(--line); }
+.code > div { padding: .6rem .9rem; min-width: 0; }
+.code > div + div { border-left: 1px solid var(--line); }
+.code h3 { margin: 0 0 .3rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+pre { margin: 0; overflow-x: auto; font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+@media (max-width: 40rem) { .code { grid-template-columns: 1fr; } .code > div + div { border-left: 0; border-top: 1px solid var(--line); } .bars { display: none; } }
+#env { font-size: .85rem; }
+noscript { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Fengari vs JavaScript</h1>
+  <p class="muted">Lua 5.4 running in <a href="https://github.com/datamoc/fengari">@datamoc/fengari</a> compared with the same algorithms written in plain JavaScript. Everything runs in <em>your</em> browser, right now.</p>
+
+  <p>Fengari is a Lua interpreter written in JavaScript: every Lua instruction is executed by JavaScript code, while the native JavaScript versions below are compiled to machine code by your browser's JIT. Expect Lua-in-Fengari to be much slower on tight numeric loops. This page measures exactly how much, so you can decide whether Fengari fits your workload (scripting, rules, configuration, game logic) or not (number crunching).</p>
+
+  <noscript><p>This page needs JavaScript.</p></noscript>
+
+  <div class="controls">
+    <button id="run" class="primary" type="button">Run benchmark</button>
+    <label>Timed runs
+      <select id="runs">
+        <option value="1">1 (quick)</option>
+        <option value="3" selected>3 + warm-up (median)</option>
+        <option value="5">5 + warm-up (median)</option>
+      </select>
+    </label>
+    <button id="copy" class="secondary" type="button" disabled>Copy results as Markdown</button>
+  </div>
+  <div id="status" role="status" aria-live="polite">Ready. A full run takes about 10 to 30 seconds and the page may freeze briefly while each Lua benchmark runs.</div>
+
+  <div class="summary" id="summary" aria-live="polite"></div>
+
+  <table id="results">
+    <thead>
+      <tr>
+        <th>Benchmark</th>
+        <th class="num">JavaScript</th>
+        <th class="num">Lua (Fengari)</th>
+        <th class="num">Slowdown</th>
+        <th class="bars">Time, log scale</th>
+        <th>Same result</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="legend"><span class="js">JavaScript</span><span class="lua">Lua in Fengari</span></div>
+
+  <h2>Method</h2>
+  <p>Each benchmark runs the same algorithm in both languages with the same input size and returns a checksum; the last column checks that both agree. JavaScript times are averaged over enough repetitions to last at least 80&nbsp;ms (browsers coarsen <code>performance.now()</code>). With 3 or 5 runs, one untimed warm-up run is done first and the median of the timed runs is reported. The Lua side is called through <code>FengariVm</code> with only the <code>base</code>, <code>string</code>, <code>table</code> and <code>math</code> libraries opened.</p>
+  <p class="muted" id="env"></p>
+
+  <h2>The algorithms</h2>
+  <div id="sources"></div>
+</main>
+
+<script src="fengari.bundle.js"></script>
+<script src="benchmarks.js"></script>
+<script>
+"use strict";
+
+const runButton = document.getElementById("run");
+const copyButton = document.getElementById("copy");
+const runsSelect = document.getElementById("runs");
+const statusLine = document.getElementById("status");
+const summary = document.getElementById("summary");
+const tbody = document.querySelector("#results tbody");
+let lastMarkdown = "";
+
+const MIN_JS_MS = 80;
+
+function pause() {
+  return new Promise((resolve) => setTimeout(resolve, 40));
+}
+
+function format(ms) {
+  if (ms < 0.01) return "<0.01 ms";
+  if (ms < 10) return ms.toFixed(2) + " ms";
+  if (ms < 1000) return ms.toFixed(1) + " ms";
+  return (ms / 1000).toFixed(2) + " s";
+}
+
+function median(values) {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function timeOnce(fn) {
+  const start = performance.now();
+  const value = fn();
+  return { value, ms: performance.now() - start };
+}
+
+/* JavaScript is far too fast for one call to be measurable: repeat until MIN_JS_MS has elapsed. */
+function timeJs(fn, size, runs) {
+  let result = fn(size); /* warm-up */
+  const samples = [];
+  for (let sample = 0; sample < runs; sample++) {
+    let iterations = 0;
+    const start = performance.now();
+    do {
+      result = fn(size);
+      iterations++;
+    } while (performance.now() - start < MIN_JS_MS);
+    samples.push((performance.now() - start) / iterations);
+  }
+  return { value: result, ms: median(samples) };
+}
+
+function timeLua(vm, size, runs) {
+  const samples = [];
+  let value;
+  if (runs > 1) vm.call("run", size); /* warm-up */
+  for (let sample = 0; sample < runs; sample++) {
+    const timed = timeOnce(() => vm.call("run", size));
+    value = timed.value;
+    samples.push(timed.ms);
+  }
+  return { value, ms: median(samples) };
+}
+
+function makeRow(bench) {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td><div class="bench-name"></div><div class="bench-what"></div></td>
+    <td class="num js-time">…</td><td class="num lua-time">…</td><td class="num ratio">…</td>
+    <td class="bars"><div class="bar js" style="width:0"></div><div class="bar lua" style="width:0"></div></td>
+    <td class="check"></td>`;
+  row.querySelector(".bench-name").textContent = bench.title;
+  row.querySelector(".bench-what").textContent = `${bench.what} (n = ${bench.size.toLocaleString("en-US")})`;
+  tbody.appendChild(row);
+  return row;
+}
+
+function drawBars(results) {
+  const times = results.flatMap((r) => [r.js.ms, r.lua.ms]);
+  const low = Math.log10(Math.max(Math.min(...times) / 2, 0.001));
+  const high = Math.log10(Math.max(...times));
+  const scale = (ms) => (high === low ? 100 : 4 + 96 * (Math.log10(Math.max(ms, 0.001)) - low) / (high - low));
+  for (const r of results) {
+    r.row.querySelector(".bar.js").style.width = scale(r.js.ms) + "%";
+    r.row.querySelector(".bar.lua").style.width = scale(r.lua.ms) + "%";
+  }
+}
+
+function geometricMean(values) {
+  return Math.exp(values.reduce((sum, v) => sum + Math.log(v), 0) / values.length);
+}
+
+function showSummary(results) {
+  const ratios = results.map((r) => r.lua.ms / r.js.ms);
+  const mean = geometricMean(ratios);
+  const allMatch = results.every((r) => r.js.value === r.lua.value);
+  summary.style.display = "block";
+  summary.innerHTML = `On these ${results.length} benchmarks, Lua in Fengari was <strong>${mean.toFixed(0)}× slower</strong> than JavaScript (geometric mean; range ${Math.min(...ratios).toFixed(0)}× to ${Math.max(...ratios).toFixed(0)}×).` +
+    (allMatch ? "" : ' <span class="bad">Warning: some results differ between the two languages.</span>');
+}
+
+function toMarkdown(results, runs) {
+  const lines = [
+    "| Benchmark | JavaScript | Lua (Fengari) | Slowdown |",
+    "| --- | ---: | ---: | ---: |",
+    ...results.map((r) => `| ${r.bench.title} (n=${r.bench.size}) | ${format(r.js.ms)} | ${format(r.lua.ms)} | ${(r.lua.ms / r.js.ms).toFixed(0)}× |`),
+    "",
+    `Geometric mean slowdown: ${geometricMean(results.map((r) => r.lua.ms / r.js.ms)).toFixed(0)}×. ` +
+      `${runs} timed run(s), median. ${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}`
+  ];
+  return lines.join("\n");
+}
+
+async function runAll() {
+  const runs = Number(runsSelect.value);
+  runButton.disabled = true;
+  copyButton.disabled = true;
+  summary.style.display = "none";
+  tbody.textContent = "";
+  const vm = new Fengari.FengariVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
+  const results = [];
+
+  try {
+    for (const [index, bench] of BENCHMARKS.entries()) {
+      const row = makeRow(bench);
+      statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running JavaScript…`;
+      await pause();
+      const js = timeJs(bench.js, bench.size, runs);
+      row.querySelector(".js-time").textContent = format(js.ms);
+
+      statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running Lua in Fengari…`;
+      await pause();
+      vm.run(bench.lua, "=" + bench.id);
+      const lua = timeLua(vm, bench.size, runs);
+      row.querySelector(".lua-time").textContent = format(lua.ms);
+      row.querySelector(".ratio").textContent = (lua.ms / js.ms).toFixed(0) + "×";
+
+      const match = js.value === lua.value;
+      const check = row.querySelector(".check");
+      check.textContent = match ? "✓" : `✗ (${js.value} vs ${lua.value})`;
+      check.className = "check " + (match ? "ok" : "bad");
+      results.push({ bench, row, js, lua });
+      drawBars(results);
+    }
+    showSummary(results);
+    lastMarkdown = toMarkdown(results, runs);
+    copyButton.disabled = false;
+    statusLine.textContent = "Done.";
+  } catch (error) {
+    statusLine.textContent = "Benchmark failed: " + (error && error.message ? error.message : error);
+    console.error(error);
+  } finally {
+    runButton.disabled = false;
+  }
+}
+
+function describeEnvironment() {
+  const cores = navigator.hardwareConcurrency ? `, ${navigator.hardwareConcurrency} logical cores` : "";
+  document.getElementById("env").textContent = `${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}${cores}.`;
+}
+
+function listSources() {
+  const container = document.getElementById("sources");
+  for (const bench of BENCHMARKS) {
+    const details = document.createElement("details");
+    const title = document.createElement("summary");
+    title.textContent = `${bench.title} (n = ${bench.size.toLocaleString("en-US")})`;
+    const code = document.createElement("div");
+    code.className = "code";
+    for (const [label, source] of [["JavaScript", bench.js.toString()], ["Lua", bench.lua.trim()]]) {
+      const cell = document.createElement("div");
+      const heading = document.createElement("h3");
+      heading.textContent = label;
+      const pre = document.createElement("pre");
+      pre.textContent = source;
+      cell.append(heading, pre);
+      code.appendChild(cell);
+    }
+    details.append(title, code);
+    container.appendChild(details);
+  }
+}
+
+runButton.addEventListener("click", runAll);
+copyButton.addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(lastMarkdown);
+    statusLine.textContent = "Results copied to the clipboard.";
+  } catch {
+    statusLine.textContent = "Could not access the clipboard; select the table manually.";
+  }
+});
+describeEnvironment();
+listSources();
+</script>
+</body>
+</html>

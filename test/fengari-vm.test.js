@@ -279,3 +279,80 @@ describe("FengariVm binary strings and exotic keys", () => {
         expect(arr[0]).toBe(arr);
     });
 });
+
+describe("FengariVm hardening", () => {
+    test("a __proto__ key stays an own property", () => {
+        const vm = new FengariVm();
+        const value = vm.run("return {['__proto__'] = {polluted = true}, a = 1}");
+        expect(Object.getPrototypeOf(value)).toBe(Object.prototype);
+        expect(value.polluted).toBeUndefined();
+        expect(Object.keys(value).sort()).toEqual(["__proto__", "a"]);
+        expect({}.polluted).toBeUndefined();
+    });
+
+    test("references from another VM are rejected", () => {
+        const a = new FengariVm();
+        const b = new FengariVm();
+        const ref = a.run("return function() return 'A' end");
+        b.defineFunction("leak", () => ref);
+        expect(() => b.run("return leak()")).toThrow(/another FengariVm/);
+        b.defineFunction("leakCo", () => a.coroutineFromSource("return 1"));
+        expect(() => b.run("return leakCo()")).toThrow(/another FengariVm/);
+    });
+
+    test("removing a library also removes it from package.loaded and preload", () => {
+        const vm = new FengariVm(undefined, undefined, { remove: ["os", "io"] });
+        expect(vm.run("return type(os) .. type(package.loaded.os) .. type(package.loaded.io)")).toBe("nilnilnil");
+        expect(vm.run("return pcall(require, 'os')")).toBe(false);
+    });
+});
+
+describe("FengariVm sandbox preset", () => {
+    const sandbox = () => new FengariVm(undefined, undefined, { sandbox: true });
+
+    test("only the safe libraries are present", () => {
+        const vm = sandbox();
+        for (const name of ["os", "io", "debug", "package", "require", "dofile", "loadfile"]) {
+            expect(vm.run(`return type(${name})`)).toBe("nil");
+        }
+        expect(vm.run("return type(string.dump)")).toBe("nil");
+        expect(vm.run("return type(string.rep) .. type(table.sort) .. type(math.sin) .. type(utf8.char) .. type(coroutine.wrap)"))
+            .toBe("functionfunctionfunctionfunctionfunction");
+    });
+
+    test("ordinary scripts still work, including load with text and env", () => {
+        const vm = sandbox();
+        expect(vm.run("return load('return 1 + 1')()")).toBe(2);
+        expect(vm.run("local env = {x = 5} return load('return x', 'chunk', 't', env)()")).toBe(5);
+        expect(vm.run("return load('return x')()")).toBeNull();
+        expect(vm.run("x = 7 return load('return x')()")).toBe(7);
+        expect(vm.run("return coroutine.wrap(function() coroutine.yield(1) end)()")).toBe(1);
+    });
+
+    test("load refuses binary chunks even when asked for them", () => {
+        const dumper = new FengariVm();
+        const vm = sandbox();
+        vm.defineFunction("bytecode", () => dumper.run("return string.dump(function() return 42 end)"));
+        expect(vm.run("local f, err = load(bytecode(), 'b', 'b') return f == nil and err ~= nil")).toBe(true);
+        expect(vm.run("local f = load(bytecode()) return f == nil")).toBe(true);
+    });
+
+    test("no way back to the removed libraries", () => {
+        const vm = sandbox();
+        expect(vm.run("return type(_G.os) .. type(getmetatable('').__index.dump) .. type(_ENV.io)")).toBe("nilnilnil");
+        expect(vm.run("return select('#', pcall(require, 'os'))")).toBe(2);
+        expect(vm.run("return (pcall(require, 'os'))")).toBe(false);
+    });
+
+    test("libs can narrow the preset but not widen it", () => {
+        const narrowed = new FengariVm(undefined, undefined, { sandbox: true, libs: ["base", "string"] });
+        expect(narrowed.run("return type(table) .. type(string.rep)")).toBe("nilfunction");
+        expect(() => new FengariVm(undefined, undefined, { sandbox: true, libs: ["base", "os"] })).toThrow(/not allowed/);
+        expect(() => new FengariVm(undefined, undefined, { sandbox: true, libs: ["debug"] })).toThrow(/not allowed/);
+    });
+
+    test("remove adds to the preset removals", () => {
+        const vm = new FengariVm(undefined, undefined, { sandbox: true, remove: ["load", "print"] });
+        expect(vm.run("return type(load) .. type(dofile)")).toBe("nilnil");
+    });
+});

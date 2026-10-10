@@ -11,6 +11,10 @@ A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **bro
 - **Lua 5.5.1 alignment in progress**: the migration plan, differential oracle and conformance tracking live in [docs/lua-5.5.1](docs/lua-5.5.1).
 - **Memory accounting hook**: `lua_setallocf` lets an embedder observe, bound or refuse the VM's internal string and buffer allocations; a refusal behaves like a failing C allocator (`LUA_ERRMEM`).
 
+## Performance
+
+Fengari interprets Lua in JavaScript, so it is much slower than native JavaScript on tight numeric loops. [`docs/benchmark`](docs/benchmark/index.html) is a self-contained page that runs the same algorithms in Lua (Fengari) and in plain JavaScript in your own browser and reports the measured slowdown. Serve the `docs/` folder with GitHub Pages to publish it, and run `npm run bench:build` to regenerate `docs/benchmark/fengari.bundle.js` after changing `src/`.
+
 ## Installation
 
 ```bash
