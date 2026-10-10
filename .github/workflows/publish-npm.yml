@@ -37,8 +37,14 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       # dependencies come from yarn.lock (this is a yarn project); publishing itself
-      # still runs through the npm CLI
+      # still runs through the npm CLI. NODE_AUTH_TOKEN is set to an empty string on
+      # purpose: setup-node's registry-url writes a `${NODE_AUTH_TOKEN}` placeholder
+      # into .npmrc, which yarn 1 refuses to even start under ("Failed to replace
+      # env in config") while npm merely leaves it unset - exactly what OIDC wants,
+      # since trusted publishing never uses NODE_AUTH_TOKEN
       - run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ''
       # trusted publishing needs npm 11.5.1+ for the OIDC exchange; pin high enough
       # that a future Node LTS bundling an older npm doesn't silently fall back to
       # failing for a missing token
