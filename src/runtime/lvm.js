@@ -39,6 +39,7 @@ module.exports = function createLvm(dependencies) {
             OP_DIV,
             OP_EQ,
             OP_EXTRAARG,
+            OP_TBC,
             OP_FORLOOP,
             OP_FORPREP,
             OP_GETTABLE,
@@ -541,7 +542,7 @@ module.exports = function createLvm(dependencies) {
                         let nfuncOff = nci.funcOff;
                         let ofuncOff = oci.funcOff;
                         let lim = nci.l_base + nfunc.value.p.numparams;
-                        if (cl.p.p.length > 0) lfunc.luaF_close(L, oci.l_base);
+                        if (cl.p.p.length > 0 || lfunc.luaF_hastbc(L, oci.l_base)) lfunc.luaF_close(L, oci.l_base);
                         for (let aux = 0; nfuncOff + aux < lim; aux++)
                             lobject.setobjs2s(L, ofuncOff + aux, nfuncOff + aux);
                         oci.l_base = ofuncOff + (nci.l_base - nfuncOff);
@@ -560,7 +561,7 @@ module.exports = function createLvm(dependencies) {
                     break;
                 }
                 case OP_RETURN: {
-                    if (cl.p.p.length > 0) lfunc.luaF_close(L, base);
+                    if (cl.p.p.length > 0 || lfunc.luaF_hastbc(L, base)) lfunc.luaF_close(L, base);
                     let b = ldo.luaD_poscall(L, ci, ra, (i.B !== 0 ? i.B - 1 : L.top - ra));
 
                     if (ci.callstatus & lstate.CIST_FRESH)
@@ -635,7 +636,7 @@ module.exports = function createLvm(dependencies) {
                     break;
                 }
                 case OP_TFORCALL: {
-                    let cb = ra + 3; /* call base */
+                    let cb = ra + 4; /* call base */
                     lobject.setobjs2s(L, cb+2, ra+2);
                     lobject.setobjs2s(L, cb+1, ra+1);
                     lobject.setobjs2s(L, cb, ra);
@@ -649,8 +650,8 @@ module.exports = function createLvm(dependencies) {
                 }
                 /* fall through */
                 case OP_TFORLOOP: {
-                    if (!L.stack[ra + 1].ttisnil()) { /* continue loop? */
-                        lobject.setobjs2s(L, ra, ra + 1); /* save control variable */
+                    if (!L.stack[ra + 2].ttisnil()) { /* continue loop? */
+                        lobject.setobjs2s(L, ra, ra + 2); /* save control variable */
                         ci.l_savedpc += i.sBx; /* jump back */
                     }
                     break;
@@ -703,6 +704,10 @@ module.exports = function createLvm(dependencies) {
 
                     for (; j < b; j++) /* complete required results with nil */
                         L.stack[ra + j].setnilvalue();
+                    break;
+                }
+                case OP_TBC: {
+                    lfunc.luaF_newtbcvar(L, ra);
                     break;
                 }
                 case OP_EXTRAARG: {

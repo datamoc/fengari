@@ -1335,22 +1335,35 @@ module.exports = function createLapi(dependencies) {
         }
     };
 
-    const lua_resetthread = function(L) {
-        lua_settop(L, 0);
-        L.status = LUA_OK;
-        L.ci = L.base_ci;
-        L.nCcalls = 0;
-        return LUA_OK;
+    /* kill a coroutine, running the closers of its pending to-be-closed variables */
+    const lua_closethread = function(L, from) {
+        return ldo.lua_closethread(L, from);
     };
 
+    const lua_resetthread = function(L) {
+        return ldo.lua_closethread(L, null);
+    };
+
+    /* mark the value at 'idx' as a to-be-closed variable of the running function */
+    const lua_toclose = function(L, idx) {
+        const level = L.ci.funcOff + lua_absindex(L, idx);
+        api_check(L, !lfunc.luaF_hastbc(L, level), "variable already marked to be closed");
+        lfunc.luaF_newtbcvar(L, level);
+    };
+
+    /* run the closers of the slot at 'idx' (and any above it), then set it to nil */
     const lua_closeslot = function(L, idx) {
-        lua_pushnil(L);
-        lua_replace(L, idx);
+        const level = L.ci.funcOff + lua_absindex(L, idx);
+        api_check(L, lfunc.luaF_hastbc(L, level), "no variable to close at given level");
+        lfunc.luaF_close(L, level);
+        L.stack[level].setnilvalue();
         return LUA_OK;
     };
 
     exports.lua_pushjsfunction_ex = lua_pushjsfunction_ex;
+    exports.lua_closethread = lua_closethread;
     exports.lua_resetthread = lua_resetthread;
+    exports.lua_toclose = lua_toclose;
     exports.lua_closeslot = lua_closeslot;
 
     return exports;

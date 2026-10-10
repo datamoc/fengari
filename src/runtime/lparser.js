@@ -98,6 +98,7 @@ module.exports = function createLparser(dependencies) {
             OP_NEWTABLE,
             OP_SETTABLE,
             OP_TAILCALL,
+            OP_TBC,
             OP_TFORCALL,
             OP_TFORLOOP,
             OP_VARARG
@@ -134,6 +135,7 @@ module.exports = function createLparser(dependencies) {
             this.firstgoto = NaN;  /* index of first pending goto in this block */
             this.nactvar = NaN;    /* # active locals outside the block */
             this.upval = NaN;      /* true if some variable in the block is an upvalue */
+            this.insidetbc = false; /* true if inside the scope of a to-be-closed var. */
             this.isloop = NaN;     /* true if 'block' is a loop */
         }
     }
@@ -216,9 +218,14 @@ module.exports = function createLparser(dependencies) {
     }
 
     /* description of active local variable */
+    const VDKREG = 0;     /* regular variable */
+    const RDKCONST = 1;   /* variable declared '<const>' */
+    const RDKTOCLOSE = 2; /* variable declared '<close>' */
+
     class Vardesc {
         constructor() {
             this.idx = NaN;  /* variable index in stack */
+            this.kind = VDKREG;
         }
     }
 
@@ -344,14 +351,13 @@ module.exports = function createLparser(dependencies) {
         return fs.nlocvars++;
     };
 
-    const new_localvar = function(ls, name, is_close = false) {
+    const new_localvar = function(ls, name) {
         let fs = ls.fs;
         let dyd = ls.dyd;
         let reg = registerlocalvar(ls, name);
         checklimit(fs, dyd.actvar.n + 1 - fs.firstlocal, MAXVARS, to_luastring("local variables", true));
         dyd.actvar.arr[dyd.actvar.n] = new Vardesc();
         dyd.actvar.arr[dyd.actvar.n].idx = reg;
-        dyd.actvar.arr[dyd.actvar.n].is_close = is_close;
         dyd.actvar.n++;
     };
 
@@ -390,10 +396,14 @@ module.exports = function createLparser(dependencies) {
     const newupvalue = function(fs, name, v) {
         let f = fs.f;
         checklimit(fs, fs.nups + 1, lfunc.MAXUPVAL, to_luastring("upvalues", true));
+        const outer = fs.prev;
         f.upvalues[fs.nups] = {
             instack: v.k === expkind.VLOCAL,
             idx: v.u.info,
-            name: name
+            name: name,
+            readonly: outer !== null && (v.k === expkind.VLOCAL
+                ? outer.ls.dyd.actvar.arr[outer.firstlocal + v.u.info].kind !== VDKREG
+                : outer.f.upvalues[v.u.info].readonly)  /* the main chunk's _ENV has no outer function */
         };
         return fs.nups++;
     };
@@ -582,6 +592,7 @@ module.exports = function createLparser(dependencies) {
         bl.firstlabel = fs.ls.dyd.label.n;
         bl.firstgoto = fs.ls.dyd.gt.n;
         bl.upval = 0;
+        bl.insidetbc = fs.bl !== null && fs.bl.insidetbc;
         bl.previous = fs.bl;
         fs.bl = bl;
         lua_assert(fs.freereg === fs.nactvar);
@@ -653,15 +664,15 @@ module.exports = function createLparser(dependencies) {
     const leaveblock = function(fs) {
         let bl = fs.bl;
         let ls = fs.ls;
+        if (bl.isloop)
+            breaklabel(ls);  /* close pending breaks; they land on the close below */
+
         if (bl.previous && bl.upval) {
             /* create a 'jump to here' to close upvalues */
             let j = luaK_jump(fs);
             luaK_patchclose(fs, j , bl.nactvar);
             luaK_patchtohere(fs, j);
         }
-
-        if (bl.isloop)
-            breaklabel(ls);  /* close pending breaks */
 
         fs.bl = bl.previous;
         removevars(fs, bl.nactvar);
@@ -1210,9 +1221,35 @@ module.exports = function createLparser(dependencies) {
         }
     };
 
+    /*
+    ** Raise an error if the variable being assigned is a constant or a
+    ** to-be-closed variable, as a local or as an upvalue.
+    */
+    const check_readonly = function(ls, e) {
+        const fs = ls.fs;
+        let varname = null;
+        switch (e.k) {
+            case expkind.VLOCAL: {
+                const vd = ls.dyd.actvar.arr[fs.firstlocal + e.u.info];
+                if (vd.kind !== VDKREG)
+                    varname = getlocvar(fs, e.u.info).varname;
+                break;
+            }
+            case expkind.VUPVAL: {
+                const up = fs.f.upvalues[e.u.info];
+                if (up.readonly)
+                    varname = up.name;
+                break;
+            }
+        }
+        if (varname !== null)
+            semerror(ls, lobject.luaO_pushfstring(ls.L, to_luastring("attempt to assign to const variable '%s'", true), varname.getstr()));
+    };
+
     const assignment = function(ls, lh, nvars) {
         let e = new expdesc();
         check_condition(ls, vkisvar(lh.v.k), to_luastring("syntax error", true));
+        check_readonly(ls, lh.v);
         if (testnext(ls, 44 /* (',').charCodeAt(0) */)) {  /* assignment -> ',' suffixedexp assignment */
             let nv = new LHS_assign();
             nv.prev = lh;
@@ -1342,7 +1379,12 @@ module.exports = function createLparser(dependencies) {
         let bl = new BlockCnt();
         let fs = ls.fs;
         let endfor;
-        adjustlocalvars(ls, 3);  /* control variables */
+        adjustlocalvars(ls, isnum ? 3 : 4);  /* control variables */
+        if (!isnum) {  /* generic for: the 4th control value is closed when the loop ends */
+            fs.bl.upval = 1;
+            fs.bl.insidetbc = true;
+            luaK_codeABC(fs, OP_TBC, base + 3, 0, 0);
+        }
         checknext(ls, R.TK_DO);
         let prep = isnum ? luaK_codeAsBx(fs, OP_FORPREP, base, NO_JUMP) : luaK_jump(fs);
         enterblock(fs, bl, 0);  /* scope for declared variables */
@@ -1387,12 +1429,13 @@ module.exports = function createLparser(dependencies) {
         /* forlist -> NAME {,NAME} IN explist forbody */
         let fs = ls.fs;
         let e = new expdesc();
-        let nvars = 4;  /* gen, state, control, plus at least one declared var */
+        let nvars = 5;  /* gen, state, control, closing value, plus at least one declared var */
         let base = fs.freereg;
         /* create control variables */
         new_localvarliteral(ls, "(for generator)");
         new_localvarliteral(ls, "(for state)");
         new_localvarliteral(ls, "(for control)");
+        new_localvarliteral(ls, "(for state)");  /* closing value */
         /* create declared variables */
         new_localvar(ls, indexname);
         while (testnext(ls, 44 /* (',').charCodeAt(0) */)) {
@@ -1401,9 +1444,9 @@ module.exports = function createLparser(dependencies) {
         }
         checknext(ls, R.TK_IN);
         let line = ls.linenumber;
-        adjust_assign(ls, 3, explist(ls, e), e);
+        adjust_assign(ls, 4, explist(ls, e), e);
         luaK_checkstack(fs, 3);  /* extra space to call generator */
-        forbody(ls, base, line, nvars - 3, 0);
+        forbody(ls, base, line, nvars - 4, 0);
     };
 
     const forstat = function(ls, line) {
@@ -1481,21 +1524,38 @@ module.exports = function createLparser(dependencies) {
         getlocvar(fs, b.u.info).startpc = fs.pc;
     };
 
+    /* attrib -> ['<' NAME '>'], 'const' and 'close' being ordinary names */
+    const getlocalattribute = function(ls) {
+        if (!testnext(ls, 60 /* ('<').charCodeAt(0) */))
+            return VDKREG;
+        const attr = str_checkname(ls);
+        checknext(ls, 62 /* ('>').charCodeAt(0) */);
+        if (eqstr(attr, luaS_newliteral(ls.L, "const")))
+            return RDKCONST;
+        if (eqstr(attr, luaS_newliteral(ls.L, "close")))
+            return RDKTOCLOSE;
+        return semerror(ls, lobject.luaO_pushfstring(ls.L, to_luastring("unknown attribute '%s'", true), attr.getstr()));
+    };
+
     const localstat = function(ls) {
-        /* stat -> LOCAL [const] NAME {',' NAME} ['=' explist] */
-        let is_const = false;
-        if (testnext(ls, "TK_CONST")) {
-            is_const = true;
-        }
+        /* stat -> LOCAL [attrib] NAME [attrib] {',' NAME [attrib]} ['=' explist] */
+        const fs = ls.fs;
+        let toclose = -1;  /* index of the to-be-closed variable, if any */
         let nvars = 0;
         let nexps;
         let e = new expdesc();
+        const defaultkind = getlocalattribute(ls);  /* 'local <const> x, y' applies to all */
         do {
-            let is_close = false;
-            if (testnext(ls, "TK_CLOSE")) {
-                is_close = true;
+            new_localvar(ls, str_checkname(ls));
+            let kind = getlocalattribute(ls);
+            if (kind === VDKREG)
+                kind = defaultkind;
+            ls.dyd.actvar.arr[ls.dyd.actvar.n - 1].kind = kind;
+            if (kind === RDKTOCLOSE) {
+                if (toclose !== -1)
+                    semerror(ls, to_luastring("multiple to-be-closed variables in local list", true));
+                toclose = fs.nactvar + nvars;
             }
-            new_localvar(ls, str_checkname(ls), is_close);
             nvars++;
         } while (testnext(ls, 44 /* (',').charCodeAt(0) */));
         if (testnext(ls, 61 /* ('=').charCodeAt(0) */))
@@ -1506,12 +1566,10 @@ module.exports = function createLparser(dependencies) {
         }
         adjust_assign(ls, nvars, nexps, e);
         adjustlocalvars(ls, nvars);
-
-        // Marquer les variables comme 'const' si nécessaire
-        if (is_const) {
-            for (let i = 0; i < nvars; i++) {
-                getlocvar(ls.fs, ls.fs.nactvar - nvars + i).is_const = true;
-            }
+        if (toclose !== -1) {  /* mark the block so leaving it closes the variable */
+            fs.bl.upval = 1;
+            fs.bl.insidetbc = true;
+            luaK_codeABC(fs, OP_TBC, toclose, 0, 0);
         }
     };
 
@@ -1565,7 +1623,7 @@ module.exports = function createLparser(dependencies) {
             nret = explist(ls, e);  /* optional return values */
             if (hasmultret(e.k)) {
                 luaK_setmultret(fs, e);
-                if (e.k === expkind.VCALL && nret === 1) {  /* tail call? */
+                if (e.k === expkind.VCALL && nret === 1 && !fs.bl.insidetbc) {  /* tail call? */
                     SET_OPCODE(getinstruction(fs, e), OP_TAILCALL);
                     lua_assert(getinstruction(fs, e).A === fs.nactvar);
                 }

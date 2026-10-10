@@ -84,8 +84,6 @@ module.exports = function createLlex(dependencies) {
     const TK_INT      = FIRST_RESERVED + 34;
     const TK_NAME     = FIRST_RESERVED + 35;
     const TK_STRING   = FIRST_RESERVED + 36;
-    const TK_CONST    = FIRST_RESERVED + 37;
-    const TK_CLOSE    = FIRST_RESERVED + 38;
 
     const RESERVED = {
         "TK_AND":      TK_AND,
@@ -124,9 +122,7 @@ module.exports = function createLlex(dependencies) {
         "TK_FLT":      TK_FLT,
         "TK_INT":      TK_INT,
         "TK_NAME":     TK_NAME,
-        "TK_STRING":   TK_STRING,
-        "TK_CONST":    TK_CONST,
-        "TK_CLOSE":    TK_CLOSE
+        "TK_STRING":   TK_STRING
     };
 
     const luaX_tokens = [
@@ -136,7 +132,7 @@ module.exports = function createLlex(dependencies) {
         "return", "then", "true", "until", "while",
         "//", "..", "...", "==", ">=", "<=", "~=",
         "<<", ">>", "::", "<eof>",
-        "<number>", "<integer>", "<name>", "<string>", "const", "<close>"
+        "<number>", "<integer>", "<name>", "<string>"
     ].map((e, i)=>to_luastring(e));
 
     class SemInfo {

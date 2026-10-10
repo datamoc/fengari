@@ -1,5 +1,5 @@
 "use strict";
 
-const { lua_resetthread, lua_closeslot } = require("./lapi.js");
+const { lua_resetthread, lua_closeslot, lua_closethread, lua_toclose } = require("./lapi.js");
 
-module.exports = { lua_resetthread, lua_closeslot };
+module.exports = { lua_resetthread, lua_closeslot, lua_closethread, lua_toclose };

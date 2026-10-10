@@ -70,7 +70,8 @@ module.exports = function createLtm(dependencies) {
         TM_LE:      21,
         TM_CONCAT:  22,
         TM_CALL:    23,
-        TM_N:       24  /* number of elements in the enum */
+        TM_CLOSE:   24,
+        TM_N:       25  /* number of elements in the enum */
     };
 
     const luaT_init = function(L) {
@@ -98,6 +99,7 @@ module.exports = function createLtm(dependencies) {
         L.l_G.tmname[TMS.TM_LE]       = new luaS_new(L, to_luastring("__le", true));
         L.l_G.tmname[TMS.TM_CONCAT]   = new luaS_new(L, to_luastring("__concat", true));
         L.l_G.tmname[TMS.TM_CALL]     = new luaS_new(L, to_luastring("__call", true));
+        L.l_G.tmname[TMS.TM_CLOSE]    = new luaS_new(L, to_luastring("__close", true));
     };
 
     /*

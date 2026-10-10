@@ -76,6 +76,7 @@ module.exports = function createLstate(dependencies) {
             this.nny = 1;
             this.status = LUA_OK;
             this.errfunc = 0;
+            this.tbclist = [];  /* absolute stack indices of pending to-be-closed variables */
         }
 
     }

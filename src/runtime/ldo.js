@@ -517,7 +517,8 @@ module.exports = function createLdo(dependencies) {
         if (ci === null) return 0;  /* no recovery point */
         /* "finish" luaD_pcall */
         let oldtop = ci.extra;
-        lfunc.luaF_close(L, oldtop);
+        L.ci = ci;
+        status = luaD_closeprotected(L, oldtop, status);
         seterrorobj(L, status, oldtop);
         L.ci = ci;
         L.allowhook = ci.callstatus & lstate.CIST_OAH;  /* restore original 'allowhook' */
@@ -621,6 +622,30 @@ module.exports = function createLdo(dependencies) {
         return status;
     };
 
+    /*
+    ** Kill a suspended or dead coroutine: run the closers of its pending
+    ** to-be-closed variables, then leave it empty. Returns LUA_OK, or the
+    ** status of the error that killed it (or that a closer raised), with
+    ** that error object as the only value on its stack.
+    */
+    const lua_closethread = function(L, from) {
+        L.nCcalls = from ? from.nCcalls : 0;
+        L.ci = L.base_ci;
+        let status = L.status;
+        L.status = LUA_OK;  /* so it can run closers */
+        if (status === LUA_YIELD)
+            status = LUA_OK;
+        status = luaD_closeprotected(L, 1, status);
+        if (status !== LUA_OK)
+            seterrorobj(L, status, 1);
+        else
+            while (L.top > 1)
+                delete L.stack[--L.top];
+        L.ci.top = L.top + LUA_MINSTACK;
+        L.status = status;
+        return status;
+    };
+
     const lua_isyieldable = function(L) {
         return L.nny === 0;
     };
@@ -657,6 +682,27 @@ module.exports = function createLdo(dependencies) {
         lua_yieldk(L, n, 0, null);
     };
 
+    /*
+    ** Close the pending upvalues and to-be-closed variables from stack index
+    ** 'level' while the error object for 'status' is on top of the stack. A
+    ** closer that fails replaces the error and the remaining closers still
+    ** run. Returns the status of the last error.
+    */
+    const luaD_closeprotected = function(L, level, status) {
+        const old_ci = L.ci;
+        const old_allowhooks = L.allowhook;
+        const old_nny = L.nny;
+        for (;;) {
+            const closestatus = luaD_rawrunprotected(L, (L, st) => lfunc.luaF_close(L, level, st), status);
+            if (closestatus === LUA_OK)
+                return status;
+            L.ci = old_ci;
+            L.allowhook = old_allowhooks;
+            L.nny = old_nny;
+            status = closestatus === -1 ? LUA_ERRRUN : closestatus;
+        }
+    };
+
     const luaD_pcall = function(L, func, u, old_top, ef) {
         let old_ci = L.ci;
         let old_allowhooks = L.allowhook;
@@ -667,11 +713,11 @@ module.exports = function createLdo(dependencies) {
         let status = luaD_rawrunprotected(L, func, u);
 
         if (status !== LUA_OK) {
-            lfunc.luaF_close(L, old_top);
-            seterrorobj(L, status, old_top);
             L.ci = old_ci;
             L.allowhook = old_allowhooks;
             L.nny = old_nny;
+            status = luaD_closeprotected(L, old_top, status);
+            seterrorobj(L, status, old_top);
             luaD_shrinkstack(L);
         }
 
@@ -740,6 +786,7 @@ module.exports = function createLdo(dependencies) {
     exports.luaD_growstack       = luaD_growstack;
     exports.luaD_hook            = luaD_hook;
     exports.luaD_inctop          = luaD_inctop;
+    exports.luaD_closeprotected  = luaD_closeprotected;
     exports.luaD_pcall           = luaD_pcall;
     exports.luaD_poscall         = luaD_poscall;
     exports.luaD_precall         = luaD_precall;
@@ -747,6 +794,7 @@ module.exports = function createLdo(dependencies) {
     exports.luaD_rawrunprotected = luaD_rawrunprotected;
     exports.luaD_reallocstack    = luaD_reallocstack;
     exports.luaD_throw           = luaD_throw;
+    exports.lua_closethread      = lua_closethread;
     exports.lua_isyieldable      = lua_isyieldable;
     exports.lua_resume           = lua_resume;
     exports.lua_yield            = lua_yield;

@@ -1,5 +1,17 @@
 # Changements dans Fengari
 
+## Non publié
+
+### Nouvelles fonctionnalités
+- **`<const>` et `<close>` (Lua 5.4)** : la grammaire `local x <const> = v` / `local x <close> = v` est analysée pour de bon (la version 0.2.0 annonçait ce support sans qu'aucun de ces programmes ne se compile). La forme préfixe `local <const> x, y = 1, 2` de la spécification 5.5 du fork est aussi acceptée. `const` et `close` restent des noms ordinaires.
+  - **`<const>`** : une affectation à la variable, y compris depuis une fonction imbriquée (`attempt to assign to const variable 'x'`), est refusée à la compilation. Une variable `<close>` est en lecture seule de la même façon.
+  - **`<close>`** : nouvel opcode `OP_TBC` (ajouté en fin de table, les opcodes existants ne bougent pas). La valeur doit être nil, `false` ou avoir une métaméthode `__close` (`variable 'x' got a non-closable value`). Les fermetures s'exécutent dans l'ordre inverse, avec `(valeur, erreur ou nil)`, à la fin du bloc, sur `break`, `goto`, `return` (valeurs de retour intactes) et sur erreur. Un `return f()` dans la portée d'une variable à fermer n'est plus un appel terminal. Une erreur dans un `__close` remplace l'erreur en cours et les fermetures restantes s'exécutent quand même.
+  - **`for ... in a, b, c, d`** : la quatrième valeur est la valeur de fermeture de la boucle, fermée à la fin, sur `break`, `return` ou erreur (la disposition des registres de `OP_TFORCALL`/`OP_TFORLOOP` suit désormais Lua 5.4).
+  - **`coroutine.close`**, et `coroutine.wrap` ferme sa coroutine quand elle échoue.
+  - **API C** : `lua_closethread`, `lua_toclose`, et de vrais `lua_resetthread` et `lua_closeslot` (les versions de la 0.2.0 ne faisaient que vider la pile).
+  - **Limite** : un `__close` ne peut pas se suspendre (`coroutine.yield` y échoue avec « attempt to yield across a JS-call boundary »).
+  - **Tests** : `test/lattribs.test.js`.
+
 ## Version 0.2.0
 
 ### Nouvelles fonctionnalités
@@ -68,8 +80,8 @@ console.log(addResult); // Affiche 30
 ### Utilisation de `const` et `<close>`
 ```lua
 -- Déclaration d'une variable constante
-local const x = 10
--- x = 20 -- Erreur : x est constante
+local x <const> = 10
+-- x = 20 -- erreur de compilation : x est constante
 
 -- Déclaration d'une variable à fermer automatiquement
 local file <close> = io.open("data.txt", "r")

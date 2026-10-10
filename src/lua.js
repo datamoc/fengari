@@ -191,6 +191,8 @@ module.exports.lua_yieldk              = ldo.lua_yieldk;
 module.exports.lua_tocfunction         = lapi.lua_tocfunction;
 module.exports.lua_resetthread         = lapi.lua_resetthread;
 module.exports.lua_closeslot           = lapi.lua_closeslot;
+module.exports.lua_closethread         = lapi.lua_closethread;
+module.exports.lua_toclose             = lapi.lua_toclose;
 module.exports.lua_pushjsfunction_ex   = lapi.lua_pushjsfunction_ex;
 // Fonction pour évaluer plusieurs expressions Lua en une seule fois
 const lua_eval_multiple = function(L, str) {
