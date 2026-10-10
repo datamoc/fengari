@@ -1086,3 +1086,137 @@ module.exports.luaL_typename        = luaL_typename;
 module.exports.luaL_unref           = luaL_unref;
 module.exports.luaL_where           = luaL_where;
 module.exports.lua_writestringerror = lua_writestringerror;
+
+// Missing symbols for Lua 5.5.1 compliance
+const luaL_addgsub = function(B, s, p, r) {
+    // Implementation of luaL_addgsub: add a substitution to a buffer
+    let i = 0;
+    let l = s.length;
+    while (i < l) {
+        if (s[i] !== p[0]) {
+            luaL_addchar(B, s[i++]);
+        } else {
+            let j = 0;
+            while (j < p.length && i < l && s[i] === p[j]) {
+                i++;
+                j++;
+            }
+            if (j === p.length) {
+                luaL_addstring(B, r);
+            } else {
+                luaL_addlstring(B, s.substring(i - j, i), j);
+            }
+        }
+    }
+};
+
+const luaL_argexpected = function(L, cond, arg, tname) {
+    // Implementation of luaL_argexpected: raise an error if the argument type is incorrect
+    if (!cond) {
+        luaL_argerror(L, arg, lua_pushfstring(L, "%s expected, got %s", tname, luaL_typename(L, arg)));
+    }
+};
+
+const luaL_pushfail = function(L) {
+    // Implementation of luaL_pushfail: push a "fail" value onto the stack
+    lua_pushnil(L);
+};
+
+const luaL_typeerror = function(L, arg, tname) {
+    // Implementation of luaL_typeerror: raise a type error
+    luaL_error(L, to_luastring("%s expected, got %s"), tname, luaL_typename(L, arg));
+};
+
+module.exports.luaL_addgsub = luaL_addgsub;
+module.exports.luaL_argexpected = luaL_argexpected;
+module.exports.luaL_pushfail = luaL_pushfail;
+module.exports.luaL_typeerror = luaL_typeerror;
+
+// Additional missing symbols for Lua 5.5.1 compliance
+const luaL_buffaddr = function(B) {
+    // Implementation of luaL_buffaddr: return the address of the buffer
+    return B.b;
+};
+
+const luaL_bufflen = function(B) {
+    // Implementation of luaL_bufflen: return the length of the buffer
+    return B.n;
+};
+
+const luaL_buffsub = function(B, s) {
+    // Implementation of luaL_buffsub: subtract a substring from the buffer
+    luaL_addlstring(B, s, s.length);
+};
+
+const luaL_checkint = function(L, arg) {
+    // Implementation of luaL_checkint: check for an integer
+    return luaL_checkinteger(L, arg);
+};
+
+const luaL_checklong = function(L, arg) {
+    // Implementation of luaL_checklong: check for a long integer
+    return luaL_checkinteger(L, arg);
+};
+
+const luaL_checkunsigned = function(L, arg) {
+    // Implementation of luaL_checkunsigned: check for an unsigned integer
+    let n = luaL_checkinteger(L, arg);
+    if (n < 0) {
+        luaL_argerror(L, arg, to_luastring("unsigned integer expected"));
+    }
+    return n;
+};
+
+const luaL_intop = function(op, v1, v2) {
+    // Implementation of luaL_intop: perform integer operations
+    switch (op) {
+        case 0: return v1 + v2;  // LUA_OPADD
+        case 1: return v1 - v2;  // LUA_OPSUB
+        case 2: return v1 * v2;  // LUA_OPMUL
+        case 3: return v1 / v2;  // LUA_OPDIV
+        case 4: return v1 % v2;  // LUA_OPMOD
+        case 5: return v1 & v2;  // LUA_OPBAND
+        case 6: return v1 | v2;  // LUA_OPBOR
+        case 7: return v1 ^ v2;  // LUA_OPBXOR
+        case 8: return v1 << v2; // LUA_OPSHL
+        case 9: return v1 >> v2; // LUA_OPSHR
+        case 10: return ~v1;     // LUA_OPBNOT
+        default: return 0;
+    }
+};
+
+const luaL_makeseed = function() {
+    // Implementation of luaL_makeseed: generate a seed for randomization
+    return Math.floor(Math.random() * 0x100000000);
+};
+
+const luaL_optint = function(L, arg, def) {
+    // Implementation of luaL_optint: opt for an integer
+    return luaL_optinteger(L, arg, def);
+};
+
+const luaL_optlong = function(L, arg, def) {
+    // Implementation of luaL_optlong: opt for a long integer
+    return luaL_optinteger(L, arg, def);
+};
+
+const luaL_optunsigned = function(L, arg, def) {
+    // Implementation of luaL_optunsigned: opt for an unsigned integer
+    let n = luaL_optinteger(L, arg, def);
+    if (n < 0) {
+        luaL_argerror(L, arg, to_luastring("unsigned integer expected"));
+    }
+    return n;
+};
+
+module.exports.luaL_buffaddr = luaL_buffaddr;
+module.exports.luaL_bufflen = luaL_bufflen;
+module.exports.luaL_buffsub = luaL_buffsub;
+module.exports.luaL_checkint = luaL_checkint;
+module.exports.luaL_checklong = luaL_checklong;
+module.exports.luaL_checkunsigned = luaL_checkunsigned;
+module.exports.luaL_intop = luaL_intop;
+module.exports.luaL_makeseed = luaL_makeseed;
+module.exports.luaL_optint = luaL_optint;
+module.exports.luaL_optlong = luaL_optlong;
+module.exports.luaL_optunsigned = luaL_optunsigned;

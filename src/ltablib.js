@@ -1,4 +1,5 @@
 "use strict";
+const integer = require('./linteger.js');
 
 const { LUA_MAXINTEGER } = require('./luaconf.js');
 const {
@@ -47,7 +48,7 @@ const {
     luaL_pushresult,
     luaL_typename
 } = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+const lualib = require("./lualib-constants.js");
 const { to_luastring } = require("./fengaricore.js");
 
 /*
@@ -150,19 +151,20 @@ const tmove = function(L) {
     checktab(L, 1, TAB_R);
     checktab(L, tt, TAB_W);
     if (e >= f) {  /* otherwise, nothing to move */
-        luaL_argcheck(L, f > 0 || e < LUA_MAXINTEGER + f, 3, "too many elements to move");
-        let n = e - f + 1;  /* number of elements to move */
-        luaL_argcheck(L, t <= LUA_MAXINTEGER - n + 1, 4, "destination wrap around");
+        const first = BigInt(f), last = BigInt(e), target = BigInt(t);
+        const n = last - first + 1n;
+        luaL_argcheck(L, n <= integer.MAX, 3, "too many elements to move");
+        luaL_argcheck(L, target + n - 1n <= integer.MAX, 4, "destination wrap around");
 
         if (t > e || t <= f || (tt !== 1 && lua_compare(L, 1, tt, LUA_OPEQ) !== 1)) {
-            for (let i = 0; i < n; i++) {
-                lua_geti(L, 1, f + i);
-                lua_seti(L, tt, t + i);
+            for (let i = 0n; i < n; i++) {
+                lua_geti(L, 1, integer.canonical(first + i));
+                lua_seti(L, tt, integer.canonical(target + i));
             }
         } else {
-            for (let i = n - 1; i >= 0; i--) {
-                lua_geti(L, 1, f + i);
-                lua_seti(L, tt, t + i);
+            for (let i = n - 1n; i >= 0n; i--) {
+                lua_geti(L, 1, integer.canonical(first + i));
+                lua_seti(L, tt, integer.canonical(target + i));
             }
         }
     }
@@ -344,7 +346,17 @@ const sort = function(L) {
     return 0;
 };
 
+const tcreate = function(L) {
+    const sizeseq = luaL_checkinteger(L, 1);
+    const sizerest = luaL_optinteger(L, 2, 0);
+    luaL_argcheck(L, sizeseq >= 0 && sizeseq <= 0x7FFFFFFF, 1, "out of range");
+    luaL_argcheck(L, sizerest >= 0 && sizerest <= 0x7FFFFFFF, 2, "out of range");
+    lua_createtable(L, sizeseq, sizerest);
+    return 1;
+};
+
 const tab_funcs = {
+    "create": tcreate,
     "concat": tconcat,
     "insert": tinsert,
     "move":   tmove,

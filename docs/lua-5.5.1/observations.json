@@ -1,0 +1,545 @@
+{
+  "capturedAt": "2026-10-10T08:17:16.574Z",
+  "target": "Lua 5.5.1",
+  "nodeVersion": "v26.8.1",
+  "platform": "win32",
+  "gitHead": "ac8c3872509a56fb4bd9c1ef853de01f391c058b",
+  "gitStatus": [
+    "M .gitignore",
+    " M README.md",
+    " M package.json",
+    " M src/defs.js",
+    " M src/fengari.js",
+    " M src/lapi.js",
+    " M src/lauxlib.js",
+    " M src/lbaselib.js",
+    " M src/lcode.js",
+    " M src/ldblib.js",
+    " M src/ldebug.js",
+    " M src/ldo.js",
+    " M src/ldump.js",
+    " M src/lfunc.js",
+    " M src/linit.js",
+    " M src/liolib.js",
+    " M src/llex.js",
+    " M src/lmathlib.js",
+    " M src/loadlib.js",
+    " M src/lobject.js",
+    " M src/lparser.js",
+    " M src/lstate.js",
+    " M src/lstrlib.js",
+    " M src/ltable.js",
+    " M src/ltablib.js",
+    " M src/ltm.js",
+    " M src/lua.js",
+    " M src/luaconf.js",
+    " M src/lualib.js",
+    " M src/lundump.js",
+    " M src/lutf8lib.js",
+    " M src/lvm.js",
+    " M test/loslib.test.js",
+    " M test/lutf8lib.test.js",
+    " M test/test-suite/errors.test.js",
+    " M test/test-suite/literals.test.js",
+    " M test/test-suite/sort.test.js",
+    " M test/test-suite/utf8.test.js",
+    "?? .coord-session",
+    "?? .opencode/",
+    "?? CHANGES.md",
+    "?? docs/",
+    "?? src/fengari-vm.js",
+    "?? src/lapi-ext.js",
+    "?? src/lbytecode.js",
+    "?? src/library-runtime.js",
+    "?? src/linteger.js",
+    "?? src/lstate_clean.js",
+    "?? src/luaconf-base.js",
+    "?? src/lualib-constants.js",
+    "?? src/runtime.js",
+    "?? src/runtime/",
+    "?? src/tvalue.js",
+    "?? src/tvalue_section.txt",
+    "?? test/dependencies.test.js",
+    "?? test/lauxlib-extended.test.js",
+    "?? test/lua55/",
+    "?? test/test-api-c-complete.js",
+    "?? test/test-api-c-simple.js",
+    "?? test/test-api-c.js",
+    "?? test/test-fengari-vm-basic.js",
+    "?? test/test-fengari-vm-final.js",
+    "?? test/test-fengari-vm-mock.js",
+    "?? test/test-fengari-vm-simple.js",
+    "?? test/test-fengari-vm-structure.js",
+    "?? test/test-fengari-vm.js",
+    "?? test/test-lapi-exports.js",
+    "?? test/test-lexer-tokens.js",
+    "?? test/test-new-features.js",
+    "?? test/test-tokens.js",
+    "?? tools/"
+  ],
+  "limitations": "Observations of this worktree only; the Lua 5.5.1 oracle and full official suite were not run by this tool.",
+  "sourceHashes": [
+    {
+      "file": "src/defs.js",
+      "sha256": "b976501e506ea37edb477175bfc5ebd6fa2b3ce14df4335d139a15bd6c8bf43b"
+    },
+    {
+      "file": "src/fengari-vm.js",
+      "sha256": "098ae81c3e64f85b6724fc78afbd06933357a4b719df10e6627e2cddd1097948"
+    },
+    {
+      "file": "src/fengari.js",
+      "sha256": "a9d3c0918a3f7b1864a176ef0a8d2cf065080549f46a6f8c919acf51ceece4a5"
+    },
+    {
+      "file": "src/fengaricore.js",
+      "sha256": "fa77b86aac6a70a596043ce335b1476fe38842866fc2aa67b8eee3fa2d2b3bb7"
+    },
+    {
+      "file": "src/fengarilib.js",
+      "sha256": "ef681ebc8bdd806231c1a496727d1b0e2b348d7b61e0c5fb2f10e8c9bcab65e2"
+    },
+    {
+      "file": "src/lapi-ext.js",
+      "sha256": "99c272b174d8a3c738018fcefe2094b4cb6a031e3529af567997d98ea2515469"
+    },
+    {
+      "file": "src/lapi.js",
+      "sha256": "f011565a5cbfbf79891a6f02b9477e3675d5be3412841856ddea908cbd486159"
+    },
+    {
+      "file": "src/lauxlib.js",
+      "sha256": "8ea8e00fcd3d5aeb3d3e9011303703b452bed44d3aa132dcd234c41e7d0c8af9"
+    },
+    {
+      "file": "src/lbaselib.js",
+      "sha256": "3f704a731c2ce142a69bbdde0a90b70deb037dfa12504da80f6da36897224fcf"
+    },
+    {
+      "file": "src/lbytecode.js",
+      "sha256": "45a5725ba3a7fa62be999332d4b4d780f56868d065831c1380dac3eda355f57e"
+    },
+    {
+      "file": "src/lcode.js",
+      "sha256": "8144daeae74100c6b3c50276ca5933bdc60dcab4a462de480f981b9f3f8ed9db"
+    },
+    {
+      "file": "src/lcorolib.js",
+      "sha256": "79d8a25d83138ee10acd2c89f62ae33593ba8723ec21f5e1fd471afe0333a2b3"
+    },
+    {
+      "file": "src/ldblib.js",
+      "sha256": "35318375217bc2258782f25a37c5df5cf852fa978a5f90b5783c10d8006eac6f"
+    },
+    {
+      "file": "src/ldebug.js",
+      "sha256": "fda4b44f3867224b13810890b5bd364918eb71c92ffb9d9e2cc962c9b42aed97"
+    },
+    {
+      "file": "src/ldo.js",
+      "sha256": "227b576d28689b1c03f71921f371b2a62082af4326c397d018d712adc882bc5b"
+    },
+    {
+      "file": "src/ldump.js",
+      "sha256": "a8be9e9df1370da86b61a3ee8f70872c60b0863ad64c984eb500a6f766c6f690"
+    },
+    {
+      "file": "src/lfunc.js",
+      "sha256": "57e51a6a8ff0ee6aaf7af4f62022cbb22892bbd650a4159ea7f8814d2d990387"
+    },
+    {
+      "file": "src/library-runtime.js",
+      "sha256": "6a62e8fc62342a249e41b9a3dfc9e232839d7df05c9fdd7ce9c6fc95fcf9cde9"
+    },
+    {
+      "file": "src/linit.js",
+      "sha256": "bf35452c19b409293eec116f6445e0d742ef7caa0ecfe86d13da288dd7e3bd30"
+    },
+    {
+      "file": "src/linteger.js",
+      "sha256": "a1ae8ca295711ec52bb684ca6343f45c92a6dbc0093339abd5e38461fb6a379d"
+    },
+    {
+      "file": "src/liolib.js",
+      "sha256": "5d862c3930502e7dc206a93dc990f504929718077fe1ff54e7d9fea600962ba1"
+    },
+    {
+      "file": "src/ljstype.js",
+      "sha256": "fcad4e8a0866680a2c6961f4fbc6761109e0ae1b5dbae1c9722e2abb5c7e9a19"
+    },
+    {
+      "file": "src/llex.js",
+      "sha256": "be9cf5c9bf59a11b86cdde7ed58f677c3e0b1e8d007d410d5428a75a9d999299"
+    },
+    {
+      "file": "src/llimits.js",
+      "sha256": "f0f4162cee61b55f4a00a0ed2f94b8daa2b7b97052168c185bc978bcbce0be22"
+    },
+    {
+      "file": "src/lmathlib.js",
+      "sha256": "020f0a663df21f5b55af9b4086252b9583c9b88c205461a1a6bac83b7c85edef"
+    },
+    {
+      "file": "src/loadlib.js",
+      "sha256": "4898d8a125f812513983c8039e95bb6947a6d0b6de326f94d8a82aa57379010c"
+    },
+    {
+      "file": "src/lobject.js",
+      "sha256": "6ffef8d6ec001993bad89d6c08f222d605cd04146bcdd9c30831e545a81e940a"
+    },
+    {
+      "file": "src/lopcodes.js",
+      "sha256": "d5d36c126686f5f3eb442945193ada422d7e3603b968b6e40b5f760cf275b034"
+    },
+    {
+      "file": "src/loslib.js",
+      "sha256": "0b5280bb91405bb130d3bf32737da96d917b8eb619d8075f0aca57c28c964fae"
+    },
+    {
+      "file": "src/lparser.js",
+      "sha256": "1d0cb5ed7600e2c266a6565fb8299ce888e05465b7c7a92c426a3a1503996ad0"
+    },
+    {
+      "file": "src/lstate.js",
+      "sha256": "1f9ccdee8fab558f08c2ab139c81a45fffb2ca104b50609ce422d5a9b2ad14f0"
+    },
+    {
+      "file": "src/lstate_clean.js",
+      "sha256": "31000ce91d06d7bcde838407d0487018a8b88b63cc7f1595e2b94f6a0ebd27de"
+    },
+    {
+      "file": "src/lstring.js",
+      "sha256": "3f0ac81d9ffb1eb5ffcb26385938fd228bc5252e84e6486f8f3af289a15ae205"
+    },
+    {
+      "file": "src/lstrlib.js",
+      "sha256": "47dba1099cd97f5c386886a7e905afff90166b82931c5bd46b8a4c35f9a6857f"
+    },
+    {
+      "file": "src/ltable.js",
+      "sha256": "e92fbe0f9ace2d2525f746efc804a492465beb3fba5ab4b4aae4af870cc328bc"
+    },
+    {
+      "file": "src/ltablib.js",
+      "sha256": "0d3ab38ea351647768a008f5c751f3563a157ad2a69eb55819230e3bdb74ea29"
+    },
+    {
+      "file": "src/ltm.js",
+      "sha256": "7e7c2221a684e224c4e4ff80f8c5b741d0c1e32b0614936260cc38b895669b78"
+    },
+    {
+      "file": "src/lua.js",
+      "sha256": "b2648f651a7eb29d87d8eb4e10fcdd10a41c13fe494653841d5522de8d03a89d"
+    },
+    {
+      "file": "src/luaconf-base.js",
+      "sha256": "45e3f387a4378d186d70b0df4ed140d33b129f1f619ecc0a1bbff0d80c537139"
+    },
+    {
+      "file": "src/luaconf.js",
+      "sha256": "b39e55274518c99825dd3ad99d96940a2b8482f9cda8143236af9828842baa74"
+    },
+    {
+      "file": "src/lualib-constants.js",
+      "sha256": "c9d9b5765436b93ae89766d834388e48166e0b71d291a2ea11fc71a0354fa476"
+    },
+    {
+      "file": "src/lualib.js",
+      "sha256": "1a291b56f1c5655dc20da4af14a6cc2b9009eb855ffb2906b9323040503b538b"
+    },
+    {
+      "file": "src/lundump.js",
+      "sha256": "0c19aa70ddee221f5180fbf8aca155d07764b0e7f172e244c0873238321bdb6b"
+    },
+    {
+      "file": "src/lutf8lib.js",
+      "sha256": "75ebb97eb6f2bddda0532f98b9ae7c3c95ae810ad4a07b8c96c5a5a329d387f9"
+    },
+    {
+      "file": "src/lvm.js",
+      "sha256": "565b82fed44c424c880a9f82b96f4006b48efe5545f6ff224b93a225d3415eba"
+    },
+    {
+      "file": "src/lzio.js",
+      "sha256": "631ff1dfe413524eaf8e83ca267c7f1c1fdca26c4883264a44f893bccc122971"
+    },
+    {
+      "file": "src/runtime/lapi.js",
+      "sha256": "dac8e04e9462e2f148f4c774da8d22007c65e8653955b7387e56b58669a7bc7d"
+    },
+    {
+      "file": "src/runtime/lcode.js",
+      "sha256": "6b6df5e91af9e91704a9a7cb6fc415b394885572a466d33e0cd9522cf6c2b401"
+    },
+    {
+      "file": "src/runtime/ldebug.js",
+      "sha256": "f9f4a6b39c3035599089109049c15be5d2d94994916ef11d83a20519628ad402"
+    },
+    {
+      "file": "src/runtime/ldo.js",
+      "sha256": "e1e25d6283486c458d46103a0d31a3eb13ea228deeb8b8f6469e2af9da871875"
+    },
+    {
+      "file": "src/runtime/lfunc.js",
+      "sha256": "87981184066ca5e1530c4898d2b761b3f25622c955bcccf901dcbb37c323175b"
+    },
+    {
+      "file": "src/runtime/llex.js",
+      "sha256": "c3ae4e4d7f56431c571c3708a38cd1590ae35ab783912d629faf346568131327"
+    },
+    {
+      "file": "src/runtime/loadlib.js",
+      "sha256": "17c95a29ae1fb400924134266f743de20bfa1246f2694f91fd41f932a7750b37"
+    },
+    {
+      "file": "src/runtime/lobject.js",
+      "sha256": "8de86beb29df9584798c25bf9f9d50ff46efc2c631d92b9eb550b27adc14460c"
+    },
+    {
+      "file": "src/runtime/lparser.js",
+      "sha256": "a38867b40a48226f09e03589fb66c34a78d9ee4446d1ae7f16ac654b3996057a"
+    },
+    {
+      "file": "src/runtime/lstate.js",
+      "sha256": "c87945653f225eb2d35bad12ce016c75ab9281e508755e579f384de95364b680"
+    },
+    {
+      "file": "src/runtime/ltable.js",
+      "sha256": "6944f53ba7063a34f92807e95ab68e8721331959d034169b2875c62741b957bc"
+    },
+    {
+      "file": "src/runtime/ltm.js",
+      "sha256": "16aeb7469815db8c8c47def8278819ba1db226b697de71b5d7ad3f2db73e2695"
+    },
+    {
+      "file": "src/runtime/lundump.js",
+      "sha256": "5a869ff8ad46a8e221f44f98dfb709091e684c1fb88f16c823e1d4c35169fead"
+    },
+    {
+      "file": "src/runtime/lvm.js",
+      "sha256": "7ce71a09d5b1eeec0edaee0a37f475208fe86dbb76e3e82674b6b7d15eda641d"
+    },
+    {
+      "file": "src/runtime.js",
+      "sha256": "f9ff27d8b14f02f4311b8da205b3e9af55dac23d1740cc57bfabebeaa9985f79"
+    },
+    {
+      "file": "src/tvalue.js",
+      "sha256": "bde6d5536e91cff1e2490c621d51c368fdada7380ce1a63709c7337ed8b780cf"
+    }
+  ],
+  "bytecodeVersion": 83,
+  "probes": [
+    {
+      "id": "version",
+      "source": "return _VERSION",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "Lua 5.4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "const-suffix",
+      "source": "local x <const> = 1; return x",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"local x <const> = 1; return x\"]:1: unexpected symbol near '<'"
+      }
+    },
+    {
+      "id": "const-prefix",
+      "source": "local <const> x, y = 1, 2; return x+y",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"local <const> x, y = 1, 2; return x+y\"]:1: <name> expected near '<'"
+      }
+    },
+    {
+      "id": "close",
+      "source": "local x <close> = nil; return true",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"local x <close> = nil; return true\"]:1: unexpected symbol near '<'"
+      }
+    },
+    {
+      "id": "legacy-const",
+      "source": "local const x = 1; return x",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "number",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "global",
+      "source": "global X; X = 1; return X",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"global X; X = 1; return X\"]:1: syntax error near 'X'"
+      }
+    },
+    {
+      "id": "global-wildcard",
+      "source": "global<const> *; return math.pi",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"global<const> *; return math.pi\"]:1: syntax error near '<'"
+      }
+    },
+    {
+      "id": "named-varargs",
+      "source": "local f = function(...args) return args.n, args[1] end; return f(7)",
+      "observed": {
+        "phase": "compilation",
+        "status": 3,
+        "error": "[string \"local f = function(...args) return args.n, ar...\"]:1: ')' expected near 'args'"
+      }
+    },
+    {
+      "id": "readonly-for",
+      "source": "for i=1,1 do i=7 end; return true",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "boolean",
+            "value": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "table-create",
+      "source": "return type(table.create)",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coroutine-close",
+      "source": "return type(coroutine.close)",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "id": "warnings",
+      "source": "return type(warn)",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nil-error",
+      "source": "local ok,e=pcall(error,nil); return ok,type(e)",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "boolean",
+            "value": false
+          },
+          {
+            "type": "string",
+            "value": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "utf8-offset-results",
+      "source": "return select('#',utf8.offset('a',1))",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "number",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "float-roundtrip",
+      "source": "return tostring(1.2345678901234567)",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "1.2345678901235"
+          }
+        ]
+      }
+    },
+    {
+      "id": "integer-profile",
+      "source": "return math.mininteger, math.maxinteger",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "number",
+            "value": "-9223372036854776000"
+          },
+          {
+            "type": "number",
+            "value": "9223372036854776000"
+          }
+        ]
+      }
+    },
+    {
+      "id": "collectgarbage",
+      "source": "return collectgarbage('count')",
+      "observed": {
+        "phase": "execution",
+        "status": 2,
+        "error": "[string \"return collectgarbage('count')\"]:1: lua_gc not implemented"
+      }
+    }
+  ]
+}

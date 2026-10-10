@@ -1,4 +1,5 @@
 "use strict";
+const integer = require('./linteger.js');
 
 const {
     LUA_MULTRET,
@@ -274,9 +275,13 @@ const b_str2int = function(s, base) {
     }
     let r = /^[\t\v\f \n\r]*([+-]?)0*([0-9A-Za-z]+)[\t\v\f \n\r]*$/.exec(s);
     if (!r) return null;
-    let v = parseInt(r[1]+r[2], base);
-    if (isNaN(v)) return null;
-    return v|0;
+    let v = 0n;
+    for (const c of r[2]) {
+        const digit = parseInt(c, 36);
+        if (digit >= base) return null;
+        v = BigInt.asUintN(integer.BITS, v * BigInt(base) + BigInt(digit));
+    }
+    return integer.wrap(r[1] === '-' ? -v : v);
 };
 
 const luaB_tonumber = function(L) {

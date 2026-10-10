@@ -31,7 +31,7 @@ const {
     luaL_setmetatable,
     luaL_testudata
 } = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+const lualib = require("./lualib-constants.js");
 const { to_luastring } = require("./fengaricore.js");
 
 const IO_PREFIX = "_IO_";

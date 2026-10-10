@@ -9,6 +9,7 @@ const {
     lua_pushstring,
     lua_pushvalue,
     lua_setfield,
+    lua_toboolean,
     lua_tointeger
 } = require('./lua.js');
 const {
@@ -30,6 +31,7 @@ const {
 } = require("./fengaricore.js");
 
 const MAXUNICODE = 0x10FFFF;
+const MAXUTF = 0x7FFFFFFF;
 
 const iscont = function(p) {
     let c = p & 0xC0;
@@ -46,12 +48,14 @@ const u_posrelat = function(pos, len) {
 /*
 ** Decode one UTF-8 sequence, returning NULL if byte sequence is invalid.
 */
-const limits = [0xFF, 0x7F, 0x7FF, 0xFFFF];
-const utf8_decode = function(s, pos) {
+const limits = [0xFFFFFFFF, 0x80, 0x800, 0x10000, 0x200000, 0x4000000];
+const utf8_decode = function(s, pos, strict) {
     let c = s[pos];
     let res = 0;  /* final result */
     if (c < 0x80)  /* ascii? */
         res = c;
+    else if (c >= 0xFE)
+        return null;
     else {
         let count = 0;  /* to count number of continuation bytes */
         while (c & 0x40) {  /* still have continuation bytes? */
@@ -62,10 +66,13 @@ const utf8_decode = function(s, pos) {
             c <<= 1;  /* to test next bit */
         }
         res |= ((c & 0x7F) << (count * 5));  /* add first byte */
-        if (count > 3 || res > MAXUNICODE || res <= limits[count])
+        if (res > MAXUTF || res < limits[count])
             return null;  /* invalid byte sequence */
         pos += count;  /* skip continuation bytes read */
     }
+
+    if (strict && (res > MAXUNICODE || (res >= 0xD800 && res <= 0xDFFF)))
+        return null;
 
     return {
         code: res,
@@ -84,12 +91,13 @@ const utflen = function(L) {
     let len = s.length;
     let posi = u_posrelat(luaL_optinteger(L, 2, 1), len);
     let posj = u_posrelat(luaL_optinteger(L, 3, -1), len);
+    let lax = lua_toboolean(L, 4);
 
-    luaL_argcheck(L, 1 <= posi && --posi <= len, 2, "initial position out of string");
-    luaL_argcheck(L, --posj < len, 3, "final position out of string");
+    luaL_argcheck(L, 1 <= posi && --posi <= len, 2, "initial position out of bounds");
+    luaL_argcheck(L, --posj < len, 3, "final position out of bounds");
 
     while (posi <= posj) {
-        let dec = utf8_decode(s, posi);
+        let dec = utf8_decode(s, posi, !lax);
         if (dec === null) { /* conversion error? */
             lua_pushnil(L);  /* return nil ... */
             lua_pushinteger(L, posi + 1);  /* ... and current position */
@@ -105,7 +113,7 @@ const utflen = function(L) {
 const p_U = to_luastring("%U");
 const pushutfchar = function(L, arg) {
     let code = luaL_checkinteger(L, arg);
-    luaL_argcheck(L, 0 <= code && code <= MAXUNICODE, arg, "value out of range");
+    luaL_argcheck(L, 0 <= code && code <= MAXUTF, arg, "value out of range");
     lua_pushfstring(L, p_U, code);
 };
 
@@ -130,7 +138,7 @@ const utfchar = function(L) {
 
 /*
 ** offset(s, n, [i])  -> index where n-th character counting from
-**   position 'i' starts; 0 means character at 'i'.
+**   position 'i' starts and ends; 0 means character at 'i'.
 */
 const byteoffset = function(L) {
     let s = luaL_checkstring(L, 1);
@@ -138,7 +146,7 @@ const byteoffset = function(L) {
     let posi = n >= 0 ? 1 : s.length + 1;
     posi = u_posrelat(luaL_optinteger(L, 3, posi), s.length);
 
-    luaL_argcheck(L, 1 <= posi && --posi <= s.length, 3, "position out of range");
+    luaL_argcheck(L, 1 <= posi && --posi <= s.length, 3, "position out of bounds");
 
     if (n === 0) {
         /* find beginning of current byte sequence */
@@ -165,12 +173,19 @@ const byteoffset = function(L) {
         }
     }
 
-    if (n === 0)  /* did it find given character? */
-        lua_pushinteger(L, posi + 1);
-    else  /* no such character */
+    if (n !== 0) {
         lua_pushnil(L);
+        return 1;
+    }
 
-    return 1;
+    lua_pushinteger(L, posi + 1);
+    if (s[posi] & 0x80) {
+        if (iscont(s[posi]))
+            return luaL_error(L, "initial position is a continuation byte");
+        while (iscont(s[posi + 1])) posi++;
+    }
+    lua_pushinteger(L, posi + 1);
+    return 2;
 };
 
 /*
@@ -181,18 +196,19 @@ const codepoint = function(L) {
     let s = luaL_checkstring(L, 1);
     let posi = u_posrelat(luaL_optinteger(L, 2, 1), s.length);
     let pose = u_posrelat(luaL_optinteger(L, 3, posi), s.length);
+    let lax = lua_toboolean(L, 4);
 
-    luaL_argcheck(L, posi >= 1, 2, "out of range");
-    luaL_argcheck(L, pose <= s.length, 3, "out of range");
+    luaL_argcheck(L, posi >= 1, 2, "out of bounds");
+    luaL_argcheck(L, pose <= s.length, 3, "out of bounds");
 
     if (posi > pose) return 0;  /* empty interval; return no values */
-    if (pose - posi >= Number.MAX_SAFE_INTEGER)
+    if (pose - posi >= 0x7FFFFFFF)
         return luaL_error(L, "string slice too long");
     let n = (pose - posi) + 1;
     luaL_checkstack(L, n, "string slice too long");
     n = 0;
     for (posi -= 1; posi < pose;) {
-        let dec = utf8_decode(s, posi);
+        let dec = utf8_decode(s, posi, !lax);
         if (dec === null)
             return luaL_error(L, "invalid UTF-8 code");
         lua_pushinteger(L, dec.code);
@@ -202,22 +218,17 @@ const codepoint = function(L) {
     return n;
 };
 
-const iter_aux = function(L) {
+const iter_aux = function(L, strict) {
     let s = luaL_checkstring(L, 1);
     let len = s.length;
-    let n = lua_tointeger(L, 2) - 1;
-
-    if (n < 0)  /* first iteration? */
-        n = 0;  /* start from here */
-    else if (n < len) {
-        n++;  /* skip current byte */
-        while (iscont(s[n])) n++;  /* and its continuations */
-    }
+    let n = lua_tointeger(L, 2) >>> 0;
+    if (n < len)
+        while (iscont(s[n])) n++;
 
     if (n >= len)
         return 0;  /* no more codepoints */
     else {
-        let dec = utf8_decode(s, n);
+        let dec = utf8_decode(s, n, strict);
         if (dec === null || iscont(s[dec.pos]))
             return luaL_error(L, to_luastring("invalid UTF-8 code"));
         lua_pushinteger(L, n + 1);
@@ -226,9 +237,14 @@ const iter_aux = function(L) {
     }
 };
 
+const iter_auxstrict = function(L) { return iter_aux(L, true); };
+const iter_auxlax = function(L) { return iter_aux(L, false); };
+
 const iter_codes = function(L) {
-    luaL_checkstring(L, 1);
-    lua_pushcfunction(L, iter_aux);
+    let lax = lua_toboolean(L, 2);
+    let s = luaL_checkstring(L, 1);
+    luaL_argcheck(L, !iscont(s[0]), 1, "invalid UTF-8 code");
+    lua_pushcfunction(L, lax ? iter_auxlax : iter_auxstrict);
     lua_pushvalue(L, 1);
     lua_pushinteger(L, 0);
     return 3;
@@ -243,7 +259,7 @@ const funcs = {
 };
 
 /* pattern to match a single UTF-8 character */
-const UTF8PATT = luastring_of(91, 0, 45, 127, 194, 45, 244, 93, 91, 128, 45, 191, 93, 42);
+const UTF8PATT = luastring_of(91, 0, 45, 127, 194, 45, 253, 93, 91, 128, 45, 191, 93, 42);
 
 const luaopen_utf8 = function(L) {
     luaL_newlib(L, funcs);

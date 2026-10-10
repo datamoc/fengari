@@ -61,7 +61,7 @@ test("[test-suite] errors: test error message with no info", () => {
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = `
-        assert(doit("error()") == nil)
+        assert(doit("error()") == "<no error object>")
     `;
     lualib.luaL_openlibs(L);
     if (lauxlib.luaL_loadstring(L, to_luastring(prefix + luaCode)) === lua.LUA_ERRSYNTAX)
@@ -686,7 +686,7 @@ test("[test-suite] errors: non string messages", () => {
           assert(not res and msg == t)
 
           res, msg = pcall(function () error(nil) end)
-          assert(not res and msg == nil)
+          assert(not res and msg == "<no error object>")
 
           local function f() error{msg='x'} end
           res, msg = xpcall(f, function (r) return {msg=r.msg..'y'} end)
@@ -706,7 +706,7 @@ test("[test-suite] errors: non string messages", () => {
           assert(not res and msg == t)
 
           res, msg = pcall(assert, nil, nil)
-          assert(not res and msg == nil)
+          assert(not res and msg == "<no error object>")
 
           -- 'assert' without arguments
           res, msg = pcall(assert)

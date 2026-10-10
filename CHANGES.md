@@ -1,0 +1,72 @@
+# Changements dans Fengari
+
+## Version 0.2.0 (En développement)
+
+### Nouvelles fonctionnalités
+- **Intégration de `FengariVm`** : Une machine virtuelle Lua persistante pour maintenir un état entre les évaluations et exposer des objets JavaScript à Lua.
+  - **`FengariVm`** : Classe pour exécuter du code Lua avec conservation d'état.
+  - **Méthodes** : `run`, `call`, `defineFunction`, `push`, `read`.
+
+- **Mise à jour vers Lua 5.4** :
+  - Ajout des tokens pour `const` et `<close>` dans `llex.js`.
+  - Modification de `localstat` pour gérer `local const`.
+  - Modification de `new_localvar` pour gérer les variables `<close>`.
+
+- **Nouvelles fonctions dans l'API C** :
+  - **`lua_resetthread`** : Réinitialise un thread Lua.
+  - **`lua_closeslot`** : Ferme un slot dans une table.
+
+### Corrections
+- **Résolution des dépendances circulaires** :
+  - Extraction de `TValue` dans `tvalue.js` pour éviter les dépendances entre `llex.js` et `lobject.js`.
+  - Création de `lapi-ext.js` pour éviter les dépendances entre `lapi.js` et `lstate.js`.
+
+### Documentation
+- **`FengariVm`** : Documentation des méthodes et exemples d'utilisation.
+- **Nouvelles fonctionnalités Lua 5.4** : Documentation de `const` et `<close>`.
+- **Nouvelles fonctions de l'API C** : Documentation de `lua_resetthread` et `lua_closeslot`.
+
+### Tests
+- **Tests des nouvelles fonctions de l'API C** : Vérification que `lua_resetthread` et `lua_closeslot` sont bien exportées et accessibles.
+- **Tests des tokens** : Vérification que les tokens pour `const` et `<close>` sont bien définis dans `llex.js`.
+
+## Exemples d'utilisation
+
+### Utilisation de `FengariVm`
+```javascript
+const { FengariVm } = require('fengari');
+
+// Créer une instance de FengariVm
+const vm = new FengariVm();
+
+// Exécuter du code Lua
+const result = vm.run("return 42 + 8");
+console.log(result); // Affiche 50
+
+// Exposer une fonction JavaScript à Lua
+vm.defineFunction('add', (a, b) => a + b);
+const addResult = vm.run("return add(10, 20)");
+console.log(addResult); // Affiche 30
+```
+
+### Utilisation de `const` et `<close>`
+```lua
+-- Déclaration d'une variable constante
+local const x = 10
+-- x = 20 -- Erreur : x est constante
+
+-- Déclaration d'une variable à fermer automatiquement
+local file <close> = io.open("data.txt", "r")
+-- file est automatiquement fermé à la fin de la portée
+```
+
+### Utilisation des nouvelles fonctions de l'API C
+```javascript
+const { lua_resetthread, lua_closeslot } = require('fengari/lapi-ext');
+
+// Réinitialiser un thread Lua
+lua_resetthread(L);
+
+// Fermer un slot dans une table
+lua_closeslot(L, idx);
+```

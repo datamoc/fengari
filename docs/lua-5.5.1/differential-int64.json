@@ -1,0 +1,1624 @@
+{
+  "capturedAt": "2026-10-10T07:58:37.153Z",
+  "gitHead": "ac8c3872509a56fb4bd9c1ef853de01f391c058b",
+  "sourceHashes": {
+    "src/defs.js": "b976501e506ea37edb477175bfc5ebd6fa2b3ce14df4335d139a15bd6c8bf43b",
+    "src/fengari-vm.js": "098ae81c3e64f85b6724fc78afbd06933357a4b719df10e6627e2cddd1097948",
+    "src/fengari.js": "a9d3c0918a3f7b1864a176ef0a8d2cf065080549f46a6f8c919acf51ceece4a5",
+    "src/fengaricore.js": "fa77b86aac6a70a596043ce335b1476fe38842866fc2aa67b8eee3fa2d2b3bb7",
+    "src/fengarilib.js": "ef681ebc8bdd806231c1a496727d1b0e2b348d7b61e0c5fb2f10e8c9bcab65e2",
+    "src/lapi-ext.js": "99c272b174d8a3c738018fcefe2094b4cb6a031e3529af567997d98ea2515469",
+    "src/lapi.js": "f011565a5cbfbf79891a6f02b9477e3675d5be3412841856ddea908cbd486159",
+    "src/lauxlib.js": "24444029d233160d7041bbd23c3a494d1abaa2322caeffab4bbd19b7075befc8",
+    "src/lbaselib.js": "3db6f674c7c4a0ad7f130040226d6ed7eb359eef779928679658f6ec6a50d0f2",
+    "src/lbytecode.js": "45a5725ba3a7fa62be999332d4b4d780f56868d065831c1380dac3eda355f57e",
+    "src/lcode.js": "8144daeae74100c6b3c50276ca5933bdc60dcab4a462de480f981b9f3f8ed9db",
+    "src/lcorolib.js": "79d8a25d83138ee10acd2c89f62ae33593ba8723ec21f5e1fd471afe0333a2b3",
+    "src/ldblib.js": "35318375217bc2258782f25a37c5df5cf852fa978a5f90b5783c10d8006eac6f",
+    "src/ldebug.js": "fda4b44f3867224b13810890b5bd364918eb71c92ffb9d9e2cc962c9b42aed97",
+    "src/ldo.js": "227b576d28689b1c03f71921f371b2a62082af4326c397d018d712adc882bc5b",
+    "src/ldump.js": "2078cb6ff42244bb80c4cd4575d8fbf4d10e449eb97ba1d4bb776f9ad24196ad",
+    "src/lfunc.js": "57e51a6a8ff0ee6aaf7af4f62022cbb22892bbd650a4159ea7f8814d2d990387",
+    "src/library-runtime.js": "6a62e8fc62342a249e41b9a3dfc9e232839d7df05c9fdd7ce9c6fc95fcf9cde9",
+    "src/linit.js": "bf35452c19b409293eec116f6445e0d742ef7caa0ecfe86d13da288dd7e3bd30",
+    "src/liolib.js": "5d862c3930502e7dc206a93dc990f504929718077fe1ff54e7d9fea600962ba1",
+    "src/ljstype.js": "fcad4e8a0866680a2c6961f4fbc6761109e0ae1b5dbae1c9722e2abb5c7e9a19",
+    "src/llex.js": "be9cf5c9bf59a11b86cdde7ed58f677c3e0b1e8d007d410d5428a75a9d999299",
+    "src/llimits.js": "f0f4162cee61b55f4a00a0ed2f94b8daa2b7b97052168c185bc978bcbce0be22",
+    "src/lmathlib.js": "9bc68ca094d2c431f315c528a3b9ce336e97c0ab866a8d621f693a2dbaf99886",
+    "src/loadlib.js": "4898d8a125f812513983c8039e95bb6947a6d0b6de326f94d8a82aa57379010c",
+    "src/lobject.js": "6ffef8d6ec001993bad89d6c08f222d605cd04146bcdd9c30831e545a81e940a",
+    "src/lopcodes.js": "d5d36c126686f5f3eb442945193ada422d7e3603b968b6e40b5f760cf275b034",
+    "src/loslib.js": "0b5280bb91405bb130d3bf32737da96d917b8eb619d8075f0aca57c28c964fae",
+    "src/lparser.js": "1d0cb5ed7600e2c266a6565fb8299ce888e05465b7c7a92c426a3a1503996ad0",
+    "src/lstate_clean.js": "31000ce91d06d7bcde838407d0487018a8b88b63cc7f1595e2b94f6a0ebd27de",
+    "src/lstate.js": "1f9ccdee8fab558f08c2ab139c81a45fffb2ca104b50609ce422d5a9b2ad14f0",
+    "src/lstring.js": "3f0ac81d9ffb1eb5ffcb26385938fd228bc5252e84e6486f8f3af289a15ae205",
+    "src/lstrlib.js": "47dba1099cd97f5c386886a7e905afff90166b82931c5bd46b8a4c35f9a6857f",
+    "src/ltable.js": "e92fbe0f9ace2d2525f746efc804a492465beb3fba5ab4b4aae4af870cc328bc",
+    "src/ltablib.js": "3d7090c0ef5f00f7ccc45a559dd1659e9bf39ec4b8d273ec142f40f5347a8a7b",
+    "src/ltm.js": "7e7c2221a684e224c4e4ff80f8c5b741d0c1e32b0614936260cc38b895669b78",
+    "src/lua.js": "b2648f651a7eb29d87d8eb4e10fcdd10a41c13fe494653841d5522de8d03a89d",
+    "src/luaconf-base.js": "45e3f387a4378d186d70b0df4ed140d33b129f1f619ecc0a1bbff0d80c537139",
+    "src/luaconf.js": "ce8816a9400a803a4916e031003ac041e589077fd23442fd07d5c4da99bcb7cc",
+    "src/lualib-constants.js": "c9d9b5765436b93ae89766d834388e48166e0b71d291a2ea11fc71a0354fa476",
+    "src/lualib.js": "1a291b56f1c5655dc20da4af14a6cc2b9009eb855ffb2906b9323040503b538b",
+    "src/lundump.js": "0c19aa70ddee221f5180fbf8aca155d07764b0e7f172e244c0873238321bdb6b",
+    "src/lutf8lib.js": "75ebb97eb6f2bddda0532f98b9ae7c3c95ae810ad4a07b8c96c5a5a329d387f9",
+    "src/lvm.js": "565b82fed44c424c880a9f82b96f4006b48efe5545f6ff224b93a225d3415eba",
+    "src/lzio.js": "631ff1dfe413524eaf8e83ca267c7f1c1fdca26c4883264a44f893bccc122971",
+    "src/runtime/lapi.js": "fd9af84b1c1ff3ead2adf453dd5219d0251716333b7c90f3d110621bebf388c7",
+    "src/runtime/lcode.js": "6b6df5e91af9e91704a9a7cb6fc415b394885572a466d33e0cd9522cf6c2b401",
+    "src/runtime/ldebug.js": "f9f4a6b39c3035599089109049c15be5d2d94994916ef11d83a20519628ad402",
+    "src/runtime/ldo.js": "e1e25d6283486c458d46103a0d31a3eb13ea228deeb8b8f6469e2af9da871875",
+    "src/runtime/lfunc.js": "87981184066ca5e1530c4898d2b761b3f25622c955bcccf901dcbb37c323175b",
+    "src/runtime/llex.js": "c3ae4e4d7f56431c571c3708a38cd1590ae35ab783912d629faf346568131327",
+    "src/runtime/loadlib.js": "17c95a29ae1fb400924134266f743de20bfa1246f2694f91fd41f932a7750b37",
+    "src/runtime/lobject.js": "6de1149f0199c82340cc92467584d99964a61d7bf67fc49ef4ee6c1b8d33e9b2",
+    "src/runtime/lparser.js": "a38867b40a48226f09e03589fb66c34a78d9ee4446d1ae7f16ac654b3996057a",
+    "src/runtime/lstate.js": "c87945653f225eb2d35bad12ce016c75ab9281e508755e579f384de95364b680",
+    "src/runtime/ltable.js": "18c93a8f935d8e1542f6428f557fca2398b2872c584c3700f4519b6aa9260a1e",
+    "src/runtime/ltm.js": "16aeb7469815db8c8c47def8278819ba1db226b697de71b5d7ad3f2db73e2695",
+    "src/runtime/lundump.js": "6302e23178204907f1050462743c5dafdeb59dfb7358dc7eedfa3d06f526308f",
+    "src/runtime/lvm.js": "d6823ab762f890ec919ffda1a9dc11f24fd58967bd8f2f4d94c6ca856b2eb8dd",
+    "src/runtime.js": "f9ff27d8b14f02f4311b8da205b3e9af55dac23d1740cc57bfabebeaa9985f79",
+    "src/tvalue.js": "bde6d5536e91cff1e2490c621d51c368fdada7380ce1a63709c7337ed8b780cf"
+  },
+  "fixturesSha256": "eef89f78c89fe885e8f93a2f7dc7f0c1367a36328a1d81a7beb5bdc70daa2b28",
+  "oracle": {
+    "target": "Lua 5.5.1",
+    "profile": "int64",
+    "builtAt": "2026-10-10T07:44:58.581Z",
+    "platform": "win32",
+    "archiveSha256": "1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce",
+    "executableSha256": "4da885b589c8588647932f388c60d899e24e5696f3d775dd0566f0b2d0a9921b",
+    "release": "Lua 5.5.1  Copyright (C) 1994-2026 Lua.org, PUC-Rio",
+    "numericProfile": "8\t8\t-9223372036854775808\t9223372036854775807",
+    "configuration": "Upstream default: long long integers and double floats",
+    "compatibility": "No compatibility options enabled",
+    "compilerEnvironment": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat",
+    "compilerLog": "lapi.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlauxlib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlbaselib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlcode.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlcorolib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlctype.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nldblib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nldebug.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nldo.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nldump.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlfunc.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlgc.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlinit.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nliolib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nllex.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlmathlib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlmem.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nloadlib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlobject.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlopcodes.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nG�n�ration de code en cours...\r\nCompilation en cours...\r\nloslib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlparser.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlstate.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlstring.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlstrlib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nltable.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nltablib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nltm.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlua.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlundump.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlutf8lib.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlvm.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nlzio.c\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): warning C4005: 'LUA_USE_WINDOWS'�: red�finition de macro\r\nC:\\Users\\miche\\dev\\fengari\\.lua55-build\\int64\\lua-5.5.1\\src\\luaconf.h(51): note: 'LUA_USE_WINDOWS' pr�c�demment d�clar� en ligne de commande\r\nG�n�ration de code en cours...\r\n"
+  },
+  "currentFengariProfile": "int32/double; default distribution target remains int64/double",
+  "normalizations": [
+    "Error wording is retained in reports; default comparison checks phase and error-object type. Set compareDiagnostics for exact wording."
+  ],
+  "limitations": [
+    "Scalar results only; library/GC/native API suite coverage remains incomplete",
+    "stdout side effects are not compared; fixtures must return observable traces",
+    "Matching corpus does not certify the full specification"
+  ],
+  "total": 60,
+  "matched": 38,
+  "results": [
+    {
+      "id": "scalar-baseline",
+      "requirements": [
+        "L01"
+      ],
+      "profile": "int64",
+      "source": "return nil, true, false, 42, 1.5, 'a' .. string.char(0,255)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "nil",
+          "boolean:true",
+          "boolean:false",
+          "integer:42",
+          "float:3ff8000000000000",
+          "string:6100ff"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "nil",
+          "boolean:true",
+          "boolean:false",
+          "integer:42",
+          "float:3ff8000000000000",
+          "string:6100ff"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "recursion-baseline",
+      "requirements": [
+        "L09",
+        "L10"
+      ],
+      "profile": "int64",
+      "source": "local function f(n) if n==0 then return 1 end return n*f(n-1) end return f(6)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:720"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:720"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "multiret-baseline",
+      "requirements": [
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "local function f() return 1,nil,3 end return f()",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1",
+          "nil",
+          "integer:3"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1",
+          "nil",
+          "integer:3"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "const-suffix",
+      "requirements": [
+        "L08",
+        "D03"
+      ],
+      "profile": "int64",
+      "source": "local x <const> = 1; return x",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636f6e73742d7375666669783a313a20756e65787065637465642073796d626f6c206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "const-prefix",
+      "requirements": [
+        "L08",
+        "D03"
+      ],
+      "profile": "int64",
+      "source": "local <const> x, y = 1,2; return x+y",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636f6e73742d7072656669783a313a203c6e616d653e206578706563746564206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:3"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "const-write-rejection",
+      "requirements": [
+        "L08"
+      ],
+      "profile": "int64",
+      "source": "local x <const> = 1; x=2",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636f6e73742d77726974652d72656a656374696f6e3a313a20756e65787065637465642073796d626f6c206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636f6e73742d77726974652d72656a656374696f6e3a313a20617474656d707420746f2061737369676e20746f20636f6e7374207661726961626c6520277827"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "global-declaration",
+      "requirements": [
+        "L02",
+        "L08"
+      ],
+      "profile": "int64",
+      "source": "global X; X=1; return X",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d6465636c61726174696f6e3a313a2073796e746178206572726f72206e65617220275827"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "global-existing-value",
+      "requirements": [
+        "L02"
+      ],
+      "profile": "int64",
+      "source": "X=1; global X=2; return X",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d6578697374696e672d76616c75653a313a2073796e746178206572726f72206e65617220275827"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d6578697374696e672d76616c75653a313a20676c6f62616c2027582720616c726561647920646566696e6564"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "global-readonly-wildcard",
+      "requirements": [
+        "L02"
+      ],
+      "profile": "int64",
+      "source": "global<const> *; return math.pi",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d726561646f6e6c792d77696c64636172643a313a2073796e746178206572726f72206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "float:400921fb54442d18"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "global-undeclared-rejection",
+      "requirements": [
+        "L02"
+      ],
+      "profile": "int64",
+      "source": "global X; Y=1",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d756e6465636c617265642d72656a656374696f6e3a313a2073796e746178206572726f72206e65617220275827"
+        ]
+      },
+      "expected": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:676c6f62616c2d756e6465636c617265642d72656a656374696f6e3a313a207661726961626c6520275927206e6f74206465636c61726564"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "named-varargs",
+      "requirements": [
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "local f=function(...args) return args.n,args[1] end; return f(7,nil)",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:6e616d65642d766172617267733a313a20272927206578706563746564206e65617220276172677327"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:2",
+          "integer:7"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "vararg-table-mutation",
+      "requirements": [
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "local f=function(...args) args[1]=9; args.n=1; return ... end; return f(1,2)",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:7661726172672d7461626c652d6d75746174696f6e3a313a20272927206578706563746564206e65617220276172677327"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:9"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "readonly-numeric-for",
+      "requirements": [
+        "L08"
+      ],
+      "profile": "int64",
+      "source": "for i=1,1 do i=7 end; return true",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true"
+        ]
+      },
+      "expected": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:726561646f6e6c792d6e756d657269632d666f723a313a20617474656d707420746f2061737369676e20746f20636f6e7374207661726961626c6520276927"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "readonly-generic-for",
+      "requirements": [
+        "L08"
+      ],
+      "profile": "int64",
+      "source": "for k,v in pairs({x=1}) do v=7 end; return true",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "nil-error-object",
+      "requirements": [
+        "L03",
+        "D02"
+      ],
+      "profile": "int64",
+      "source": "local ok,e=pcall(error,nil); return ok,type(e)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:737472696e67"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:737472696e67"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "local t=table.create(4,2); return type(t),#t,next(t)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7461626c65",
+          "integer:0",
+          "nil"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7461626c65",
+          "integer:0",
+          "nil"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-offset-second-result",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.offset('abc',2)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:2",
+          "integer:2"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:2",
+          "integer:2"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "float-roundtrip",
+      "requirements": [
+        "L01",
+        "D02"
+      ],
+      "profile": "int64",
+      "source": "local x=1.2345678901234567; return tostring(x),tonumber(tostring(x))==x",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:312e32333435363738393031323335",
+          "boolean:false"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:312e32333435363738393031323334353637",
+          "boolean:true"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "warnings",
+      "requirements": [
+        "L03",
+        "B02"
+      ],
+      "profile": "int64",
+      "source": "warn('@off'); return type(warn)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7761726e696e67733a313a20617474656d707420746f2063616c6c2061206e696c2076616c75652028676c6f62616c20277761726e2729"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:66756e6374696f6e"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "coroutine-close",
+      "requirements": [
+        "L06",
+        "B03"
+      ],
+      "profile": "int64",
+      "source": "local co=coroutine.create(function() coroutine.yield() end); coroutine.resume(co); return coroutine.close(co),coroutine.status(co)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:636f726f7574696e652d636c6f73653a313a20617474656d707420746f2063616c6c2061206e696c2076616c756520286669656c642027636c6f73652729"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true",
+          "string:64656164"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "close-order",
+      "requirements": [
+        "L08",
+        "L06"
+      ],
+      "profile": "int64",
+      "source": "local log={}; local function item(n) return setmetatable({}, {__close=function() log[#log+1]=n end}) end; do local a <close> = item('a'); local b <close> = item('b'); end; return table.concat(log,',')",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636c6f73652d6f726465723a313a20756e65787065637465642073796d626f6c206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:622c61"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "close-argument-count",
+      "requirements": [
+        "L08"
+      ],
+      "profile": "int64",
+      "source": "local n; do local a <close> = setmetatable({}, {__close=function(self,...) n=select('#',...) end}); end; return n",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:636c6f73652d617267756d656e742d636f756e743a313a20756e65787065637465642073796d626f6c206e65617220273c27"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:0"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "collectgarbage-count",
+      "requirements": [
+        "L05",
+        "B02"
+      ],
+      "profile": "int64",
+      "source": "return type(collectgarbage('count'))",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:636f6c6c656374676172626167652d636f756e743a313a206c75615f6763206e6f7420696d706c656d656e746564"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:6e756d626572"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "utf8-full-range",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local s=utf8.char(0,0xD800,0x10FFFF,0x110000,0x200000,0x4000000,0x7FFFFFFF); return s,utf8.len(s,1,-1,true),utf8.codepoint(s,1,-1,true)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:00eda080f48fbfbff4908080f888808080fc8480808080fdbfbfbfbfbf",
+          "integer:7",
+          "integer:0",
+          "integer:55296",
+          "integer:1114111",
+          "integer:1114112",
+          "integer:2097152",
+          "integer:67108864",
+          "integer:2147483647"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:00eda080f48fbfbff4908080f888808080fc8480808080fdbfbfbfbfbf",
+          "integer:7",
+          "integer:0",
+          "integer:55296",
+          "integer:1114111",
+          "integer:1114112",
+          "integer:2097152",
+          "integer:67108864",
+          "integer:2147483647"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-strict-surrogate",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local s=utf8.char(0xD800); return utf8.len(s)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "nil",
+          "integer:1"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "nil",
+          "integer:1"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-strict-max",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.codepoint(utf8.char(0x10FFFF))",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1114111"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1114111"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-strict-too-large",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.codepoint(utf8.char(0x110000))",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d7374726963742d746f6f2d6c617267653a313a20696e76616c6964205554462d3820636f6465"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d7374726963742d746f6f2d6c617267653a313a20696e76616c6964205554462d3820636f6465"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-malformed",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local b={string.char(0x80),string.char(0xC0,0x80),string.char(0xE2,0x82),string.char(0xFE),string.char(0xFF)}; local t={}; for _,s in ipairs(b) do local n,p=utf8.len(s,1,-1,true); t[#t+1]=tostring(n)..':'..p end; return table.concat(t,',')",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:6e696c3a312c6e696c3a312c6e696c3a312c6e696c3a312c6e696c3a31"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:6e696c3a312c6e696c3a312c6e696c3a312c6e696c3a312c6e696c3a31"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-char-negative",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.char(-1)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636861722d6e656761746976653a313a2062616420617267756d656e7420233120746f20276368617227202876616c7565206f7574206f662072616e676529"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636861722d6e656761746976653a313a2062616420617267756d656e7420233120746f20276368617227202876616c7565206f7574206f662072616e676529"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-char-empty",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.char(),utf8.char('65')",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:",
+          "string:41"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:",
+          "string:41"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-offset-endpoints",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local s=utf8.char(65,0x20AC,66); local a,b=utf8.offset(s,2); local c,d=utf8.offset(s,0,3); local e,f=utf8.offset(s,-1); local g,h=utf8.offset(s,4); return a,b,c,d,e,f,g,h,select('#',utf8.offset(s,5)),utf8.offset(s,5)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:2",
+          "integer:4",
+          "integer:2",
+          "integer:4",
+          "integer:5",
+          "integer:5",
+          "integer:6",
+          "integer:6",
+          "integer:1",
+          "nil"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:2",
+          "integer:4",
+          "integer:2",
+          "integer:4",
+          "integer:5",
+          "integer:5",
+          "integer:6",
+          "integer:6",
+          "integer:1",
+          "nil"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-offset-empty",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local a,b=utf8.offset('',0); local c,d=utf8.offset('',1); return a,b,c,d,utf8.offset('',-1)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1",
+          "integer:1",
+          "integer:1",
+          "integer:1",
+          "nil"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1",
+          "integer:1",
+          "integer:1",
+          "integer:1",
+          "nil"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-offset-continuation",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.offset(string.char(0x80),0)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d6f66667365742d636f6e74696e756174696f6e3a313a20696e697469616c20706f736974696f6e206973206120636f6e74696e756174696f6e2062797465"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d6f66667365742d636f6e74696e756174696f6e3a313a20696e697469616c20706f736974696f6e206973206120636f6e74696e756174696f6e2062797465"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-offset-bounds",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.offset('abc',1,5)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d6f66667365742d626f756e64733a313a2062616420617267756d656e7420233320746f20276f6666736574272028706f736974696f6e206f7574206f6620626f756e647329"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d6f66667365742d626f756e64733a313a2062616420617267756d656e7420233320746f20276f6666736574272028706f736974696f6e206f7574206f6620626f756e647329"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-codes-lax",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local t={}; for p,c in utf8.codes(utf8.char(0xDFFF,0x7FFFFFFF),true) do t[#t+1]=p..':'..c end; return table.concat(t,',')",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:313a35373334332c343a32313437343833363437"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:313a35373334332c343a32313437343833363437"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-codes-strict",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "for p,c in utf8.codes(utf8.char(0xDFFF)) do end; return true",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636f6465732d7374726963743a313a20696e76616c6964205554462d3820636f6465"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636f6465732d7374726963743a313a20696e76616c6964205554462d3820636f6465"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-codes-negative-control",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "local f,s=utf8.codes('abc'); return select('#',f(s,-1))",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:0"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:0"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-codes-leading-continuation",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return type(utf8.codes(string.char(0x80)))",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636f6465732d6c656164696e672d636f6e74696e756174696f6e3a313a2062616420617267756d656e7420233120746f2027636f646573272028696e76616c6964205554462d3820636f646529"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:757466382d636f6465732d6c656164696e672d636f6e74696e756174696f6e3a313a2062616420617267756d656e7420233120746f2027636f646573272028696e76616c6964205554462d3820636f646529"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-pattern",
+      "requirements": [
+        "B06"
+      ],
+      "profile": "int64",
+      "source": "return utf8.charpattern",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:5b002d7fc22dfd5d5b802dbf5d2a"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:5b002d7fc22dfd5d5b802dbf5d2a"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-escape-31bit",
+      "requirements": [
+        "B06",
+        "L07"
+      ],
+      "profile": "int64",
+      "source": "return '\\u{7fffffff}' == utf8.char(0x7fffffff)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "utf8-escape-overflow",
+      "requirements": [
+        "L07"
+      ],
+      "profile": "int64",
+      "source": "return '\\u{80000000}'",
+      "actual": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:757466382d6573636170652d6f766572666c6f773a313a205554462d382076616c756520746f6f206c61726765206e6561722027275c757b383030303030303027"
+        ]
+      },
+      "expected": {
+        "phase": "compilation",
+        "status": "error",
+        "values": [
+          "string:757466382d6573636170652d6f766572666c6f773a313a205554462d382076616c756520746f6f206c61726765206e6561722027275c757b383030303030303027"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create-empty",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "local a,b=table.create(0),table.create('4',nil); return type(a),#a,next(a),a~=b",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7461626c65",
+          "integer:0",
+          "nil",
+          "boolean:true"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7461626c65",
+          "integer:0",
+          "nil",
+          "boolean:true"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create-negative-sequence",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "return table.create(-1)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6e656761746976652d73657175656e63653a313a2062616420617267756d656e7420233120746f20276372656174652720286f7574206f662072616e676529"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6e656761746976652d73657175656e63653a313a2062616420617267756d656e7420233120746f20276372656174652720286f7574206f662072616e676529"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create-negative-records",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "return table.create(0,-1)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6e656761746976652d7265636f7264733a313a2062616420617267756d656e7420233220746f20276372656174652720286f7574206f662072616e676529"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6e656761746976652d7265636f7264733a313a2062616420617267756d656e7420233220746f20276372656174652720286f7574206f662072616e676529"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create-fraction",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "return table.create(1.5)",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6672616374696f6e3a313a2062616420617267756d656e7420233120746f20276372656174652720286e756d62657220686173206e6f20696e746567657220726570726573656e746174696f6e29"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6672616374696f6e3a313a2062616420617267756d656e7420233120746f20276372656174652720286e756d62657220686173206e6f20696e746567657220726570726573656e746174696f6e29"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-create-missing",
+      "requirements": [
+        "B07"
+      ],
+      "profile": "int64",
+      "source": "return table.create()",
+      "actual": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6d697373696e673a313a2062616420617267756d656e7420233120746f20276372656174652720286e756d6265722065787065637465642c20676f74206e6f2076616c756529"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "error",
+        "values": [
+          "string:7461626c652d6372656174652d6d697373696e673a313a2062616420617267756d656e7420233120746f20276372656174652720286e756d6265722065787065637465642c20676f74206e6f2076616c756529"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "nil-error-message",
+      "requirements": [
+        "L03",
+        "D02"
+      ],
+      "profile": "int64",
+      "source": "return pcall(error,nil)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "nil-error-handler-observes-original",
+      "requirements": [
+        "L03"
+      ],
+      "profile": "int64",
+      "source": "local seen; local ok,e=xpcall(function() error(nil) end,function(e) seen=type(e); return e end); return ok,e,seen",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e",
+          "string:6e696c"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e",
+          "string:6e696c"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "nil-error-handler-result",
+      "requirements": [
+        "L03"
+      ],
+      "profile": "int64",
+      "source": "return xpcall(function() error('boom',0) end,function() return nil end)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "false-error-object",
+      "requirements": [
+        "L03"
+      ],
+      "profile": "int64",
+      "source": "return pcall(error,false)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "boolean:false"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "boolean:false"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "table-error-object-identity",
+      "requirements": [
+        "L03"
+      ],
+      "profile": "int64",
+      "source": "local t={}; local ok,e=pcall(error,t); return ok,e==t",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "boolean:true"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "boolean:true"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "nil-assert-message",
+      "requirements": [
+        "L03",
+        "B02"
+      ],
+      "profile": "int64",
+      "source": "return pcall(assert,false,nil)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "string:3c6e6f206572726f72206f626a6563743e"
+        ]
+      },
+      "matches": true
+    },
+    {
+      "id": "numeric-profile",
+      "requirements": [
+        "L01",
+        "B08"
+      ],
+      "profile": "int64",
+      "source": "return math.mininteger,math.maxinteger,string.packsize('j'),string.packsize('n')",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-2147483648",
+          "integer:2147483647",
+          "integer:4",
+          "integer:8"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-9223372036854775808",
+          "integer:9223372036854775807",
+          "integer:8",
+          "integer:8"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-boundaries",
+      "requirements": [
+        "L01"
+      ],
+      "profile": "int64",
+      "source": "return 9223372036854775807,-9223372036854775808,9007199254740993",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "float:43e0000000000000",
+          "float:c3e0000000000000",
+          "float:4340000000000000"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:9223372036854775807",
+          "float:c3e0000000000000",
+          "integer:9007199254740993"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-wrap",
+      "requirements": [
+        "L01"
+      ],
+      "profile": "int64",
+      "source": "return math.maxinteger+1,math.mininteger-1,-math.mininteger,math.maxinteger*2",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-2147483648",
+          "integer:2147483647",
+          "integer:-2147483648",
+          "integer:-2"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-9223372036854775808",
+          "integer:9223372036854775807",
+          "integer:-9223372036854775808",
+          "integer:-2"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-float-distinction",
+      "requirements": [
+        "L01",
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "return 9007199254740993==9007199254740992.0,9007199254740993>9007199254740992.0",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:true",
+          "boolean:false"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "boolean:false",
+          "boolean:true"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-table-key-precision",
+      "requirements": [
+        "L01",
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "local t={}; t[9007199254740993]='i'; t[9007199254740992.0]='f'; return t[9007199254740993],t[9007199254740992.0]",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:66",
+          "string:66"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:69",
+          "string:66"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-shifts",
+      "requirements": [
+        "L01",
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "return 1<<40,-1>>1,1<<64,1>>-40",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:0",
+          "integer:2147483647",
+          "integer:0",
+          "integer:0"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:1099511627776",
+          "integer:9223372036854775807",
+          "integer:0",
+          "integer:1099511627776"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-pack-profile",
+      "requirements": [
+        "L01",
+        "B05"
+      ],
+      "profile": "int64",
+      "source": "return string.pack('>j',math.maxinteger),string.pack('>j',math.mininteger)",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7fffffff",
+          "string:80000000"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "string:7fffffffffffffff",
+          "string:8000000000000000"
+        ]
+      },
+      "matches": false
+    },
+    {
+      "id": "integer-floor-modulo",
+      "requirements": [
+        "L01",
+        "L09"
+      ],
+      "profile": "int64",
+      "source": "return -7//3,-7%3,7//-3,7%-3,math.mininteger//-1,math.mininteger%-1",
+      "actual": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-3",
+          "integer:2",
+          "integer:-3",
+          "integer:-2",
+          "integer:-2147483648",
+          "integer:0"
+        ]
+      },
+      "expected": {
+        "phase": "execution",
+        "status": "ok",
+        "values": [
+          "integer:-3",
+          "integer:2",
+          "integer:-3",
+          "integer:-2",
+          "integer:-9223372036854775808",
+          "integer:0"
+        ]
+      },
+      "matches": false
+    }
+  ]
+}

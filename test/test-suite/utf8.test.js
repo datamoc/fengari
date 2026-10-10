@@ -137,10 +137,10 @@ test("[test-suite] utf8: error in initial position for offset", () => {
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = prefix + `
-        checkerror("position out of range", utf8.offset, "abc", 1, 5)
-        checkerror("position out of range", utf8.offset, "abc", 1, -4)
-        checkerror("position out of range", utf8.offset, "", 1, 2)
-        checkerror("position out of range", utf8.offset, "", 1, -1)
+        checkerror("position out of bounds", utf8.offset, "abc", 1, 5)
+        checkerror("position out of bounds", utf8.offset, "abc", 1, -4)
+        checkerror("position out of bounds", utf8.offset, "", 1, 2)
+        checkerror("position out of bounds", utf8.offset, "", 1, -1)
         checkerror("continuation byte", utf8.offset, "𦧺", 1, 2)
         checkerror("continuation byte", utf8.offset, "𦧺", 1, 2)
         checkerror("continuation byte", utf8.offset, "\\x80", 1)
@@ -169,11 +169,11 @@ test("[test-suite] utf8: codepoints", () => {
           local t = {utf8.codepoint(s,1,#s - 1)}
           assert(#t == 3 and t[1] == 225 and t[2] == 233 and t[3] == 237)
           checkerror("invalid UTF%-8 code", utf8.codepoint, s, 1, #s)
-          checkerror("out of range", utf8.codepoint, s, #s + 1)
+          checkerror("out of bounds", utf8.codepoint, s, #s + 1)
           t = {utf8.codepoint(s, 4, 3)}
           assert(#t == 0)
-          checkerror("out of range", utf8.codepoint, s, -(#s + 1), 1)
-          checkerror("out of range", utf8.codepoint, s, 1, #s + 1)
+          checkerror("out of bounds", utf8.codepoint, s, -(#s + 1), 1)
+          checkerror("out of bounds", utf8.codepoint, s, 1, #s + 1)
         end
 
         assert(utf8.char() == "")
@@ -181,7 +181,10 @@ test("[test-suite] utf8: codepoints", () => {
 
         assert(utf8.codepoint(utf8.char(0x10FFFF)) == 0x10FFFF)
 
-        checkerror("value out of range", utf8.char, 0x10FFFF + 1)
+        -- Lua 5.5 char encodes beyond Unicode; strict decoding still rejects it.
+        assert(utf8.codepoint(utf8.char(0x10FFFF + 1), 1, -1, true) == 0x110000)
+        assert(utf8.len(utf8.char(0x10FFFF + 1)) == nil)
+        checkerror("value out of range", utf8.char, 0x7FFFFFFF + 1)
     `;
     lualib.luaL_openlibs(L);
     if (lauxlib.luaL_loadstring(L, to_luastring(luaCode)) === lua.LUA_ERRSYNTAX)

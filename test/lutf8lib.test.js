@@ -18,6 +18,8 @@ test('utf8.offset', () => {
         lua.lua_call(L, 0, -1);
     }
 
+    expect(lua.lua_gettop(L)).toBe(2);
+    expect(lua.lua_tointeger(L, -2)).toBe(7);
     expect(lua.lua_tointeger(L, -1)).toBe(7);
 });
 

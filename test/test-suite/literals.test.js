@@ -153,7 +153,8 @@ test("[test-suite] literals: Error in escape sequences", () => {
         lexerror([["   \\256"]], [[\\256"]])
 
         -- errors in UTF-8 sequences
-        lexerror([["abc\\u{110000}"]], [[abc\\u{110000]])   -- too large
+        -- Lua 5.5 accepts 31-bit UTF-8 escapes; overflow is above 0x7fffffff.
+        lexerror([["abc\\u{100000000}"]], [[abc\\u{100000000]])   -- too large
         lexerror([["abc\\u11r"]], [[abc\\u1]])    -- missing '{'
         lexerror([["abc\\u"]], [[abc\\u"]])    -- missing '{'
         lexerror([["abc\\u{11r"]], [[abc\\u{11r]])    -- missing '}'

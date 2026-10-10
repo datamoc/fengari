@@ -150,12 +150,18 @@ test('os.getenv', () => {
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = `
-        return os.getenv('PATH')
+        return os.getenv('FENGARI_TEST_ENV')
     `;
-    {
+    const previous = process.env.FENGARI_TEST_ENV;
+    process.env.FENGARI_TEST_ENV = "fengari getenv test";
+    try {
         lualib.luaL_openlibs(L);
         expect(lauxlib.luaL_loadstring(L, to_luastring(luaCode))).toBe(lua.LUA_OK);
         lua.lua_call(L, 0, -1);
+        expect(lua.lua_tojsstring(L, -1)).toBe("fengari getenv test");
+    } finally {
+        if (previous === undefined) delete process.env.FENGARI_TEST_ENV;
+        else process.env.FENGARI_TEST_ENV = previous;
     }
 
     expect(lua.lua_isstring(L, -1)).toBe(true);

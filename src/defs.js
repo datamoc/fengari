@@ -250,13 +250,13 @@ module.exports.from_userstring   = from_userstring;
 const LUA_SIGNATURE = to_luastring("\x1bLua");
 
 const LUA_VERSION_MAJOR   = "5";
-const LUA_VERSION_MINOR   = "3";
-const LUA_VERSION_NUM     = 503;
-const LUA_VERSION_RELEASE = "4";
+const LUA_VERSION_MINOR   = "4";
+const LUA_VERSION_NUM     = 504;
+const LUA_VERSION_RELEASE = "6";
 
 const LUA_VERSION         = "Lua " + LUA_VERSION_MAJOR + "." + LUA_VERSION_MINOR;
 const LUA_RELEASE         = LUA_VERSION + "." + LUA_VERSION_RELEASE;
-const LUA_COPYRIGHT       = LUA_RELEASE + "  Copyright (C) 1994-2017 Lua.org, PUC-Rio";
+const LUA_COPYRIGHT       = LUA_RELEASE + "  Copyright (C) 1994-2020 Lua.org, PUC-Rio";
 const LUA_AUTHORS         = "R. Ierusalimschy, L. H. de Figueiredo, W. Celes";
 
 module.exports.LUA_SIGNATURE       = LUA_SIGNATURE;
@@ -329,7 +329,7 @@ const LUA_OPLE = 2;
 
 const LUA_MINSTACK = 20;
 
-const { LUAI_MAXSTACK } = require('./luaconf.js');
+const { LUAI_MAXSTACK } = require('./luaconf-base.js');
 const LUA_REGISTRYINDEX = -LUAI_MAXSTACK - 1000;
 
 const lua_upvalueindex = function(i) {

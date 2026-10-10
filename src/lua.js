@@ -189,3 +189,68 @@ module.exports.lua_xmove               = lapi.lua_xmove;
 module.exports.lua_yield               = ldo.lua_yield;
 module.exports.lua_yieldk              = ldo.lua_yieldk;
 module.exports.lua_tocfunction         = lapi.lua_tocfunction;
+module.exports.lua_resetthread         = lapi.lua_resetthread;
+module.exports.lua_closeslot           = lapi.lua_closeslot;
+module.exports.lua_pushjsfunction_ex   = lapi.lua_pushjsfunction_ex;
+// Fonction pour évaluer plusieurs expressions Lua en une seule fois
+const lua_eval_multiple = function(L, str) {
+
+    // Diviser la chaîne en plusieurs expressions Lua
+    const expressions = str.split(';').map(s => s.trim()).filter(s => s.length > 0);
+
+    let results = [];
+    for (let i = 0; i < expressions.length; i++) {
+        const expr = expressions[i];
+        if (expr.length === 0) continue;
+
+        // Charger l'expression Lua
+        let source = defs.to_luastring(expr);
+        const status = lapi.lua_load(L, () => {
+            const chunk = source;
+            source = null;
+            return chunk;
+        }, null, source, null);
+        if (status !== defs.thread_status.LUA_OK) {
+            return { status, error: lapi.lua_tojsstring(L, -1) };
+        }
+
+        // Exécuter l'expression
+        const pcall_status = lapi.lua_pcall(L, 0, defs.LUA_MULTRET, 0);
+        if (pcall_status !== defs.thread_status.LUA_OK) {
+            return { status: pcall_status, error: lapi.lua_tojsstring(L, -1) };
+        }
+
+        // Récupérer les résultats
+        const top = lapi.lua_gettop(L);
+        let result = [];
+        for (let j = 1; j <= top; j++) {
+            const type = lapi.lua_type(L, j);
+            switch (type) {
+                case defs.constant_types.LUA_TNIL:
+                    result.push(null);
+                    break;
+                case defs.constant_types.LUA_TBOOLEAN:
+                    result.push(lapi.lua_toboolean(L, j));
+                    break;
+                case defs.constant_types.LUA_TNUMBER:
+                    if (lapi.lua_isinteger(L, j)) {
+                        result.push(lapi.lua_tointeger(L, j));
+                    } else {
+                        result.push(lapi.lua_tonumber(L, j));
+                    }
+                    break;
+                case defs.constant_types.LUA_TSTRING:
+                    result.push(lapi.lua_tojsstring(L, j));
+                    break;
+                default:
+                    result.push(`<${defs.to_jsstring(lapi.lua_typename(L, type))}>`);
+            }
+        }
+        results.push(result);
+        lapi.lua_settop(L, 0); // Réinitialiser la pile
+    }
+
+    return { status: defs.thread_status.LUA_OK, results };
+};
+
+module.exports.lua_eval_multiple = lua_eval_multiple;

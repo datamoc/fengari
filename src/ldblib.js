@@ -73,7 +73,7 @@ const {
     luaL_traceback,
     lua_writestringerror
 } = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+const lualib = require("./lualib-constants.js");
 const {
     luastring_indexOf,
     to_luastring

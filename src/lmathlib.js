@@ -1,4 +1,5 @@
 "use strict";
+const integer = require('./linteger.js');
 
 const {
     LUA_OPLT,
@@ -88,7 +89,7 @@ const math_randomseed = function(L) {
 const math_abs = function(L) {
     if (lua_isinteger(L, 1)) {
         let n = lua_tointeger(L, 1);
-        if (n < 0) n = (-n)|0;
+        if (n < 0) n = integer.neg(n);
         lua_pushinteger(L, n);
     }
     else
@@ -254,7 +255,7 @@ const math_fmod = function(L) {
         if (d === 0) {
             luaL_argerror(L, 2, "zero");
         } else
-            lua_pushinteger(L, (lua_tointeger(L, 1) % d)|0);
+            lua_pushinteger(L, integer.wrap(BigInt(lua_tointeger(L, 1)) % BigInt(d)));
     } else {
         let a = luaL_checknumber(L, 1);
         let b = luaL_checknumber(L, 2);

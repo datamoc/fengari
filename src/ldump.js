@@ -1,9 +1,8 @@
 "use strict";
+const integer = require('./linteger.js');
 
 const {
     LUA_SIGNATURE,
-    LUA_VERSION_MAJOR,
-    LUA_VERSION_MINOR,
     constant_types: {
         LUA_TBOOLEAN,
         LUA_TLNGSTR,
@@ -18,7 +17,7 @@ const {
 const LUAC_DATA    = luastring_of(25, 147, 13, 10, 26, 10);
 const LUAC_INT     = 0x5678;
 const LUAC_NUM     = 370.5;
-const LUAC_VERSION = Number(LUA_VERSION_MAJOR) * 16 + Number(LUA_VERSION_MINOR);
+const { LUAC_VERSION } = require('./lbytecode.js');
 const LUAC_FORMAT  = 0;   /* this is the official format */
 
 class DumpState {
@@ -49,11 +48,12 @@ const DumpInt = function(x, D) {
 };
 
 const DumpInteger = function(x, D) {
-    let ab = new ArrayBuffer(4);
+    let ab = new ArrayBuffer(integer.SIZE);
     let dv = new DataView(ab);
-    dv.setInt32(0, x, true);
+    if (integer.SIZE === 8) dv.setBigInt64(0, BigInt(x), true);
+    else dv.setInt32(0, x, true);
     let t = new Uint8Array(ab);
-    DumpBlock(t, 4, D);
+    DumpBlock(t, integer.SIZE, D);
 };
 
 const DumpNumber = function(x, D) {
@@ -74,7 +74,7 @@ const DumpString = function(s, D) {
             DumpByte(size, D);
         else {
             DumpByte(0xFF, D);
-            DumpInteger(size, D);
+            DumpInt(size, D);  /* size_t remains the JS host's 32-bit length profile */
         }
         DumpBlock(str, size - 1, D);  /* no need to save '\0' */
     }
@@ -173,7 +173,7 @@ const DumpHeader = function(D) {
     DumpByte(4, D); // intSize
     DumpByte(4, D); // size_tSize
     DumpByte(4, D); // instructionSize
-    DumpByte(4, D); // integerSize
+    DumpByte(integer.SIZE, D); // integerSize
     DumpByte(8, D); // numberSize
     DumpInteger(LUAC_INT, D);
     DumpNumber(LUAC_NUM, D);

@@ -1,0 +1,5289 @@
+{
+  "capturedAt": "2026-10-10T08:17:16.574Z",
+  "note": "Presence is not semantic conformance; header macros include build-only contracts to classify explicitly.",
+  "api": [
+    {
+      "symbol": "LUA_ERRFILE",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_FILEHANDLE",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "object",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_GNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_LOADED_TABLE",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "object",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_NOREF",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_PRELOAD_TABLE",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "object",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUA_REFNIL",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addchar",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addgsub",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addlstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addsize",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_addvalue",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_alloc",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_argcheck",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_argerror",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_argexpected",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_buffaddr",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_Buffer",
+      "kind": "type",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "luaL_buffinit",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_buffinitsize",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_bufflen",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_buffsub",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_callmeta",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkany",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkint",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkinteger",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checklong",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checklstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checknumber",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkoption",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkstack",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkstring",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checktype",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkudata",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkunsigned",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkversion",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_checkversion_",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_dofile",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_dostring",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_error",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_execresult",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_fileresult",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_getmetafield",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_getmetatable",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_getsubtable",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_gsub",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_intop",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_len",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_loadbuffer",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_loadbufferx",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_loadfile",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_loadfilex",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_loadstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_makeseed",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_newlib",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_newlibtable",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_newmetatable",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_newstate",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "LUAL_NUMSIZES",
+      "kind": "constant-or-build-macro",
+      "module": "lauxlib",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_opt",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optint",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optinteger",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optlong",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optlstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optnumber",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optstring",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_optunsigned",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_prepbuffer",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_prepbuffsize",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_pushfail",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_pushresult",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_pushresultsize",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_ref",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_Reg",
+      "kind": "type",
+      "module": "lauxlib",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "luaL_requiref",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_setfuncs",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_setmetatable",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_Stream",
+      "kind": "type",
+      "module": "lauxlib",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "luaL_testudata",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_tolstring",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_traceback",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_typeerror",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_typename",
+      "kind": "macro-function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_unref",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "luaL_where",
+      "kind": "function",
+      "module": "lauxlib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lauxlib.h"
+    },
+    {
+      "symbol": "lua_absindex",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Alloc",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_arith",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_atpanic",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_AUTHORS",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_call",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_callk",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_CFunction",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_checkstack",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_close",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_closeslot",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_closethread",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_compare",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_concat",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_copy",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_COPYRIGHT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_createtable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Debug",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "function",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_dump",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_ERRERR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_ERRMEM",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_error",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_ERRRUN",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_ERRSYNTAX",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gc",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCCOLLECT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCCOUNT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCCOUNTB",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCGEN",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCINC",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCISRUNNING",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPARAM",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPMAJORMINOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPMINORMAJOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPMINORMUL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPN",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPPAUSE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPSTEPMUL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCPSTEPSIZE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCRESTART",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCSTEP",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_GCSTOP",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getallocf",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getextraspace",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getfield",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getglobal",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gethook",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gethookcount",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gethookmask",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_geti",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getinfo",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getiuservalue",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getlocal",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getmetatable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getstack",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gettable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_gettop",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getupvalue",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_getuservalue",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Hook",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "LUA_HOOKCALL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_HOOKCOUNT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_HOOKLINE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_HOOKRET",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_HOOKTAILCALL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_insert",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Integer",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_isboolean",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_iscfunction",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isfunction",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isinteger",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_islightuserdata",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isnil",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isnone",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isnoneornil",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isnumber",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_istable",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isthread",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isuserdata",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_isyieldable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_KContext",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_KFunction",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_len",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_load",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MASKCALL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MASKCOUNT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MASKLINE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MASKRET",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MINSTACK",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_MULTRET",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_N2SBUFFSZ",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_newstate",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_newtable",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_newthread",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_newuserdata",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_newuserdatauv",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_next",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Number",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_numbertocstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_numbertointeger",
+      "kind": "documented-api",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "LUA_NUMTYPES",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OK",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPADD",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPBAND",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPBNOT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPBOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPBXOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPDIV",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPEQ",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPIDIV",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPLE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPLT",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPMOD",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPMUL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPPOW",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPSHL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPSHR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPSUB",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_OPUNM",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pcall",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pcallk",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pop",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushboolean",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushcclosure",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushcfunction",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushexternalstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushfstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushglobaltable",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushinteger",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushlightuserdata",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushliteral",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushlstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushnil",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushnumber",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushthread",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushvalue",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_pushvfstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawequal",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawget",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawgeti",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawgetp",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawlen",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawset",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawseti",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rawsetp",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Reader",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_register",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_REGISTRYINDEX",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_RELEASE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_remove",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_replace",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_resetthread",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_resume",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_RIDX_GLOBALS",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_RIDX_LAST",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_RIDX_MAINTHREAD",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_rotate",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setallocf",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setfield",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setglobal",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_sethook",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_seti",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setiuservalue",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setlocal",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setmetatable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_settable",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_settop",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setupvalue",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setuservalue",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_setwarnf",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_SIGNATURE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "object",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_State",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_status",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_stringtonumber",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TBOOLEAN",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TFUNCTION",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TLIGHTUSERDATA",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TNIL",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TNONE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TNUMBER",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_toboolean",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tocfunction",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_toclose",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tointeger",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tointegerx",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tolstring",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tonumber",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tonumberx",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_topointer",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tostring",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_tothread",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_touserdata",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TSTRING",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TTABLE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TTHREAD",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_TUSERDATA",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_type",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_typename",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Unsigned",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_upvalueid",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_upvalueindex",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_upvaluejoin",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_version",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_MAJOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_MAJOR_N",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_MINOR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_MINOR_N",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_NUM",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_RELEASE",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_RELEASE_N",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_VERSION_RELEASE_NUM",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_WarnFunction",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_warning",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-absent",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_Writer",
+      "kind": "type",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "contrat-type-a-definir",
+      "header": "manual.html"
+    },
+    {
+      "symbol": "lua_xmove",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_yield",
+      "kind": "macro-function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_YIELD",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "lua_yieldk",
+      "kind": "function",
+      "module": "lua",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUAI_TOSTR",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUAI_TOSTRAUX",
+      "kind": "constant-or-build-macro",
+      "module": "lua",
+      "observedType": "absent",
+      "status": "export-ou-adaptation-a-auditer",
+      "header": "lua.h"
+    },
+    {
+      "symbol": "LUA_COLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_COLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_DBLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_DBLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_GLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_IOLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_IOLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_LOADLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_LOADLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_MATHLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_MATHLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_OSLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_OSLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_STRLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_STRLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_TABLIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_TABLIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_UTF8LIBK",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "number",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_UTF8LIBNAME",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "LUA_VERSUFFIX",
+      "kind": "constant-or-build-macro",
+      "module": "lualib",
+      "observedType": "string",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaL_openlibs",
+      "kind": "macro-function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaL_openselectedlibs",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_base",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_coroutine",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_debug",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_io",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_math",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_os",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_package",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_string",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_table",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    },
+    {
+      "symbol": "luaopen_utf8",
+      "kind": "function",
+      "module": "lualib",
+      "observedType": "function",
+      "status": "present-contrat-non-verifie",
+      "header": "lualib.h"
+    }
+  ],
+  "library": [
+    {
+      "symbol": "_G",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "_PROMPT",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "_PROMPT2",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "_VERSION",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "string"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "assert",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "collectgarbage",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.close",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.create",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.isyieldable",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.resume",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.running",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.status",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.wrap",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "coroutine.yield",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.debug",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.gethook",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getinfo",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getlocal",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getmetatable",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getregistry",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getupvalue",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.getuservalue",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.sethook",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.setlocal",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.setmetatable",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.setupvalue",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.setuservalue",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.traceback",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.upvalueid",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "debug.upvaluejoin",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "dofile",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "error",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "file:close",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:flush",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:lines",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:read",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:seek",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:setvbuf",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "file:write",
+      "status": "fixture-fichier-requise",
+      "observed": null
+    },
+    {
+      "symbol": "getmetatable",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.close",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.flush",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.input",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.lines",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.open",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.output",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.popen",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.read",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.stderr",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "userdata"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.stdin",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "userdata"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.stdout",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "userdata"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.tmpfile",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.type",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "io.write",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "ipairs",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "load",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "loadfile",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.abs",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.acos",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.asin",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.atan",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.ceil",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.cos",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.deg",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.exp",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.floor",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.fmod",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.frexp",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.huge",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "number"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.ldexp",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.log",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.max",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.maxinteger",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "number"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.min",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.mininteger",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "number"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.modf",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.pi",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "number"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.rad",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.random",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.randomseed",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.sin",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.sqrt",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.tan",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.tointeger",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.type",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "math.ult",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "next",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.clock",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.date",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.difftime",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.execute",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.exit",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.getenv",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.remove",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.rename",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.setlocale",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.time",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "os.tmpname",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.config",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "string"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.cpath",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.loaded",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.loadlib",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.path",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "string"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.preload",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.searchers",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "package.searchpath",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "pairs",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "pcall",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "print",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "rawequal",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "rawget",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "rawlen",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "rawset",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "require",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "select",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "setmetatable",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.byte",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.char",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.dump",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.find",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.format",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.gmatch",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.gsub",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.len",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.lower",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.match",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.pack",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.packsize",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.rep",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.reverse",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.sub",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.unpack",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "string.upper",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.concat",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.create",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.insert",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.move",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.pack",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.remove",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.sort",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "table.unpack",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "tonumber",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "tostring",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "type",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "table"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.char",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.charpattern",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "string"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.codepoint",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.codes",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.len",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "utf8.offset",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "warn",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "nil"
+          }
+        ]
+      }
+    },
+    {
+      "symbol": "xpcall",
+      "status": "contrat-non-verifie",
+      "observed": {
+        "phase": "execution",
+        "status": 0,
+        "values": [
+          {
+            "type": "string",
+            "value": "function"
+          }
+        ]
+      }
+    }
+  ],
+  "contextEntries": [
+    {
+      "symbol": "lua.h",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_USE_APICHECK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MINSTACK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TNONE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_REGISTRYINDEX",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_RIDX_MAINTHREAD",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_RIDX_GLOBALS",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_ERRRUN",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_ERRMEM",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_ERRERR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_ERRSYNTAX",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_YIELD",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_ERRFILE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPADD",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPSUB",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPMUL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPDIV",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPIDIV",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPMOD",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPPOW",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPUNM",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPBNOT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPBAND",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPBOR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPBXOR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPSHL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPSHR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MULTRET",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPEQ",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPLT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OPLE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCCOLLECT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCSTOP",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCRESTART",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCCOUNT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCCOUNTB",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCSTEP",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCISRUNNING",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCINC",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCGEN",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPARAM",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPMINORMUL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPMAJORMINOR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPMINORMAJOR",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPPAUSE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPSTEPMUL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GCPSTEPSIZE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MININTEGER",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MAXINTEGER",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_N2SBUFFSZ",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TNIL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TNUMBER",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TBOOLEAN",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TSTRING",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TTABLE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TFUNCTION",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TUSERDATA",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TTHREAD",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TLIGHTUSERDATA",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_HOOKCALL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_HOOKRET",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_HOOKTAILCALL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_HOOKLINE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_HOOKCOUNT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MASKCALL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MASKRET",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MASKLINE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MASKCOUNT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUAL_BUFFERSIZE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_REFNIL",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_NOREF",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_GLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_LOADLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_COLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_STRLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_UTF8LIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_TABLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_MATHLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_IOLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_OSLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_DBLIBK",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_CPATH_5_5",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_CPATH",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_LOADED_TABLE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_PATH_5_5",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_PATH",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_PRELOAD_TABLE",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_INIT_5_5",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    },
+    {
+      "symbol": "LUA_INIT",
+      "status": "configuration-environnement-ou-constante-a-auditer"
+    }
+  ]
+}

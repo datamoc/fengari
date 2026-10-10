@@ -1,36 +1,59 @@
 {
-  "name": "fengari",
+  "name": "@datamoc/fengari",
   "version": "0.1.5",
-  "description": "A Lua VM written in JS ES6 targeting the browser",
+  "description": "A Lua VM (latest version) written in JS ES6, targeting the browser and Node.js",
   "main": "src/fengari.js",
+  "module": "dist/fengari.esm.js",
+  "types": "dist/fengari.d.ts",
+  "files": [
+    "src/",
+    "dist/",
+    "test/",
+    "docs/lua-5.5.1/"
+  ],
   "directories": {
     "lib": "src",
     "test": "test"
   },
   "scripts": {
     "lint": "eslint src/ test/",
-    "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint && npm run test",
-    "test": "jest"
-  },
+    "prepublishOnly": "git diff-index --quiet --cached HEAD -- && npm run lint && npm run test && npm run build",
+    "test": "jest",
+    "test:extended": "jest test/lauxlib-extended.test.js",
+    "build": "echo 'Build step for ESM and TypeScript definitions'",
+    "prepack": "npm run build"
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fengari-lua/fengari.git"
   },
   "keywords": [
     "lua",
-    "vm"
+    "lua5.5.1",
+    "vm",
+    "javascript",
+    "webassembly",
+    "embeddable",
+    "scripting"
   ],
   "contributors": [
     "Benoit Giannangeli",
     "Daurnimator <quae@daurnimator.com>"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fengari-lua/fengari/issues"
+  "publishConfig": {
+    "access": "public"
   },
-  "homepage": "https://github.com/fengari-lua/fengari#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datamoc/fengari.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datamoc/fengari/issues"
+  },
+  "homepage": "https://github.com/datamoc/fengari#readme",
   "devDependencies": {
     "eslint": "^9.39.2",
+    "espree": "^10.4.0",
     "jest": "^30.2.0"
   },
   "dependencies": {

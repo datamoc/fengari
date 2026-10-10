@@ -73,7 +73,7 @@ const {
     luaL_tolstring,
     luaL_typename
 } = require('./lauxlib.js');
-const lualib = require('./lualib.js');
+const lualib = require("./lualib-constants.js");
 const {
     luastring_eq,
     luastring_indexOf,

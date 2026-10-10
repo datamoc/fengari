@@ -51,3 +51,6 @@ help
 dist
 
 .tern-port
+
+# Reproducible Lua reference builds and differential work files
+.lua55-build/

@@ -1,6 +1,7 @@
 "use strict";
 
-const conf = (process.env.FENGARICONF ? JSON.parse(process.env.FENGARICONF) : {});
+const { conf, LUAI_MAXSTACK } = require('./luaconf-base.js');
+const integer = require('./linteger.js');
 
 const {
     LUA_VERSION_MAJOR,
@@ -128,8 +129,8 @@ if (typeof process === "undefined") {
 */
 const LUA_COMPAT_FLOATSTRING = conf.LUA_COMPAT_FLOATSTRING || false;
 
-const LUA_MAXINTEGER = 2147483647;
-const LUA_MININTEGER = -2147483648;
+const LUA_MAXINTEGER = integer.canonical(integer.MAX);
+const LUA_MININTEGER = integer.canonical(integer.MIN);
 
 /*
 @@ LUAI_MAXSTACK limits the size of the Lua stack.
@@ -137,7 +138,6 @@ const LUA_MININTEGER = -2147483648;
 ** its only purpose is to stop Lua from consuming unlimited stack
 ** space (and to reserve some numbers for pseudo-indices).
 */
-const LUAI_MAXSTACK = conf.LUAI_MAXSTACK || 1000000;
 
 /*
 @@ LUA_IDSIZE gives the maximum size for the description of the source
@@ -155,7 +155,7 @@ const lua_number2str = function(n) {
 };
 
 const lua_numbertointeger = function(n) {
-    return n >= LUA_MININTEGER && n < -LUA_MININTEGER ? n : false;
+    return integer.fromFloat(n);
 };
 
 const LUA_INTEGER_FRMLEN = "";
