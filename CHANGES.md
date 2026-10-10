@@ -1,6 +1,6 @@
 # Changements dans Fengari
 
-## Version 0.2.0 (En développement)
+## Version 0.2.0
 
 ### Nouvelles fonctionnalités
 - **Intégration de `FengariVm`** : Une machine virtuelle Lua persistante pour maintenir un état entre les évaluations et exposer des objets JavaScript à Lua.

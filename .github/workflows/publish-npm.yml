@@ -1,0 +1,69 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+  # lets a maintainer re-run this exact workflow definition by hand (`gh workflow run
+  # publish-npm.yml --ref <tag>`) - `gh run rerun` on a past run replays the workflow
+  # snapshot pinned to that run's original trigger, not the file's current content
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # trusted publishing: npm exchanges this workflow's own OIDC identity for a
+      # short-lived publish token itself, once npmjs.org's package settings list this
+      # repo/workflow as a trusted publisher - no NPM_TOKEN secret (and no 2FA/OTP
+      # prompt a CI run can't answer) needed at all. Configure it on npmjs.org exactly
+      # the way @datamoc/mw_games already is: repository datamoc/fengari, workflow
+      # filename .github/workflows/publish-npm.yml, default branch master.
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # must be v7, not v6: v6 exports a dummy NODE_AUTH_TOKEN fallback (defaulting to
+      # github.token, a GitHub API token) into .npmrc even when no npm token is
+      # configured. npm then tries that bogus credential against registry.npmjs.org
+      # before ever attempting the OIDC exchange, and fails with E401. v7 removed
+      # that fallback for precisely this reason.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '26'
+          # never cache in a release build: a stale package-manager cache is exactly
+          # the kind of non-reproducible state a published artifact must not depend on
+          package-manager-cache: false
+          registry-url: 'https://registry.npmjs.org'
+
+      # dependencies come from yarn.lock (this is a yarn project); publishing itself
+      # still runs through the npm CLI
+      - run: yarn install --frozen-lockfile
+      # trusted publishing needs npm 11.5.1+ for the OIDC exchange; pin high enough
+      # that a future Node LTS bundling an older npm doesn't silently fall back to
+      # failing for a missing token
+      - run: npm install -g npm@^11.5.1
+
+      # the same gates CI already runs on every push; a release alone proves nothing
+      # about whether the code at that tag still passes
+      - run: yarn lint
+      - run: yarn test --maxWorkers=$(nproc)
+        env:
+          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+      - run: yarn test:extended
+        env:
+          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+
+      # staged, not direct: this uploads the tarball but leaves it pending. Configure
+      # the npmjs.org trusted publisher for this package to allow only
+      # `npm stage publish`, not `npm publish` - so a compromised or buggy workflow
+      # run can never make a version public by itself. `npm stage approve` needs
+      # interactive 2FA and is run by hand (`npm stage list` shows what's pending);
+      # OIDC tokens cannot approve, only stage.
+      # a prerelease (0.9.0-alpha) may not take the default `latest` dist-tag, so it
+      # publishes under `alpha`; a final release publishes bare and takes `latest`.
+      - run: |
+          if [[ "${{ github.ref_name }}" == *-* ]]; then TAG="--tag alpha"; else TAG=""; fi
+          npm stage publish --access public $TAG
+        env:
+          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
