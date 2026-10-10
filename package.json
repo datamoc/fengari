@@ -22,9 +22,6 @@
     "test:extended": "jest test/lauxlib-extended.test.js",
     "build": "echo 'Build step for ESM and TypeScript definitions'",
     "prepack": "npm run build"
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fengari-lua/fengari.git"
   },
   "keywords": [
     "lua",

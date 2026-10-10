@@ -251,7 +251,8 @@ test('string.pack/unpack/packsize', () => {
         lua.lua_call(L, 0, -1);
     }
 
-    expect(lua.lua_tointeger(L, -2)).toBe(12);
+    /* "c5" .. "j" .. "c3" => 5 + sizeof(lua_Integer) + 3, and lua_Integer is 8 bytes */
+    expect(lua.lua_tointeger(L, -2)).toBe(5 + 8 + 3);
     expect(lua.lua_toboolean(L, -1)).toBe(true);
 });
 

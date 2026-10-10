@@ -28,6 +28,7 @@ const {
     luaL_checknumber,
     luaL_error,
     luaL_newlib,
+    luaL_optinteger,
     luaL_optnumber
 } = require('./lauxlib.js');
 const {
@@ -37,29 +38,87 @@ const {
 } = require('./luaconf.js');
 const { to_luastring } = require("./fengaricore.js");
 
-let rand_state;
-/* use same parameters as glibc LCG */
-const l_rand = function() {
-    rand_state = (1103515245 * rand_state + 12345) & 0x7fffffff;
-    return rand_state;
+/*
+** Random-integer machinery ported from Lua 5.5.1 lmathlib.c:
+** 'xoshiro256**' over four unsigned 64-bit values, projected into
+** intervals with the 'project' algorithm to keep uniformity.
+** All arithmetic is done modulo 2^64 with BigInt.
+*/
+const MASK64 = (1n << 64n) - 1n;
+
+let rand_state = [0n, 0n, 0n, 0n];  /* current state */
+let rand_seeded = false;
+
+const rotl64 = function(x, n) {
+    return ((x << BigInt(n)) | (x >> BigInt(64 - n))) & MASK64;
 };
-const l_srand = function(x) {
-    rand_state = x|0;
-    if (rand_state === 0)
-        rand_state = 1;
+
+const nextrand = function() {
+    let s = rand_state;
+    let res = rotl64((s[1] * 5n) & MASK64, 7) * 9n & MASK64;
+    let t = (s[1] << 17n) & MASK64;
+    s[2] ^= s[0];
+    s[3] ^= s[1];
+    s[1] ^= s[2];
+    s[0] ^= s[3];
+    s[2] ^= t;
+    s[3] = rotl64(s[3], 45);
+    return res;
+};
+
+/* converts an unsigned 64-bit random value into a float in [0, 1) */
+const I2d = function(x) {
+    return Number(x >> 11n) / 9007199254740992;  /* 2^53 random bits */
+};
+
+/* seed the state (as Lua 5.5.1 'setseed') */
+const setrandseed = function(n1, n2) {
+    rand_state[0] = n1 & MASK64;
+    rand_state[1] = 0xffn;  /* avoid a zero state */
+    rand_state[2] = n2 & MASK64;
+    rand_state[3] = 0n;
+    for (let i = 0; i < 16; i++)  /* discard initial values to "spread" seed */
+        nextrand();
+    rand_seeded = true;
+};
+
+/* if not seeded yet, use a "random" seed from time and Math.random */
+const checkrandseed = function() {
+    if (!rand_seeded)
+        setrandseed(
+            BigInt(Math.floor(Math.random() * 0x100000000)) ^ BigInt(Date.now()),
+            BigInt(Math.floor(Math.random() * 0x100000000)));
+};
+
+/*
+** Project the random integer 'ran' into the interval [0, n]:
+** 'lim' is the smallest Mersenne number not smaller than 'n'; 'ran'
+** is projected into [0, lim] and re-drawn while it falls outside [0, n].
+*/
+const project = function(ran, n) {
+    let lim = n;  /* to compute the Mersenne number */
+    for (let sh = 1; (lim & (lim + 1n)) !== 0n; sh *= 2)
+        lim |= lim >> BigInt(sh);  /* spread 1s to the right */
+    while ((ran &= lim) > n)  /* project 'ran' into [0..lim] and test */
+        ran = nextrand();  /* not inside [0..n]? try again */
+    return ran;
 };
 
 const math_random = function(L) {
     let low, up;
-    /* use Math.random until randomseed is called */
-    let r = (rand_state === void 0)?Math.random():(l_rand() / 0x80000000);
+    checkrandseed();
+    let rv = nextrand();  /* next pseudo-random value */
     switch (lua_gettop(L)) {  /* check number of arguments */
         case 0:
-            lua_pushnumber(L, r);  /* Number between 0 and 1 */
+            lua_pushnumber(L, I2d(rv));  /* float between 0 and 1 */
             return 1;
         case 1: {
             low = 1;
             up = luaL_checkinteger(L, 1);
+            if (up === 0) {  /* single 0 as argument? */
+                lua_pushinteger(L, integer.wrap(rv));  /* full random integer */
+                return 1;
+            }
             break;
         }
         case 2: {
@@ -72,18 +131,30 @@ const math_random = function(L) {
 
     /* random integer in the interval [low, up] */
     luaL_argcheck(L, low <= up, 1, "interval is empty");
-    luaL_argcheck(L, low >= 0 || up <= LUA_MAXINTEGER + low, 1,
+    luaL_argcheck(L, low >= 0 || up <= integer.add(LUA_MAXINTEGER, low), 1,
         "interval too large");
 
-    r *= (up - low) + 1;
-    lua_pushinteger(L, Math.floor(r) + low);
+    /* project random integer into the interval [0, up - low] */
+    let p = project(rv, integer.unsigned(integer.sub(up, low)));
+    lua_pushinteger(L, integer.wrap(integer.unsigned(low) + p));
     return 1;
 };
 
 const math_randomseed = function(L) {
-    l_srand(luaL_checknumber(L, 1));
-    l_rand(); /* discard first value to avoid undesirable correlations */
-    return 0;
+    let n1, n2;
+    if (lua_isnoneornil(L, 1)) {
+        checkrandseed();  /* "random" seed */
+        n1 = BigInt(Date.now()) ^ BigInt(Math.floor(Math.random() * 0x100000000));
+        n2 = nextrand();  /* in case seed is not that random... */
+    }
+    else {
+        n1 = integer.unsigned(luaL_checkinteger(L, 1));
+        n2 = integer.unsigned(luaL_optinteger(L, 2, 0));
+    }
+    setrandseed(n1, n2);
+    lua_pushinteger(L, integer.wrap(n1));
+    lua_pushinteger(L, integer.wrap(n2));
+    return 2;  /* return seeds */
 };
 
 const math_abs = function(L) {

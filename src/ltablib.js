@@ -1,7 +1,7 @@
 "use strict";
 const integer = require('./linteger.js');
 
-const { LUA_MAXINTEGER } = require('./luaconf.js');
+const { LUA_MAXINTEGER, LUAI_MAXSTACK } = require('./luaconf.js');
 const {
     LUA_OPEQ,
     LUA_OPLT,
@@ -211,13 +211,14 @@ const unpack = function(L) {
     let i = luaL_optinteger(L, 2, 1);
     let e = luaL_opt(L, luaL_checkinteger, 3, luaL_len(L, 1));
     if (i > e) return 0;  /* empty range */
-    let n = e - i;  /* number of elements minus 1 (avoid overflows) */
-    if (n >= Number.MAX_SAFE_INTEGER || !lua_checkstack(L, ++n))
+    /* number of elements minus 1 (computed as unsigned to avoid overflows) */
+    let n = integer.unsigned(integer.sub(e, i));
+    if (n >= BigInt(LUAI_MAXSTACK) || !lua_checkstack(L, Number(++n)))
         return luaL_error(L, to_luastring("too many results to unpack"));
     for (; i < e; i++)  /* push arg[i..e - 1] (to avoid overflows) */
         lua_geti(L, 1, i);
     lua_geti(L, 1, e);  /* push last element */
-    return n;
+    return Number(n);
 };
 
 const l_randomizePivot = function() {

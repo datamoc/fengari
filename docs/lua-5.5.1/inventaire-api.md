@@ -1,6 +1,6 @@
 # Inventaire des API Lua 5.5.1
 
-Capture : 2026-10-10T08:17:16.574Z.
+Capture : 2026-10-10T10:23:54.446Z.
 
 Généré depuis les en-têtes et ancres du manuel livré avec 5.5.1, rapprochés du worktree actuel.
 **La présence d'un export ne valide pas son contrat.** Les macros de configuration/build et types C demandent une classification explicite, pas forcément un export JS.

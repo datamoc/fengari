@@ -1,6 +1,6 @@
 "use strict";
 
-const { luaX_tokens, luaX_init, LexState } = require('../src/llex.js');
+const { luaX_tokens, LexState } = require('../src/llex.js');
 const { luaS_new } = require('../src/lstring.js');
 const { lua_State } = require('../src/lstate.js');
 

@@ -1,7 +1,6 @@
 "use strict";
 
 const { FengariVm, LuaError } = require('../src/fengari-vm');
-const { lua } = require('../src/defs');
 
 // Test 1: Maintenir un état persistant
 function testPersistentState() {

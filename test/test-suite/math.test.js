@@ -312,40 +312,59 @@ test("[test-suite] math: order between floats and integers", () => {
 });
 
 
-test("[test-suite] math: testing order (floats can represent all integers)", () => {
+test("[test-suite] math: testing order (floats can/cannot represent all integers)", () => {
     let L = lauxlib.luaL_newstate();
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = `
-        assert(floatbits >= intbits)
+        if floatbits < intbits then
+          -- testing order (floats cannot represent all integers)
+          local fmax = 2^floatbits
+          local ifmax = fmax | 0
+          assert(fmax < ifmax + 1)
+          assert(fmax - 1 < ifmax)
+          assert(-(fmax - 1) > -ifmax)
+          assert(not (fmax <= ifmax - 1))
+          assert(-fmax > -(ifmax + 1))
+          assert(not (-fmax >= -(ifmax - 1)))
 
-        assert(maxint < maxint + 1.0)
-        assert(maxint < maxint + 0.5)
-        assert(maxint - 1.0 < maxint)
-        assert(maxint - 0.5 < maxint)
-        assert(not (maxint + 0.0 < maxint))
-        assert(maxint + 0.0 <= maxint)
-        assert(not (maxint < maxint + 0.0))
-        assert(maxint + 0.0 <= maxint)
-        assert(maxint <= maxint + 0.0)
-        assert(not (maxint + 1.0 <= maxint))
-        assert(not (maxint + 0.5 <= maxint))
-        assert(not (maxint <= maxint - 1.0))
-        assert(not (maxint <= maxint - 0.5))
+          assert(fmax/2 - 0.5 < ifmax//2)
+          assert(-(fmax/2 - 0.5) > -ifmax//2)
 
-        assert(minint < minint + 1.0)
-        assert(minint < minint + 0.5)
-        assert(minint <= minint + 0.5)
-        assert(minint - 1.0 < minint)
-        assert(minint - 1.0 <= minint)
-        assert(not (minint + 0.0 < minint))
-        assert(not (minint + 0.5 < minint))
-        assert(not (minint < minint + 0.0))
-        assert(minint + 0.0 <= minint)
-        assert(minint <= minint + 0.0)
-        assert(not (minint + 1.0 <= minint))
-        assert(not (minint + 0.5 <= minint))
-        assert(not (minint <= minint - 1.0))
+          assert(maxint < 2^intbits)
+          assert(minint > -2^intbits)
+          assert(maxint <= 2^intbits)
+          assert(minint >= -2^intbits)
+        else
+          -- testing order (floats can represent all integers)
+          assert(maxint < maxint + 1.0)
+          assert(maxint < maxint + 0.5)
+          assert(maxint - 1.0 < maxint)
+          assert(maxint - 0.5 < maxint)
+          assert(not (maxint + 0.0 < maxint))
+          assert(maxint + 0.0 <= maxint)
+          assert(not (maxint < maxint + 0.0))
+          assert(maxint + 0.0 <= maxint)
+          assert(maxint <= maxint + 0.0)
+          assert(not (maxint + 1.0 <= maxint))
+          assert(not (maxint + 0.5 <= maxint))
+          assert(not (maxint <= maxint - 1.0))
+          assert(not (maxint <= maxint - 0.5))
+
+          assert(minint < minint + 1.0)
+          assert(minint < minint + 0.5)
+          assert(minint <= minint + 0.5)
+          assert(minint - 1.0 < minint)
+          assert(minint - 1.0 <= minint)
+          assert(not (minint + 0.0 < minint))
+          assert(not (minint + 0.5 < minint))
+          assert(not (minint < minint + 0.0))
+          assert(minint + 0.0 <= minint)
+          assert(minint <= minint + 0.0)
+          assert(not (minint + 1.0 <= minint))
+          assert(not (minint + 0.5 <= minint))
+          assert(not (minint <= minint - 1.0))
+        end
     `;
     lualib.luaL_openlibs(L);
     if (lauxlib.luaL_loadstring(L, to_luastring(prefix + luaCode)) === lua.LUA_ERRSYNTAX)

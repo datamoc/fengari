@@ -1,81 +1,79 @@
 {
-  "capturedAt": "2026-10-10T08:17:16.574Z",
+  "capturedAt": "2026-10-10T10:23:54.446Z",
   "target": "Lua 5.5.1",
   "nodeVersion": "v26.8.1",
   "platform": "win32",
-  "gitHead": "ac8c3872509a56fb4bd9c1ef853de01f391c058b",
+  "gitHead": "953794adb2e52f0b2d07a034b1df2b659c0f6b9a",
   "gitStatus": [
-    "M .gitignore",
-    " M README.md",
+    "M .opencode/goals/state.json.sessions/7a4a41e49cf0e81be8a7aefe85facb13b96cc0925d9300f01a88bfbcf436881d/state.json",
+    " M docs/lua-5.5.1/inventaire-api.json",
+    " M docs/lua-5.5.1/inventaire-api.md",
+    " M docs/lua-5.5.1/observations.json",
     " M package.json",
-    " M src/defs.js",
-    " M src/fengari.js",
-    " M src/lapi.js",
+    " M src/fengaricore.js",
+    " M src/fengarilib.js",
     " M src/lauxlib.js",
     " M src/lbaselib.js",
-    " M src/lcode.js",
-    " M src/ldblib.js",
-    " M src/ldebug.js",
-    " M src/ldo.js",
-    " M src/ldump.js",
-    " M src/lfunc.js",
-    " M src/linit.js",
-    " M src/liolib.js",
-    " M src/llex.js",
+    " M src/lcorolib.js",
+    " M src/ljstype.js",
+    " M src/llimits.js",
     " M src/lmathlib.js",
-    " M src/loadlib.js",
-    " M src/lobject.js",
-    " M src/lparser.js",
-    " M src/lstate.js",
+    " M src/lopcodes.js",
+    " M src/loslib.js",
+    " M src/lstring.js",
     " M src/lstrlib.js",
-    " M src/ltable.js",
     " M src/ltablib.js",
-    " M src/ltm.js",
-    " M src/lua.js",
-    " M src/luaconf.js",
-    " M src/lualib.js",
-    " M src/lundump.js",
     " M src/lutf8lib.js",
-    " M src/lvm.js",
-    " M test/loslib.test.js",
+    " M src/lzio.js",
+    " M test/defs.test.js",
+    " M test/lapi.test.js",
+    " M test/lauxlib-extended.test.js",
+    " M test/lauxlib.test.js",
+    " M test/lbaselib.test.js",
+    " M test/lcorolib.test.js",
+    " M test/ldblib.test.js",
+    " M test/ldebug.test.js",
+    " M test/lexparse.test.js",
+    " M test/lmathlib.test.js",
+    " M test/load.test.js",
+    " M test/loadfile-test.bc",
+    " M test/loadlib.test.js",
+    " M test/lstrlib.test.js",
+    " M test/ltablib.test.js",
+    " M test/ltm.test.js",
+    " M test/lua.test.js",
     " M test/lutf8lib.test.js",
+    " M test/lvm.test.js",
+    " M test/manual-tests/debug-cli.js",
+    " M test/test-fengari-vm-mock.js",
+    " M test/test-fengari-vm.js",
+    " M test/test-lexer-tokens.js",
+    " M test/test-suite/api.test.js",
+    " M test/test-suite/attrib.test.js",
+    " M test/test-suite/bitwise.test.js",
+    " M test/test-suite/calls.test.js",
+    " M test/test-suite/closure.test.js",
+    " M test/test-suite/code.test.js",
+    " M test/test-suite/constructs.test.js",
+    " M test/test-suite/coroutine.test.js",
+    " M test/test-suite/db.test.js",
     " M test/test-suite/errors.test.js",
+    " M test/test-suite/events.test.js",
+    " M test/test-suite/goto.test.js",
     " M test/test-suite/literals.test.js",
+    " M test/test-suite/locals.test.js",
+    " M test/test-suite/ltests.js",
+    " M test/test-suite/math.test.js",
+    " M test/test-suite/nextvar.test.js",
+    " M test/test-suite/pm.test.js",
     " M test/test-suite/sort.test.js",
+    " M test/test-suite/strings.test.js",
+    " M test/test-suite/tpack.test.js",
     " M test/test-suite/utf8.test.js",
-    "?? .coord-session",
-    "?? .opencode/",
-    "?? CHANGES.md",
-    "?? docs/",
-    "?? src/fengari-vm.js",
-    "?? src/lapi-ext.js",
-    "?? src/lbytecode.js",
-    "?? src/library-runtime.js",
-    "?? src/linteger.js",
-    "?? src/lstate_clean.js",
-    "?? src/luaconf-base.js",
-    "?? src/lualib-constants.js",
-    "?? src/runtime.js",
-    "?? src/runtime/",
-    "?? src/tvalue.js",
-    "?? src/tvalue_section.txt",
-    "?? test/dependencies.test.js",
-    "?? test/lauxlib-extended.test.js",
-    "?? test/lua55/",
-    "?? test/test-api-c-complete.js",
-    "?? test/test-api-c-simple.js",
-    "?? test/test-api-c.js",
-    "?? test/test-fengari-vm-basic.js",
-    "?? test/test-fengari-vm-final.js",
-    "?? test/test-fengari-vm-mock.js",
-    "?? test/test-fengari-vm-simple.js",
-    "?? test/test-fengari-vm-structure.js",
-    "?? test/test-fengari-vm.js",
-    "?? test/test-lapi-exports.js",
-    "?? test/test-lexer-tokens.js",
-    "?? test/test-new-features.js",
-    "?? test/test-tokens.js",
-    "?? tools/"
+    " M test/test-suite/vararg.test.js",
+    " M test/tests.js",
+    "?? .opencode/goals/state.json.sessions/7dd11d8e90beba06d1b0f80dd2bf00684ab9f66674eb7f8d1b38ac24ae2d94b7/",
+    "?? .opencode/goals/state.json.sessions/b6aa266abe121fa9352a827f4a046daeb3fdf58e6bbab5fa25a4d9fcb7d53678/"
   ],
   "limitations": "Observations of this worktree only; the Lua 5.5.1 oracle and full official suite were not run by this tool.",
   "sourceHashes": [
@@ -93,11 +91,11 @@
     },
     {
       "file": "src/fengaricore.js",
-      "sha256": "fa77b86aac6a70a596043ce335b1476fe38842866fc2aa67b8eee3fa2d2b3bb7"
+      "sha256": "a9aaeaf5f51fffb0f020cdb3168a5c7324742269d84f6ed1a0c9a35fc0ea4603"
     },
     {
       "file": "src/fengarilib.js",
-      "sha256": "ef681ebc8bdd806231c1a496727d1b0e2b348d7b61e0c5fb2f10e8c9bcab65e2"
+      "sha256": "38e0932d4a6b47067ba05671cade42416cc37cd8ded128f159f8a980e218ad10"
     },
     {
       "file": "src/lapi-ext.js",
@@ -109,11 +107,11 @@
     },
     {
       "file": "src/lauxlib.js",
-      "sha256": "8ea8e00fcd3d5aeb3d3e9011303703b452bed44d3aa132dcd234c41e7d0c8af9"
+      "sha256": "b4bc50974845b90f76b463071121e40314f8c24862472e0f0bd63c35e988df4a"
     },
     {
       "file": "src/lbaselib.js",
-      "sha256": "3f704a731c2ce142a69bbdde0a90b70deb037dfa12504da80f6da36897224fcf"
+      "sha256": "69c63b44cc19295811c33c03cbf56f4dfe2eac74cfc8b9a59113c54874bb41ae"
     },
     {
       "file": "src/lbytecode.js",
@@ -125,7 +123,7 @@
     },
     {
       "file": "src/lcorolib.js",
-      "sha256": "79d8a25d83138ee10acd2c89f62ae33593ba8723ec21f5e1fd471afe0333a2b3"
+      "sha256": "8d78fc21541d4f79d8870709ab6a2089a28ec45f050e14e4aa044617a91177b6"
     },
     {
       "file": "src/ldblib.js",
@@ -165,7 +163,7 @@
     },
     {
       "file": "src/ljstype.js",
-      "sha256": "fcad4e8a0866680a2c6961f4fbc6761109e0ae1b5dbae1c9722e2abb5c7e9a19"
+      "sha256": "a414645dcd2bd5e014a35bcb186bb080a73874da017bf2172c8a06992847bfca"
     },
     {
       "file": "src/llex.js",
@@ -173,11 +171,11 @@
     },
     {
       "file": "src/llimits.js",
-      "sha256": "f0f4162cee61b55f4a00a0ed2f94b8daa2b7b97052168c185bc978bcbce0be22"
+      "sha256": "bd4263a9286c55949129b66d21f7fdc2335d9a7dbf0ecd62cabbfd68d8274de8"
     },
     {
       "file": "src/lmathlib.js",
-      "sha256": "020f0a663df21f5b55af9b4086252b9583c9b88c205461a1a6bac83b7c85edef"
+      "sha256": "f9fbc5c9f0aa0d83b3b7b9ec9b1bcb90d14f37e968efd70df471b113422c1234"
     },
     {
       "file": "src/loadlib.js",
@@ -189,11 +187,11 @@
     },
     {
       "file": "src/lopcodes.js",
-      "sha256": "d5d36c126686f5f3eb442945193ada422d7e3603b968b6e40b5f760cf275b034"
+      "sha256": "05ff44648c2d2069e64a76e5125a7434ac98c50ee63c0341d7683d2524dc977e"
     },
     {
       "file": "src/loslib.js",
-      "sha256": "0b5280bb91405bb130d3bf32737da96d917b8eb619d8075f0aca57c28c964fae"
+      "sha256": "d5163ad3dec9d1b4854e84d0191a52791889745d326e038d10154b45aed123a6"
     },
     {
       "file": "src/lparser.js",
@@ -209,11 +207,11 @@
     },
     {
       "file": "src/lstring.js",
-      "sha256": "3f0ac81d9ffb1eb5ffcb26385938fd228bc5252e84e6486f8f3af289a15ae205"
+      "sha256": "0552ef9782c35b8d6a8cf772771df43471cd3299304c4f35b6c58c8dce257235"
     },
     {
       "file": "src/lstrlib.js",
-      "sha256": "47dba1099cd97f5c386886a7e905afff90166b82931c5bd46b8a4c35f9a6857f"
+      "sha256": "240582c8f7780610212acb057b5dd90aad89f4cd9923526136723a0519539af9"
     },
     {
       "file": "src/ltable.js",
@@ -221,7 +219,7 @@
     },
     {
       "file": "src/ltablib.js",
-      "sha256": "0d3ab38ea351647768a008f5c751f3563a157ad2a69eb55819230e3bdb74ea29"
+      "sha256": "3afb8de353db3e3e933ca80218056ad10bf1052d12b85804caa2a5bae1ef2126"
     },
     {
       "file": "src/ltm.js",
@@ -253,7 +251,7 @@
     },
     {
       "file": "src/lutf8lib.js",
-      "sha256": "75ebb97eb6f2bddda0532f98b9ae7c3c95ae810ad4a07b8c96c5a5a329d387f9"
+      "sha256": "82cdc396ca1bc5ccd038ca7f066e4c9fa881acf0598ed480d698dbf236b0c28c"
     },
     {
       "file": "src/lvm.js",
@@ -261,7 +259,7 @@
     },
     {
       "file": "src/lzio.js",
-      "sha256": "631ff1dfe413524eaf8e83ca267c7f1c1fdca26c4883264a44f893bccc122971"
+      "sha256": "a2cebc55a0ff60aed1536546325afec78dafed543b3bb4cd8dfb7bb2ff9ed37b"
     },
     {
       "file": "src/runtime/lapi.js",

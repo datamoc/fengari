@@ -68,7 +68,7 @@ function testWithMocks() {
         const vm = new FengariVm();
         
         // Exécuter une expression Lua simple
-        const result = vm.run("return 42");
+        vm.run("return 42");
         console.log("✅ Test avec mocks: PASSED");
         return true;
     } catch (e) {
