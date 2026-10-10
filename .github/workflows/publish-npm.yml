@@ -28,23 +28,20 @@ jobs:
       # configured. npm then tries that bogus credential against registry.npmjs.org
       # before ever attempting the OIDC exchange, and fails with E401. v7 removed
       # that fallback for precisely this reason.
+      # no `registry-url` on purpose: it is what makes setup-node write an
+      # `${NODE_AUTH_TOKEN}` placeholder into .npmrc, under which yarn 1 refuses
+      # to even start ("Failed to replace env in config") - and it would buy
+      # nothing, since npm's default registry is already registry.npmjs.org
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: '26'
           # never cache in a release build: a stale package-manager cache is exactly
           # the kind of non-reproducible state a published artifact must not depend on
           package-manager-cache: false
-          registry-url: 'https://registry.npmjs.org'
 
       # dependencies come from yarn.lock (this is a yarn project); publishing itself
-      # still runs through the npm CLI. NODE_AUTH_TOKEN is set to an empty string on
-      # purpose: setup-node's registry-url writes a `${NODE_AUTH_TOKEN}` placeholder
-      # into .npmrc, which yarn 1 refuses to even start under ("Failed to replace
-      # env in config") while npm merely leaves it unset - exactly what OIDC wants,
-      # since trusted publishing never uses NODE_AUTH_TOKEN
+      # still runs through the npm CLI
       - run: yarn install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ''
       # trusted publishing needs npm 11.5.1+ for the OIDC exchange; pin high enough
       # that a future Node LTS bundling an older npm doesn't silently fall back to
       # failing for a missing token
