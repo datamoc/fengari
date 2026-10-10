@@ -943,8 +943,11 @@ const CAP_POSITION   = -2;
 const MAXCCALLS      = 200;
 const SPECIALS       = to_luastring("^$*+?.([%-");
 
+const MATCH_INTERRUPT_MASK = 0xFFFF;  /* pattern-matching steps between embedder interrupt checks */
+
 class MatchState {
     constructor(L) {
+        this.steps = 0;  /* matching steps so far, for the embedder interrupt */
         this.src = null;  /* unmodified source string */
         this.src_init = null;  /* init of source string */
         this.src_end = null;  /* end ('\0') of source string */
@@ -1140,6 +1143,10 @@ const match = function(ms, s, p) {
 
     if (ms.matchdepth-- === 0)
         luaL_error(ms.L, to_luastring("pattern too complex"));
+
+    /* give the embedder a chance to interrupt long pattern matches (see FengariVm limits) */
+    if ((++ms.steps & MATCH_INTERRUPT_MASK) === 0 && ms.L.l_G.interrupt !== null)
+        ms.L.l_G.interrupt(ms.L);
 
     while (gotoinit || gotodefault) {
         gotoinit = false;

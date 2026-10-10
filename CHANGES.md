@@ -1,5 +1,16 @@
 # Changements dans Fengari
 
+## Version 0.4.1
+
+Correctifs de sécurité sur les limites d'exécution et le préréglage `sandbox` de la 0.4.0 (à ne plus utiliser pour du code non fiable).
+
+### Corrections
+- **Limites contournables par `xpcall`** : le gestionnaire de messages d'un `xpcall` s'exécutait pendant le hook de comptage, donc sans contrôle, et pouvait boucler indéfiniment ; les hooks sont maintenant réactivés avant de signaler le dépassement.
+- **Instruction native interminable** : un filtrage de motif (`('a'):rep(20000):find('.-.-.-.-.-b')`) ne passait jamais par le hook de comptage. `string.find`, `match`, `gmatch` et `gsub` appellent désormais un point d'interruption toutes les 65536 étapes (`lua_State.l_G.interrupt`, utilisé par `limits`), chaque appel comptant pour 65536 instructions.
+- **Mémoire** : nouvelles limites `limits.allocation` (taille maximale d'une allocation interne de chaîne ou de tampon : `string.rep('x', 2^27)` ou une concaténation doublée donne « not enough memory », rattrapable) et `limits.totalAllocation` (total par appel : dépassement non rattrapable, `LimitError` avec `limit === 'memory'`), branchées sur `lua_setallocf`.
+- **`sandbox`** : `__fs_read` et `__fs_list` ne sont plus définies, le script n'a plus aucun accès aux fichiers servis par `files` ; `sandbox: true` accepte une liste `libs` sans `base` au lieu de lever une erreur.
+- **Tests** : `test/fengari-vm-limits.test.js`, `test/fengari-vm.test.js`.
+
 ## Version 0.4.0
 
 ### Nouvelles fonctionnalités (`FengariVm`)

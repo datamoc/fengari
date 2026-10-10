@@ -1,6 +1,6 @@
 {
   "name": "@datamoc/fengari",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A Lua 5.4.6 VM written in JS ES6, targeting the browser and Node.js",
   "main": "src/fengari.js",
   "files": [

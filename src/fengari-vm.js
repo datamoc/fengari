@@ -3,6 +3,8 @@
 const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').fengari;
 
 const MAX_DEPTH = 128;
+const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation'];
+const INTERRUPT_STEPS = 65536; /* étapes de filtrage de motif entre deux appels de l'interruption */
 const HOOK_GRANULARITY = 1000; /* instructions Lua entre deux vérifications des limites */
 const now = () => (typeof performance === 'object' ? performance.now() : Date.now());
 const INTEGER_KEY = /^-?\d+$/;
@@ -86,7 +88,7 @@ class LuaError extends Error {
 
 /**
  * Un script a dépassé sa limite d'instructions ou de temps (voir l'option `limits`).
- * `limit` vaut 'instructions' ou 'time'.
+ * `limit` vaut 'instructions', 'time' ou 'memory'.
  */
 class LimitError extends LuaError {
     constructor(limit, message, traceback) {
@@ -236,13 +238,17 @@ class FengariVm {
    * @param {boolean} [options.sandbox] - Préréglage pour du code Lua non fiable : seulement base,
    *   coroutine, table, string, utf8 et math ; ni os, io, debug, package ni require ; dofile,
    *   loadfile et string.dump retirés ; load n'accepte que du texte. `libs` peut restreindre
-   *   davantage mais pas ajouter os, io, debug ou package ; `remove` s'ajoute. Ne limite ni le
-   *   temps ni la mémoire, et les fonctions hôtes définies (dont `__fs_read`/`__fs_list`, qui
-   *   servent `files`) restent appelables par le script.
+   *   davantage mais pas ajouter os, io, debug ou package ; `remove` s'ajoute. `__fs_read` et
+   *   `__fs_list` (qui servent `files`) ne sont pas définies : le script n'a aucun accès aux fichiers
+   *   de l'hôte. Ne limite ni le temps ni la mémoire (voir `limits`) ; les fonctions que vous
+   *   définissez avec `defineFunction` restent appelables par le script.
    * @param {Object} [options.limits] - Budget par appel de haut niveau (run, call, callRef, Coroutine#resume),
    *   remis à zéro à chaque appel. `instructions` : nombre d'instructions Lua (approximatif, vérifié
-   *   toutes les 1000 instructions au plus) ; `timeMs` : durée réelle en ms, JS hôte inclus. Un
-   *   dépassement lève une LimitError et ne peut pas être rattrapé par le script (pcall inclus).
+   *   toutes les 1000 instructions au plus, et 65536 étapes de filtrage de motif comptent pour 65536
+   *   instructions) ; `timeMs` : durée réelle en ms, JS hôte inclus ; `allocation` : taille maximale
+   *   en octets d'une allocation interne de chaîne ou de tampon (« not enough memory », rattrapable) ;
+   *   `totalAllocation` : total d'octets alloués par appel. Un dépassement d'instructions, de temps
+   *   ou de total lève une LimitError et ne peut pas être rattrapé par le script (pcall inclus).
    *   N'agit que sur la VM créée ici : un script qui dispose de `debug.sethook` peut retirer le
    *   hook, donc combiner avec `sandbox`. Voir aussi setLimits.
    * @param {boolean} [options.preserveFloats] - Lire les flottants Lua de valeur entière (5.0)
@@ -275,7 +281,7 @@ class FengariVm {
             if (forbidden.length > 0) throw new Error(`Library not allowed in a sandbox: ${forbidden.join(', ')}`);
         }
         this.openLibraries(libs);
-        if (sandbox) this.run(SANDBOX_TEXT_ONLY_LOAD, '=sandbox'); /* avant les retraits : `remove` peut viser `load` */
+        if (sandbox && libs.includes('base')) this.run(SANDBOX_TEXT_ONLY_LOAD, '=sandbox'); /* avant les retraits : `remove` peut viser `load` */
         for (const path of [...(sandbox ? SANDBOX_REMOVE : []), ...(options.remove ?? [])]) this.removeGlobal(path);
 
         // Définir les fonctions hôtes de base
@@ -284,8 +290,10 @@ class FengariVm {
         });
 
         this.defineFunction('__random', () => this.nextRandom());
-        this.defineFunction('__fs_read', (path) => this.files.read(String(path)));
-        this.defineFunction('__fs_list', (path) => this.files.list(String(path)));
+        if (!sandbox) {
+            this.defineFunction('__fs_read', (path) => this.files.read(String(path)));
+            this.defineFunction('__fs_list', (path) => this.files.list(String(path)));
+        }
 
         if (options.limits) this.setLimits(options.limits);
     }
@@ -299,16 +307,21 @@ class FengariVm {
         if (limits === null || limits === undefined) {
             this.limits = null;
             lua.lua_sethook(this.state, null, 0, 0);
+            this.state.l_G.interrupt = null;
+            lua.lua_setallocf(this.state, null, null);
             return;
         }
-        for (const key of ['instructions', 'timeMs']) {
+        for (const key of LIMIT_KEYS) {
             if (limits[key] !== undefined && !(limits[key] > 0)) throw new RangeError(`limits.${key} must be a positive number`);
         }
-        if (limits.instructions === undefined && limits.timeMs === undefined) throw new RangeError('limits needs instructions and/or timeMs');
-        this.limits = { instructions: limits.instructions, timeMs: limits.timeMs };
+        if (LIMIT_KEYS.every((key) => limits[key] === undefined)) throw new RangeError(`limits needs at least one of ${LIMIT_KEYS.join(', ')}`);
+        this.limits = Object.fromEntries(LIMIT_KEYS.map((key) => [key, limits[key]]));
         this.hookCount = Math.max(1, Math.min(HOOK_GRANULARITY, Math.floor(limits.instructions ?? HOOK_GRANULARITY)));
         this.limitHook = (L) => this.checkLimits(L);
         lua.lua_sethook(this.state, this.limitHook, lua.LUA_MASKCOUNT, this.hookCount);
+        /* Les fonctions natives (motifs de string, allocations) ne passent pas par le hook de comptage. */
+        this.state.l_G.interrupt = (L) => this.checkInterrupt(L);
+        lua.lua_setallocf(this.state, (ud, size) => this.checkAllocation(size), null);
     }
 
     /**
@@ -326,6 +339,7 @@ class FengariVm {
 
     armLimits() {
         this.remaining = this.limits.instructions ?? Infinity;
+        this.allocated = 0;
         this.deadline = this.limits.timeMs === undefined ? Infinity : now() + this.limits.timeMs;
         this.limitHit = null;
         for (const thread of this.limitedThreads) this.lua.lua_sethook(thread, this.limitHook, this.lua.LUA_MASKCOUNT, this.hookCount);
@@ -343,11 +357,45 @@ class FengariVm {
             if (this.remaining <= 0) this.limitHit = 'instructions';
             else if (now() > this.deadline) this.limitHit = 'time';
         }
+        this.raiseIfExceeded(L);
+    }
+
+    /**
+   * Appelé toutes les 65536 étapes d'un filtrage de motif de `string` : une seule instruction Lua peut sinon
+   * durer indéfiniment (`('a'):rep(20000):find('.-.-.-.-b')`). Chaque appel compte pour 65536 instructions.
+   */
+    checkInterrupt(L) {
+        if (this.limitDepth === 0) return;
+        if (this.limitHit === null) {
+            this.remaining -= INTERRUPT_STEPS;
+            if (this.remaining <= 0) this.limitHit = 'instructions';
+            else if (now() > this.deadline) this.limitHit = 'time';
+        }
+        this.raiseIfExceeded(L);
+    }
+
+    /**
+   * Appelé avant chaque allocation interne de chaîne ou de tampon (`lua_setallocf`). Lever refuse
+   * l'allocation : « not enough memory », que le script peut rattraper. Dépasser le total par appel
+   * déclenche en plus la limite 'memory', qui n'est pas rattrapable.
+   */
+    checkAllocation(size) {
+        if (this.limitDepth === 0) return;
+        this.allocated += size;
+        const overTotal = this.allocated > (this.limits.totalAllocation ?? Infinity);
+        if (overTotal) this.limitHit ??= 'memory';
+        if (overTotal || size > (this.limits.allocation ?? Infinity)) throw new RangeError('allocation limit exceeded');
+    }
+
+    raiseIfExceeded(L) {
         if (this.limitHit === null) return;
         if (L.basehookcount !== 1) {
             this.lua.lua_sethook(L, this.limitHook, this.lua.LUA_MASKCOUNT, 1);
             this.limitedThreads.add(L);
         }
+        /* Les hooks sont coupés pendant un hook : sans cela, le gestionnaire de messages d'un xpcall
+           s'exécuterait sans contrôle et pourrait boucler indéfiniment. */
+        L.allowhook = 1;
         this.lauxlib.luaL_error(L, this.to_luastring(`${this.limitHit} limit exceeded`));
     }
 

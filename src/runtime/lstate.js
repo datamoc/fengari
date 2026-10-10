@@ -94,6 +94,7 @@ module.exports = function createLstate(dependencies) {
             this.version = null;
             this.allocf = null;  /* embedder hook, see lmem.js */
             this.allocud = null;
+            this.interrupt = null;  /* embedder callback, see lstrlib.js match() */
             this.tmname = new Array(ltm.TMS.TM_N);
             this.mt = new Array(LUA_NUMTAGS);
         }

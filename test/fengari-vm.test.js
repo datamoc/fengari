@@ -320,6 +320,14 @@ describe("FengariVm sandbox preset", () => {
             .toBe("functionfunctionfunctionfunctionfunction");
     });
 
+    test("the host file helpers are not exposed, except in a normal VM", () => {
+        const files = { read: () => "secret", list: () => ["a"] };
+        const vm = new FengariVm(files, undefined, { sandbox: true });
+        expect(vm.run("return type(__fs_read) .. type(__fs_list)")).toBe("nilnil");
+        const normal = new FengariVm(files);
+        expect(normal.run("return __fs_read('x')")).toBe("secret");
+    });
+
     test("ordinary scripts still work, including load with text and env", () => {
         const vm = sandbox();
         expect(vm.run("return load('return 1 + 1')()")).toBe(2);

@@ -108,3 +108,72 @@ describe("FengariVm execution limits", () => {
         expect(() => vm.run("for i = 1, 100000 do end")).toThrow(LimitError);
     });
 });
+
+describe("FengariVm limits against hooks that are switched off", () => {
+    test("an xpcall message handler cannot run unchecked", () => {
+        const vm = limited({ instructions: 20000 });
+        expect(() => vm.run("xpcall(function() while true do end end, function(e) while true do end end)")).toThrow(LimitError);
+        expect(() => vm.run(`xpcall(function() while true do end end,
+            function(e) pcall(function() while true do end end) while true do end end)`)).toThrow(LimitError);
+    });
+
+    test("metamethods, __close handlers and library callbacks are limited", () => {
+        const vm = limited({ instructions: 20000 });
+        for (const code of [
+            "local t = setmetatable({}, {__index = function() while true do end end}) return t.x",
+            "local x <close> = setmetatable({}, {__close = function() while true do end end}) while true do end",
+            "table.sort({3, 2, 1}, function(a, b) while true do end end)",
+            "return ('abc'):gsub('.', function() while true do end end)"
+        ]) {
+            expect(() => vm.run(code)).toThrow(LimitError);
+        }
+    });
+
+    test("one long pattern match is interrupted", () => {
+        const vm = limited({ instructions: 1000000, timeMs: 2000 });
+        const start = Date.now();
+        expect(() => vm.run("return (string.rep('a', 20000)):find('.-.-.-.-.-b')")).toThrow(LimitError);
+        expect(Date.now() - start).toBeLessThan(5000);
+        expect(vm.run("return (string.rep('a', 100)):find('a-b') == nil")).toBe(true);
+    });
+
+    test("pattern matching stays correct and fast without limits", () => {
+        const vm = new FengariVm();
+        expect(vm.run("return select(2, (string.rep('ab', 50000)):gsub('ab', 'x'))")).toBe(50000);
+        expect(vm.run("return (string.rep('a', 100000) .. 'b'):find('a*b')")).toBe(1);
+    });
+
+    test("allocation caps refuse oversized strings and stay catchable", () => {
+        const vm = limited({ instructions: 1000000, allocation: 100000 });
+        expect(vm.run("local ok = pcall(string.rep, 'x', 2^27) return ok")).toBe(false);
+        expect(vm.run("local ok, err = pcall(string.rep, 'x', 2^27) return err")).toBe("not enough memory");
+        expect(vm.run("return #string.rep('x', 5000)")).toBe(5000);
+    });
+
+    test("doubling concatenation is refused by the allocation cap", () => {
+        const vm = limited({ instructions: 1000000, allocation: 100000 });
+        expect(() => vm.run("local s = 'x' for i = 1, 40 do s = s .. s end return #s")).toThrow(/not enough memory/);
+        expect(vm.run("return #string.rep('x', 1000)")).toBe(1000);
+    });
+
+    test("a total allocation budget is a limit that pcall cannot survive", () => {
+        const vm = limited({ totalAllocation: 100000 });
+        let error;
+        try { vm.run("while true do pcall(string.rep, 'x', 50000) end"); } catch (e) { error = e; }
+        expect(error).toBeInstanceOf(LimitError);
+        expect(error.limit).toBe("memory");
+        expect(vm.run("return #string.rep('x', 1000)")).toBe(1000);
+    });
+
+    test("sandbox accepts a library list without base", () => {
+        const vm = new FengariVm(undefined, undefined, { sandbox: true, libs: ["string"] });
+        expect(vm.run("return string.rep('a', 3)")).toBe("aaa");
+    });
+
+    test("limits can be removed again, including the native interrupts", () => {
+        const vm = limited({ instructions: 20000, allocation: 10 });
+        vm.setLimits(null);
+        expect(vm.run("return #string.rep('x', 100000)")).toBe(100000);
+        expect(vm.state.l_G.interrupt).toBeNull();
+    });
+});
