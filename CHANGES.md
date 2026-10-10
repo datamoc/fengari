@@ -1,5 +1,29 @@
 # Changements dans Fengari
 
+## Version 0.4.0
+
+### Nouvelles fonctionnalités (`FengariVm`)
+- **Export** : `require('@datamoc/fengari')` expose désormais `FengariVm`, `LuaError`, `LimitError`, `Multi`, `Yield`, `LuaRef`, `LuaFloat`, `Userdata` et `Coroutine`.
+- **Coroutines pilotées par l'hôte** : `vm.coroutine(chemin | LuaRef)` et `vm.coroutineFromSource(source)` retournent une `Coroutine` (`status`, `resume(...args)` → `{done, values}`, `close()`). Une fonction hôte qui retourne `new Yield([...])` suspend la coroutine appelante ; les arguments de `resume` deviennent ses valeurs de retour.
+- **Choix des bibliothèques** : option `libs` (base, coroutine, table, string, utf8, math, os, debug, package, io, fengari) et option `remove` (globals à retirer ; retirer un global de premier niveau le retire aussi de `package.loaded` et `package.preload`).
+- **Préréglage `sandbox: true`** pour du code Lua non fiable : seulement base, coroutine, table, string, utf8 et math ; ni `os`, `io`, `debug`, `package` ni `require` ; `dofile`, `loadfile` et `string.dump` retirés ; `load` n'accepte que du texte.
+- **Limites d'exécution** : option `limits: { instructions, timeMs }` et `setLimits()`, par appel de haut niveau (`run`, `call`, `callMulti`, `callRef`, `Coroutine#resume`), via un hook de comptage. Un dépassement lève une `LimitError` (sous-classe de `LuaError`, `limit` = `'instructions'` ou `'time'`) que le script ne peut pas rattraper (`pcall` et coroutines inclus). Sans `sandbox`, `debug.sethook` permet de retirer le hook.
+- **Appels** : `runMulti` et `callMulti` retournent toutes les valeurs de retour ; `callRef` et `LuaRef#call` appellent une fonction Lua obtenue par `read`.
+- **Conversions** : fonctions, threads et userdata sont lus comme `LuaRef` ; `new Userdata(valeur)` pousse une valeur hôte opaque (light userdata) ; `new LuaFloat(5)` pousse un flottant et l'option `preserveFloats` lit `5.0` comme `LuaFloat` ; les entiers hors de ±2^53 sont des `BigInt` (et un `BigInt` est poussé comme entier 64 bits) ; une chaîne qui n'est pas de l'UTF-8 valide est lue comme `Uint8Array` (et un `Uint8Array` est poussé comme chaîne d'octets) ; une table dont les clés ne sont pas toutes des chaînes ou des entiers (booléens, flottants, tables, fonctions, chaînes binaires, collision `"1"`/`1`) est lue comme `Map`, et une `Map` est poussée avec ses clés exactes. Les références circulaires sont préservées.
+- **Page de benchmark** : `docs/benchmark/index.html` compare Lua dans Fengari et JavaScript dans le navigateur du visiteur ; `npm run bench:build` régénère `docs/benchmark/fengari.bundle.js`.
+
+### Changements de comportement
+- Une table Lua dont les clés sont 1..n est lue comme **tableau JavaScript** (et non plus comme objet `{"1": …}`).
+- `read` ne retourne plus `null` pour une fonction ou un userdata, et lève une `RangeError` au-delà de 128 niveaux d'imbrication au lieu de tronquer à 24.
+
+### Corrections
+- Une clé Lua `__proto__` ne modifie plus le prototype de l'objet lu.
+- Une `LuaRef` ou une `Coroutine` d'une autre `FengariVm` est refusée au lieu de désigner une valeur sans rapport.
+- `protectedCall` lisait sur le thread courant au lieu de l'état principal quand `call` était appelé depuis une fonction hôte exécutée dans une coroutine.
+- Une erreur de conversion d'une valeur retournée par une fonction hôte devient une erreur Lua au lieu d'une exception JavaScript brute ; `print` et les messages d'erreur ne plantent plus sur un `BigInt`, une fonction ou une référence circulaire.
+- Pousser un nombre JavaScript hors de l'intervalle des entiers sûrs (`1e300`) ne lève plus « invalid argument » : il est poussé comme flottant.
+- **Tests** : `test/fengari-vm.test.js`, `test/fengari-vm-limits.test.js`.
+
 ## Version 0.3.0
 
 ### Nouvelles fonctionnalités
