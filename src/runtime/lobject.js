@@ -69,6 +69,7 @@ module.exports = function createLobject(dependencies) {
         luai_nummod,
         lua_assert
     } = require("../llimits.js");
+    const { lua_alloc } = require('../lmem.js');
     const ltm     = dependencies.ltm;
 
     const LUA_TPROTO = LUA_NUMTAGS;
@@ -689,6 +690,7 @@ module.exports = function createLobject(dependencies) {
                     break;
                 }
                 case 85 /* ('U').charCodeAt(0) */: {
+                    lua_alloc(L, UTF8BUFFSZ);
                     let buff = new Uint8Array(UTF8BUFFSZ);
                     let l = luaO_utf8esc(buff, argp[a++]);
                     pushstr(L, buff.subarray(UTF8BUFFSZ - l));

@@ -1,6 +1,7 @@
 "use strict";
 
 const { lua_assert } = require("./llimits.js");
+const { lua_alloc } = require("./lmem.js");
 
 class MBuffer {
     constructor() {
@@ -22,6 +23,7 @@ const luaZ_resetbuffer = function(buff) {
 };
 
 const luaZ_resizebuffer = function(L, buff, size) {
+    lua_alloc(L, size);
     let newbuff = new Uint8Array(size);
     if (buff.buffer)
         newbuff.set(buff.buffer);

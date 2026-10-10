@@ -1116,14 +1116,13 @@ module.exports = function createLapi(dependencies) {
     // This functions are only there for compatibility purposes
     const lua_gc = function () {};
 
-    const lua_getallocf = function () {
-        console.warn("lua_getallocf is not available");
-        return 0;
+    const lua_getallocf = function(L) {
+        return [L.l_G.allocf, L.l_G.allocud];
     };
 
-    const lua_setallocf = function () {
-        console.warn("lua_setallocf is not available");
-        return 0;
+    const lua_setallocf = function(L, allocf, ud) {
+        L.l_G.allocf = allocf;
+        L.l_G.allocud = ud;
     };
 
     const lua_getextraspace = function () {

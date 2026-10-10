@@ -21,6 +21,7 @@ const {
     lua_toboolean,
     lua_tointegerx
 } = require('./lua.js');
+const { lua_alloc } = require('./lmem.js');
 const {
     luaL_Buffer,
     luaL_addchar,
@@ -407,6 +408,7 @@ const os_date = function(L) {
         lua_createtable(L, 0, 9);  /* 9 = number of fields */
         setallfields(L, stm, utc);
     } else {
+        lua_alloc(L, 4);
         let cc = new Uint8Array(4);
         cc[0] = "%".charCodeAt(0);
         let b = new luaL_Buffer();

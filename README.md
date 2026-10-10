@@ -9,6 +9,7 @@ A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **bro
 - **Extensible**: Easy to integrate with existing JavaScript projects.
 - **Comprehensive Testing**: Includes tests for all core and extended functionality.
 - **Lua 5.5.1 alignment in progress**: the migration plan, differential oracle and conformance tracking live in [docs/lua-5.5.1](docs/lua-5.5.1).
+- **Memory accounting hook**: `lua_setallocf` lets an embedder observe, bound or refuse the VM's internal string and buffer allocations; a refusal behaves like a failing C allocator (`LUA_ERRMEM`).
 
 ## Installation
 
@@ -45,6 +46,38 @@ lauxlib.luaL_buffinit(L, B);
 lauxlib.luaL_addgsub(B, lua.to_luastring("hello world"), lua.to_luastring("world"), lua.to_luastring("Lua"));
 lauxlib.luaL_pushresult(B);
 ```
+
+### Memory Accounting Hook (`lua_setallocf`)
+
+`lua_setallocf(L, allocf, ud)` installs a per-state hook called synchronously as
+`allocf(ud, nsize)` immediately before each internal `Uint8Array` allocation of
+`nsize` bytes (the full new size, growth reallocations included). Returning
+normally permits the allocation; throwing refuses it, which aborts the
+enclosing protected call with status `LUA_ERRMEM` and the standard
+"not enough memory" error object, leaving the state usable. `lua_getallocf(L)`
+returns `[allocf, ud]`.
+
+```javascript
+const { lua, lauxlib, lualib } = require('@datamoc/fengari');
+
+const L = lauxlib.luaL_newstate();
+lualib.luaL_openlibs(L);
+
+let budget = 1024;
+lua.lua_setallocf(L, (ud, nsize) => {
+    if (nsize > ud.budget) throw new Error('over budget');
+}, { budget });
+
+lauxlib.luaL_dostring(L, lua.to_luastring('return ("x"):rep(10)'));
+console.log(lua.lua_tojsstring(L, -1)); // xxxxxxxxxx
+```
+
+This is the JavaScript shape of C Lua's `lua_Alloc` extension point: it is
+accounting, not ownership (the JavaScript engine owns the memory, and there are
+no free notifications). Not charged: the stateless `to_luastring` conversions
+an embedder drives itself, zero-size allocations, and the few internal
+temporaries whose site has no `lua_State` at hand. See `src/lmem.js` for the
+exact contract.
 
 ## Testing
 

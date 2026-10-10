@@ -44,6 +44,7 @@ module.exports = function createLundump(dependencies) {
         luaZ_read,
         ZIO
     } = require('../lzio.js');
+    const { lua_alloc } = require('../lmem.js');
 
     let LUAC_DATA = [0x19, 0x93, 13, 10, 0x1a, 10];
 
@@ -74,10 +75,12 @@ module.exports = function createLundump(dependencies) {
                 Math.max(this.intSize, this.size_tSize, this.instructionSize, this.integerSize, this.numberSize)
             );
             this.dv = new DataView(this.arraybuffer);
+            lua_alloc(L, this.arraybuffer.byteLength);
             this.u8 = new Uint8Array(this.arraybuffer);
         }
 
         read(size) {
+            lua_alloc(this.L, size);
             let u8 = new Uint8Array(size);
             if(luaZ_read(this.Z, u8, 0, size) !== 0)
                 this.error("truncated");

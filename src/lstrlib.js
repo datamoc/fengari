@@ -49,6 +49,7 @@ const {
     lua_type,
     lua_upvalueindex
 } = require('./lua.js');
+const { lua_alloc } = require('./lmem.js');
 const {
     luaL_Buffer,
     luaL_addchar,
@@ -716,6 +717,7 @@ const str_pack = function(L) {
 const str_reverse = function(L) {
     let s = luaL_checkstring(L, 1);
     let l = s.length;
+    lua_alloc(L, l);
     let r = new Uint8Array(l);
     for (let i=0; i<l; i++)
         r[i] = s[l-1-i];
@@ -726,6 +728,7 @@ const str_reverse = function(L) {
 const str_lower = function(L) {
     let s = luaL_checkstring(L, 1);
     let l = s.length;
+    lua_alloc(L, l);
     let r = new Uint8Array(l);
     for (let i=0; i<l; i++) {
         let c = s[i];
@@ -740,6 +743,7 @@ const str_lower = function(L) {
 const str_upper = function(L) {
     let s = luaL_checkstring(L, 1);
     let l = s.length;
+    lua_alloc(L, l);
     let r = new Uint8Array(l);
     for (let i=0; i<l; i++) {
         let c = s[i];

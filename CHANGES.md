@@ -15,6 +15,10 @@
 - **Nouvelles fonctions dans l'API C** :
   - **`lua_resetthread`** : Réinitialise un thread Lua.
   - **`lua_closeslot`** : Ferme un slot dans une table.
+- **`lua_setallocf` / `lua_getallocf` (hook d'allocation)** :
+  - **Contrat** : `allocf(ud, nsize)` est appelé de manière synchrone avant chaque allocation interne de `nsize` octets (taille complète, croissances incluses) ; lever une exception refuse l'allocation, comme un allocateur C défaillant (`LUA_ERRMEM`, « not enough memory »), et l'état reste utilisable.
+  - **Portée** : `luaL_prepbuffsize` (`string.rep`, `string.gsub`, `string.format`), `luaZ_resizebuffer`, la concaténation de la VM, `read` de l'undump, et les autres sites internes porteurs d'un état ; les conversions sans état de `defs.js` ne sont pas comptées. Le point de passage unique vit dans `src/lmem.js` (analogue JS de `lmem.c`).
+  - **Tests** : `test/lalloc.test.js` (aller-retour set/get, observation, refus, `pcall` Lua ne pouvant pas avaler un refus, isolation par état).
 
 ### Corrections
 - **Résolution des dépendances circulaires** :

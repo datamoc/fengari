@@ -94,6 +94,7 @@ module.exports = function createLvm(dependencies) {
         luaS_eqlngstr,
         luaS_hashlongstr
     } = require('../lstring.js');
+    const { lua_alloc } = require('../lmem.js');
     const ldo     = dependencies.ldo;
     const ltm     = dependencies.ltm;
     const ltable  = dependencies.ltable;
@@ -1055,6 +1056,7 @@ module.exports = function createLvm(dependencies) {
                     let l = L.stack[top - n - 1].vslen();
                     tl += l;
                 }
+                lua_alloc(L, tl);
                 let buff = new Uint8Array(tl);
                 copy2buff(L, top, n, buff);
                 let ts = luaS_bless(L, buff);

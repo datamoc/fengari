@@ -39,6 +39,7 @@ module.exports = function createLlex(dependencies) {
         luaZ_resetbuffer,
         luaZ_resizebuffer
     } = require('../lzio.js');
+    const { lua_alloc } = require('../lmem.js');
 
     const FIRST_RESERVED = 257;
 
@@ -439,6 +440,7 @@ module.exports = function createLlex(dependencies) {
     };
 
     const utf8esc = function(ls) {
+        lua_alloc(ls.L, lobject.UTF8BUFFSZ);
         let buff = new Uint8Array(lobject.UTF8BUFFSZ);
         let n = lobject.luaO_utf8esc(buff, readutf8desc(ls));
         for (; n > 0; n--)  /* add 'buff' to string */

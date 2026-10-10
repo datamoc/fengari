@@ -78,6 +78,7 @@ const {
     lua_typename,
     lua_version
 } = require('./lua.js');
+const { lua_alloc } = require('./lmem.js');
 const {
     from_userstring,
     luastring_eq,
@@ -459,6 +460,7 @@ const luaL_prepbuffsize = function(B, sz) {
     let newend = B.n + sz;
     if (B.b.length < newend) {
         let newsize = Math.max(B.b.length * 2, newend);  /* double buffer size */
+        lua_alloc(B.L, newsize);
         let newbuff = new Uint8Array(newsize);  /* create larger buffer */
         newbuff.set(B.b);  /* copy original content */
         B.b = newbuff;
@@ -872,6 +874,7 @@ if (typeof process === "undefined") {
                 if (typeof xhr.response === "string") {
                     lf.f = to_luastring(xhr.response);
                 } else {
+                    lua_alloc(L, xhr.response.byteLength);
                     lf.f = new Uint8Array(xhr.response);
                 }
             } else {

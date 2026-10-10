@@ -58,6 +58,7 @@ const {
     lua_upvaluejoin,
     lua_xmove
 } = require('./lua.js');
+const { lua_alloc } = require('./lmem.js');
 const {
     luaL_argcheck,
     luaL_argerror,
@@ -418,6 +419,7 @@ const db_sethook = function(L) {
 const db_gethook = function(L) {
     let thread = getthread(L);
     let L1 = thread.thread;
+    lua_alloc(L, 5);
     let buff = new Uint8Array(5);
     let mask = lua_gethookmask(L1);
     let hook = lua_gethook(L1);
