@@ -143,6 +143,8 @@ const tremove = function(L) {
 ** "possible" means destination after original range, or smaller
 ** than origin, or copying to another table.
 */
+const MOVE_INTERRUPT_STEPS = 0x10000;  /* elements moved between embedder interrupt checks */
+
 const tmove = function(L) {
     let f = luaL_checkinteger(L, 2);
     let e = luaL_checkinteger(L, 3);
@@ -156,15 +158,27 @@ const tmove = function(L) {
         luaL_argcheck(L, n <= integer.MAX, 3, "too many elements to move");
         luaL_argcheck(L, target + n - 1n <= integer.MAX, 4, "destination wrap around");
 
+        /* a move of 2^40 elements is one VM instruction: let the embedder interrupt it (see FengariVm limits) */
+        const interrupt = L.l_G.interrupt;
+        let steps = 0;
+        const tick = function() {
+            if (interrupt !== null && ++steps === MOVE_INTERRUPT_STEPS) {
+                steps = 0;
+                interrupt(L);
+            }
+        };
+
         if (t > e || t <= f || (tt !== 1 && lua_compare(L, 1, tt, LUA_OPEQ) !== 1)) {
             for (let i = 0n; i < n; i++) {
                 lua_geti(L, 1, integer.canonical(first + i));
                 lua_seti(L, tt, integer.canonical(target + i));
+                tick();
             }
         } else {
             for (let i = n - 1n; i >= 0n; i--) {
                 lua_geti(L, 1, integer.canonical(first + i));
                 lua_seti(L, tt, integer.canonical(target + i));
+                tick();
             }
         }
     }

@@ -165,6 +165,32 @@ describe("FengariVm limits against hooks that are switched off", () => {
         expect(vm.run("return #string.rep('x', 1000)")).toBe(1000);
     });
 
+    test("a huge table.move is interrupted", () => {
+        const vm = limited({ instructions: 1000000, timeMs: 2000 });
+        const start = Date.now();
+        expect(() => vm.run("table.move({}, 1, 2^40, 2)")).toThrow(LimitError);
+        expect(() => vm.run("table.move({}, 2^40, 1, 2)")).not.toThrow(LimitError);
+        expect(Date.now() - start).toBeLessThan(5000);
+        expect(vm.run("local t = table.move({1, 2, 3}, 1, 3, 2) return t[1] .. t[2] .. t[3] .. t[4]")).toBe("1123");
+    });
+
+    test("a quadratic plain-text search is interrupted", () => {
+        const vm = limited({ instructions: 1000000, timeMs: 2000 });
+        const start = Date.now();
+        expect(() => vm.run("return (string.rep('a', 200000)):find(string.rep('a', 100000) .. 'b', 1, true)")).toThrow(LimitError);
+        expect(Date.now() - start).toBeLessThan(5000);
+    });
+
+    test("plain and pattern searches keep their results", () => {
+        const vm = new FengariVm();
+        expect(vm.run("return (string.find('hello world', 'o w', 1, true))")).toBe(5);
+        expect(vm.runMulti("return string.find('hello world', 'wor', 1, true)")).toEqual([7, 9]);
+        expect(vm.runMulti("return string.find('hello', '', 3, true)")).toEqual([3, 2]);
+        expect(vm.run("return string.find('hello', 'xyz', 1, true)")).toBeNull();
+        expect(vm.runMulti("return string.find('a.b', '.', 1, true)")).toEqual([2, 2]);
+        expect(vm.run("return (string.find('abcabc', 'bc', 3, true))")).toBe(5);
+    });
+
     test("sandbox accepts a library list without base", () => {
         const vm = new FengariVm(undefined, undefined, { sandbox: true, libs: ["string"] });
         expect(vm.run("return string.rep('a', 3)")).toBe("aaa");

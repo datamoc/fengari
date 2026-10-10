@@ -14756,6 +14756,8 @@ const tremove = function(L) {
 ** "possible" means destination after original range, or smaller
 ** than origin, or copying to another table.
 */
+const MOVE_INTERRUPT_STEPS = 0x10000;  /* elements moved between embedder interrupt checks */
+
 const tmove = function(L) {
     let f = luaL_checkinteger(L, 2);
     let e = luaL_checkinteger(L, 3);
@@ -14769,15 +14771,27 @@ const tmove = function(L) {
         luaL_argcheck(L, n <= integer.MAX, 3, "too many elements to move");
         luaL_argcheck(L, target + n - 1n <= integer.MAX, 4, "destination wrap around");
 
+        /* a move of 2^40 elements is one VM instruction: let the embedder interrupt it (see FengariVm limits) */
+        const interrupt = L.l_G.interrupt;
+        let steps = 0;
+        const tick = function() {
+            if (interrupt !== null && ++steps === MOVE_INTERRUPT_STEPS) {
+                steps = 0;
+                interrupt(L);
+            }
+        };
+
         if (t > e || t <= f || (tt !== 1 && lua_compare(L, 1, tt, LUA_OPEQ) !== 1)) {
             for (let i = 0n; i < n; i++) {
                 lua_geti(L, 1, integer.canonical(first + i));
                 lua_seti(L, tt, integer.canonical(target + i));
+                tick();
             }
         } else {
             for (let i = n - 1n; i >= 0n; i--) {
                 lua_geti(L, 1, integer.canonical(first + i));
                 lua_seti(L, tt, integer.canonical(target + i));
+                tick();
             }
         }
     }
@@ -16531,7 +16545,8 @@ const CAP_POSITION   = -2;
 const MAXCCALLS      = 200;
 const SPECIALS       = to_luastring("^$*+?.([%-");
 
-const MATCH_INTERRUPT_MASK = 0xFFFF;  /* pattern-matching steps between embedder interrupt checks */
+const MATCH_INTERRUPT_STEPS = 0x10000;  /* matching steps between embedder interrupt checks */
+const MATCH_INTERRUPT_MASK = MATCH_INTERRUPT_STEPS - 1;
 
 class MatchState {
     constructor(L) {
@@ -16885,16 +16900,25 @@ const reprepstate = function(ms) {
     lualib.lua_assert(ms.matchdepth === MAXCCALLS);
 };
 
-const find_subarray = function(arr, subarr, from_index) {
+/* Plain substring search; worst case is quadratic, so it reports its work to the embedder interrupt. */
+const find_subarray = function(L, arr, subarr, from_index) {
     var i = from_index >>> 0,
-        sl = subarr.length;
+        sl = subarr.length,
+        work = 0;
 
     if (sl === 0)
         return i;
 
     for (; (i = arr.indexOf(subarr[0], i)) !== -1; i++) {
-        if (luastring_eq(arr.subarray(i, i+sl), subarr))
+        let k = 1;
+        while (k < sl && arr[i + k] === subarr[k]) k++;
+        if (k === sl)
             return i;
+        work += k;
+        if (work >= MATCH_INTERRUPT_STEPS && L.l_G.interrupt !== null) {
+            work = 0;
+            L.l_G.interrupt(L);
+        }
     }
 
     return -1;
@@ -16914,7 +16938,7 @@ const str_find_aux = function(L, find) {
     /* explicit request or no special characters? */
     if (find && (lua_toboolean(L, 4) || nospecials(p, lp))) {
         /* do a plain search */
-        let f = find_subarray(s.subarray(init - 1), p, 0);
+        let f = find_subarray(L, s.subarray(init - 1), p, 0);
         if (f > -1) {
             lua_pushinteger(L, init + f);
             lua_pushinteger(L, init + f + lp - 1);

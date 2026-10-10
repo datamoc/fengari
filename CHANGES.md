@@ -1,5 +1,12 @@
 # Changements dans Fengari
 
+## Version 0.4.2
+
+### Corrections
+- **Limites contournables par deux autres fonctions natives** : `table.move({}, 1, 2^40, 2)` boucle sans fin dans une seule instruction, et la recherche de texte brut (`string.find(s, p, 1, true)`) est quadratique dans le pire cas (6,6 s pour 200 000 caractères). Les deux appellent maintenant le point d'interruption (`l_G.interrupt`) tous les 65536 éléments déplacés ou comparés, et `limits` les arrête (`LimitError`). Sans limites, leur comportement est inchangé.
+- **Limite connue** : les autres fonctions natives dont le coût dépend uniquement de la taille de leurs arguments (tri d'une grande table avec le comparateur par défaut, `table.concat`, `string.format`, etc.) ne sont pas interrompues ; borner `allocation`/`totalAllocation` borne la taille des chaînes qu'elles peuvent produire.
+- **Tests** : `test/fengari-vm-limits.test.js`.
+
 ## Version 0.4.1
 
 Correctifs de sécurité sur les limites d'exécution et le préréglage `sandbox` de la 0.4.0 (à ne plus utiliser pour du code non fiable).
