@@ -1,13 +1,14 @@
 # @datamoc/fengari
 
-A **Lua 5.5.1** VM written in JavaScript ES6, targeting both **Node.js** and **browser** environments. This package provides full compliance with Lua 5.5.1, including extended auxiliary library (`lauxlib`) functionality and comprehensive test coverage.
+A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **browser** environments. This package implements Lua 5.4.6, including extended auxiliary library (`lauxlib`) functionality and comprehensive test coverage. Alignment with Lua 5.5.1 is in progress and tracked in [docs/lua-5.5.1](docs/lua-5.5.1); none of its milestone lots is complete yet, so the VM reports `Lua 5.4.6` through `lua.lua_version` and `_VERSION`.
 
 ## Features
 
-- **Full Lua 5.5.1 Compliance**: Implements the Lua 5.5.1 language specification, including all standard libraries and auxiliary functions.
+- **Lua 5.4.6 compliance**: implements the Lua 5.4 language and standard libraries, plus an extended auxiliary library (`lauxlib`).
 - **Cross-Platform**: Runs in Node.js and modern browsers.
 - **Extensible**: Easy to integrate with existing JavaScript projects.
 - **Comprehensive Testing**: Includes tests for all core and extended functionality.
+- **Lua 5.5.1 alignment in progress**: the migration plan, differential oracle and conformance tracking live in [docs/lua-5.5.1](docs/lua-5.5.1).
 
 ## Installation
 
@@ -27,7 +28,7 @@ const L = lauxlib.luaL_newstate();
 lualib.luaL_openlibs(L);  // Load standard libraries
 
 // Execute Lua code
-lauxlib.luaL_dostring(L, lua.to_luastring("print('Hello from Lua 5.5.1!')"));
+lauxlib.luaL_dostring(L, lua.to_luastring("print('Hello from Lua 5.4!')"));
 
 // Close the Lua state
 lua.lua_close(L);
@@ -47,7 +48,7 @@ lauxlib.luaL_pushresult(B);
 
 ## Testing
 
-Run the test suite to verify compliance with Lua 5.5.1:
+Run the test suite:
 
 ```bash
 npm test
@@ -61,8 +62,8 @@ npm run test:extended
 
 ## Documentation
 
-- [Lua 5.5.1 Reference Manual](https://www.lua.org/manual/5.5/)
-- [Fengari Lua 5.5.1 Compliance Docs](https://github.com/datamoc/fengari/tree/master/docs/lua-5.5.1)
+- [Lua 5.4 Reference Manual](https://www.lua.org/manual/5.4/)
+- [Lua 5.5.1 alignment plan and conformance tracking](https://github.com/datamoc/fengari/tree/master/docs/lua-5.5.1)
 
 ## License
 

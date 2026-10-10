@@ -30,6 +30,18 @@
 - **Tests des nouvelles fonctions de l'API C** : Vérification que `lua_resetthread` et `lua_closeslot` sont bien exportées et accessibles.
 - **Tests des tokens** : Vérification que les tokens pour `const` et `<close>` sont bien définis dans `llex.js`.
 
+## Version 0.1.6
+
+### Ajouts
+- **Bibliothèque auxiliaire étendue** : symboles `lauxlib` manquants ajoutés (dont `luaL_addgsub`, `luaL_pushfail`, `luaL_typeerror`, `luaL_buffaddr`/`luaL_bufflen`/`luaL_buffsub`, `luaL_checkint`/`luaL_optint`), avec leurs tests.
+
+### Corrections
+- **Empaquetage** : publication de `src/` seul ; suppression du champ `types` qui pointait vers un `dist/fengari.d.ts` jamais livré (des déclarations TypeScript restent à écrire).
+- **Entiers 64 bits** : corrections dans les bibliothèques string, math et table ; restauration du test officiel de l'ordre de `math`.
+
+### Documentation
+- **Cohérence de version** : le README et les mots-clés npm annonçaient « Lua 5.5.1 » alors que la VM rapporte Lua 5.4.6 (`LUA_VERSION_NUM` 504 dans `defs.js`). Ils décrivent désormais Lua 5.4.6 ; l'alignement 5.5.1 reste un chantier en cours suivi dans `docs/lua-5.5.1` (aucun lot M0-M9 terminé à ce jour).
+
 ## Exemples d'utilisation
 
 ### Utilisation de `FengariVm`
