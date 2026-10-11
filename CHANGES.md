@@ -1,5 +1,14 @@
 # Changes in Fengari
 
+## Version 0.5.1
+
+### Security
+- **`lua2js` comments could run as code**: a Lua line comment containing a bare CR, U+2028 or U+2029 ended the generated `//` comment early, so the rest of the comment became executable JavaScript. These characters are now replaced by spaces. If you translated untrusted Lua with 0.5.0, review the comments of the output.
+
+### New features
+- **TypeScript declarations**: `src/fengari.d.ts` (`"types"` in `package.json`) types `FengariVm`, `LuaRef`, `LuaError`, `LimitError`, `Coroutine`, `Userdata`, `LuaFloat`, `Multi`, `Yield`, `LuaValue`, the options (`FengariVmOptions`, `VmLimits`, `LuaToJsOptions`) and the translation result (`LuaToJsResult`). The C-API namespaces (`lua`, `lauxlib`, `lualib`, `luaconf`) and string helpers are typed as `any` for now. `test/types.test.js` checks that the declarations and the runtime exports stay in sync.
+- **`vm.throwLuaError(L, index = -1)`**: throws the Lua error value at `index` as a `LuaError` (a `LimitError` after a limit overrun), with the message as traceback. Replaces the `errorMessage` + `luaError(message, message)` pair; `Coroutine#close` now uses it (and so reports a `LimitError` after an overrun).
+
 ## Version 0.5.0
 
 ### New features

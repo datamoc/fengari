@@ -121,6 +121,10 @@ lauxlib.luaL_dostring(L, lua.to_luastring("print('Hello from Lua 5.4!')"));
 lua.lua_close(L);
 ```
 
+### TypeScript
+
+The package ships its declarations (`src/fengari.d.ts`): `import { FengariVm, LuaToJsOptions } from '@datamoc/fengari'` is typed without `@ts-expect-error`. The C-API namespaces (`lua`, `lauxlib`, `lualib`) are typed as `any`.
+
 ### Extended Auxiliary Library (`lauxlib`)
 
 ```javascript

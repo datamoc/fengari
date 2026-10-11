@@ -200,12 +200,11 @@ class Coroutine {
         const vm = this.vm;
         if (this.active) throw new LuaError('cannot close a running coroutine', 'cannot close a running coroutine');
         const status = vm.lua.lua_closethread(this.thread, vm.state);
-        if (status !== vm.lua.LUA_OK) {
-            const message = vm.errorMessage(this.thread, -1);
+        try {
+            if (status !== vm.lua.LUA_OK) vm.throwLuaError(this.thread);
+        } finally {
             vm.lua.lua_settop(this.thread, 0);
-            throw new LuaError(message, message);
         }
-        vm.lua.lua_settop(this.thread, 0);
     }
 }
 
@@ -406,6 +405,16 @@ class FengariVm {
    */
     luaError(message, traceback) {
         return this.limitHit === null ? new LuaError(message, traceback) : new LimitError(this.limitHit, message, traceback);
+    }
+
+    /**
+   * Throws the Lua error value at `index` of stack `L` as a LuaError (a LimitError if a limit
+   * was exceeded), with the message as traceback. The stack is left untouched.
+   * @returns {never}
+   */
+    throwLuaError(L, index = -1) {
+        const message = this.errorMessage(L, index);
+        throw this.luaError(message, message);
     }
 
     /**
