@@ -170,6 +170,8 @@ export class FengariVm {
     lualib: any;
     to_jsstring: (value: any) => string;
     to_luastring: (value: string) => any;
+    /** The limit that stopped the current call ('instructions', 'time', 'memory'), or null. */
+    limitHit: LimitName | null;
 
     /** Installs, replaces or removes (`null`) the execution limits. */
     setLimits(limits: VmLimits | null | undefined): void;
@@ -186,6 +188,17 @@ export class FengariVm {
     /** Calls a Lua function held by a LuaRef. */
     callRef(ref: LuaRef, ...args: unknown[]): LuaValue;
 
+    /** Pushes onto `L` the value designated by a dotted path of globals (nil if absent). */
+    pushPath(L: any, path: string): void;
+    /**
+     * Classifies the keys of the table at stack index `table` of `L`: `array` (keys 1..n),
+     * `object` (string keys, or integer keys that are not a sequence) or `map` (keys that
+     * JavaScript objects cannot hold, or a numeric string colliding with an integer key).
+     * Leaves the stack unchanged.
+     */
+    classifyKeys(L: any, table: number): 'array' | 'object' | 'map';
+    /** Next number of the VM's seeded generator, in [0, 1) (what `math.random` uses). */
+    nextRandom(): number;
     /** Pushes a JavaScript value onto the Lua stack. */
     push(value: unknown, L?: any, depth?: number): void;
     /** Reads the Lua value at a stack index. */

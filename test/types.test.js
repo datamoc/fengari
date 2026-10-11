@@ -34,6 +34,57 @@ describe('TypeScript declarations', () => {
     });
 });
 
+describe('FengariVm internals used by hosts', () => {
+    test('pushPath pushes the value of a dotted path, or nil', () => {
+        const vm = new FengariVm();
+        vm.run('cfg = {level = {depth = 3}}');
+        const { lua, state } = vm;
+        vm.pushPath(state, 'cfg.level.depth');
+        expect(lua.lua_tointeger(state, -1)).toBe(3);
+        vm.pushPath(state, 'cfg.missing.depth');
+        expect(lua.lua_isnil(state, -1)).toBe(true);
+        lua.lua_pop(state, 2);
+    });
+
+    test('classifyKeys tells arrays, objects and maps apart without touching the stack', () => {
+        const vm = new FengariVm();
+        const { lua, state } = vm;
+        const classify = (source) => {
+            const index = lua.lua_gettop(state) + 1;
+            vm.pushPath(state, 'load');
+            lua.lua_pushstring(state, vm.to_luastring('return ' + source));
+            lua.lua_call(state, 1, 1); /* load(...) -> chunk */
+            lua.lua_call(state, 0, 1); /* chunk() -> the table */
+            const kind = vm.classifyKeys(state, index);
+            expect(lua.lua_gettop(state)).toBe(index);
+            lua.lua_settop(state, index - 1);
+            return kind;
+        };
+        expect(classify('{10, 20, 30}')).toBe('array');
+        expect(classify('{a = 1}')).toBe('object');
+        expect(classify('{[2] = 1}')).toBe('object');
+        expect(classify('{[true] = 1}')).toBe('map');
+        expect(classify('{[1] = 1, ["1"] = 2}')).toBe('map');
+    });
+
+    test('nextRandom is deterministic per seed and within [0, 1)', () => {
+        const a = new FengariVm(undefined, 42), b = new FengariVm(undefined, 42), c = new FengariVm(undefined, 43);
+        const first = [a.nextRandom(), a.nextRandom(), a.nextRandom()];
+        expect([b.nextRandom(), b.nextRandom(), b.nextRandom()]).toEqual(first);
+        expect(c.nextRandom()).not.toBe(first[0]);
+        for (const value of first) expect(value >= 0 && value < 1).toBe(true);
+    });
+
+    test('limitHit names the limit that stopped the call and resets for the next one', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 5000 } });
+        expect(vm.limitHit).toBeNull();
+        expect(() => vm.run('while true do end')).toThrow(LimitError);
+        expect(vm.limitHit).toBe('instructions');
+        expect(vm.run('return 1')).toBe(1);
+        expect(vm.limitHit).toBeNull();
+    });
+});
+
 describe('FengariVm#protect', () => {
     const failingIndex = `
         t = setmetatable({}, {__index = function(_, key) error("no field " .. key) end})

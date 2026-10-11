@@ -1,5 +1,10 @@
 # Changes in Fengari
 
+## Version 0.5.2
+
+### TypeScript
+- **Host-facing internals declared**: `src/fengari.d.ts` now types `limitHit`, `pushPath(L, path)`, `classifyKeys(L, table)` and `nextRandom()` on `FengariVm`, which hosts use alongside `read`/`push`. Tests in `test/types.test.js` cover their behavior.
+
 ## Version 0.5.1
 
 ### Security
