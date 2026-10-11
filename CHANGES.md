@@ -7,6 +7,7 @@
 
 ### New features
 - **TypeScript declarations**: `src/fengari.d.ts` (`"types"` in `package.json`) types `FengariVm`, `LuaRef`, `LuaError`, `LimitError`, `Coroutine`, `Userdata`, `LuaFloat`, `Multi`, `Yield`, `LuaValue`, the options (`FengariVmOptions`, `VmLimits`, `LuaToJsOptions`) and the translation result (`LuaToJsResult`). The C-API namespaces (`lua`, `lauxlib`, `lualib`, `luaconf`) and string helpers are typed as `any` for now. `test/types.test.js` checks that the declarations and the runtime exports stay in sync.
+- **`vm.protect(fn)`**: runs a host callback `fn(L)` inside a Lua protected call, so Lua errors raised while it uses the C API (failing `__index` metamethod, `luaL_error`, limit overrun) become a `LuaError` / `LimitError` instead of unwinding through host code; the stack is restored and a JavaScript error thrown by `fn` is rethrown unchanged.
 - **`vm.throwLuaError(L, index = -1)`**: throws the Lua error value at `index` as a `LuaError` (a `LimitError` after a limit overrun), with the message as traceback. Replaces the `errorMessage` + `luaError(message, message)` pair; `Coroutine#close` now uses it (and so reports a `LimitError` after an overrun).
 
 ## Version 0.5.0

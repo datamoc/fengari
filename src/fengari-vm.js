@@ -418,6 +418,44 @@ class FengariVm {
     }
 
     /**
+   * Runs the host callback `fn(L)` inside a Lua protected call, so that Lua errors raised
+   * while it uses the C API (an `__index` metamethod that fails, `luaL_error`, a limit
+   * overrun...) are reported as a LuaError (a LimitError after an overrun) instead of
+   * unwinding through the host code with the Lua stack in an undefined state. Returns what
+   * `fn` returns; the stack is restored in every case. A JavaScript error thrown by `fn`
+   * itself is rethrown unchanged. Like the other entry points, it gets a fresh limits budget
+   * when it is not called from Lua.
+   * @template T
+   * @param {function(*): T} fn - Receives the Lua state (or coroutine) it runs on.
+   * @returns {T}
+   */
+    protect(fn) {
+        const L = this.thread ?? this.state;
+        const base = this.lua.lua_gettop(L);
+        let result;
+        let hostError = null;
+        this.lua.lua_pushcfunction(L, (state) => {
+            try {
+                result = fn(state);
+            } catch (error) {
+                if (error === state.errorJmp) throw error; /* a Lua error: let the protected call catch it */
+                hostError = { error };
+                this.lua.lua_pushstring(state, this.to_luastring('host error'));
+                return this.lua.lua_error(state);
+            }
+            return 0;
+        });
+        const status = this.guarded(() => this.lua.lua_pcall(L, 0, 0, 0));
+        try {
+            if (hostError !== null) throw hostError.error;
+            if (status !== this.lua.LUA_OK) this.throwLuaError(L);
+            return result;
+        } finally {
+            this.lua.lua_settop(L, base);
+        }
+    }
+
+    /**
    * Opens the requested libraries (all if `libs` is absent).
    */
     openLibraries(libs) {

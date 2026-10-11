@@ -199,6 +199,12 @@ export class FengariVm {
      * was exceeded), with the message as traceback. The stack is left untouched.
      */
     throwLuaError(L: any, index?: number): never;
+    /**
+     * Runs the host callback `fn(L)` inside a Lua protected call: Lua errors raised while it
+     * uses the C API are thrown as a LuaError (a LimitError after a limit overrun) and the Lua
+     * stack is restored. A JavaScript error thrown by `fn` is rethrown unchanged.
+     */
+    protect<T>(fn: (L: any) => T): T;
     /** Runs `fn` (a call into Lua) with a fresh budget when it is a top-level call. */
     guarded<T>(fn: () => T): T;
 

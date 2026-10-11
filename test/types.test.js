@@ -34,6 +34,83 @@ describe('TypeScript declarations', () => {
     });
 });
 
+describe('FengariVm#protect', () => {
+    const failingIndex = `
+        t = setmetatable({}, {__index = function(_, key) error("no field " .. key) end})
+        function ok() return 42 end`;
+
+    test('returns the value of the callback and keeps the stack balanced', () => {
+        const vm = new FengariVm();
+        const before = vm.lua.lua_gettop(vm.state);
+        const value = vm.protect((L) => {
+            vm.lua.lua_pushinteger(L, 7);
+            vm.lua.lua_pushinteger(L, 8);
+            return vm.lua.lua_tointeger(L, -1) + vm.lua.lua_tointeger(L, -2);
+        });
+        expect(value).toBe(15);
+        expect(vm.lua.lua_gettop(vm.state)).toBe(before);
+    });
+
+    test('turns a Lua error raised through the C API into a LuaError and leaves the VM usable', () => {
+        const vm = new FengariVm();
+        vm.run(failingIndex);
+        const before = vm.lua.lua_gettop(vm.state);
+        const read = () => vm.protect((L) => {
+            vm.pushPath(L, 't');
+            vm.lua.lua_getfield(L, -1, vm.to_luastring('missing'));
+            return vm.read(-1, 0, L);
+        });
+        expect(read).toThrow(LuaError);
+        expect(read).toThrow(/no field missing/);
+        expect(vm.lua.lua_gettop(vm.state)).toBe(before);
+        expect(vm.call('ok')).toBe(42);
+    });
+
+    test('luaL_error inside the callback is a LuaError', () => {
+        const vm = new FengariVm();
+        expect(() => vm.protect((L) => vm.lauxlib.luaL_error(L, vm.to_luastring('raised by the host')))).toThrow(/raised by the host/);
+        expect(vm.run('return 1 + 1')).toBe(2);
+    });
+
+    test('rethrows a JavaScript error of the callback unchanged', () => {
+        const vm = new FengariVm();
+        const failure = new TypeError('host bug');
+        let caught;
+        try {
+            vm.protect(() => { throw failure; });
+        } catch (error) {
+            caught = error;
+        }
+        expect(caught).toBe(failure);
+        expect(vm.run('return 1 + 1')).toBe(2);
+    });
+
+    test('reports a limit overrun inside the callback as a LimitError', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 10000 } });
+        expect(() => vm.protect(() => vm.run('while true do end'))).toThrow(LimitError);
+        expect(vm.run('return 5')).toBe(5);
+    });
+
+    test('works from a host function called by Lua (uses the running coroutine)', () => {
+        const vm = new FengariVm();
+        vm.run(failingIndex);
+        vm.defineFunction('probe', () => {
+            try {
+                vm.protect((L) => {
+                    vm.pushPath(L, 't');
+                    vm.lua.lua_getfield(L, -1, vm.to_luastring('x'));
+                });
+            } catch (error) {
+                return `${error.name}: ${error.message}`;
+            }
+            return 'no error';
+        });
+        const co = vm.coroutineFromSource('return probe()');
+        const { values } = co.resume();
+        expect(values[0]).toMatch(/^LuaError: .*no field x/);
+    });
+});
+
 describe('FengariVm#throwLuaError', () => {
     test('throws the error value at the given index with the message as traceback', () => {
         const vm = new FengariVm();
