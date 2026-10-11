@@ -55,6 +55,19 @@ No generated code contains Lua source text or identifier names.
 Run `node tools/benchmark-numeric.js` for a checksum-verified comparison of the
 interpreter, compiled Lua and native JavaScript on your machine.
 
+### Compilation and execution limits
+
+`compile` is deliberately disabled while `limits` are active: the callable then
+always runs in the interpreter. Generated JavaScript is not interrupted by the
+instruction-counting hook, the pattern-matching interrupt points or the allocation
+hook, so it would have to enforce the budget on its own, and that is a second
+enforcement mechanism to get right (every loop shape, one budget shared with the
+interpreter, no fresh budget after a guard falls back to the VM). Skipping it keeps
+the sandbox guarantees in one place. This is not a gap to work around:
+- run code you do not trust through `run`/`call` with `limits` (and `sandbox`);
+- if you need the speed, call `compile` only for functions you wrote or reviewed, on a
+  VM without `limits`, and keep untrusted scripts on a separate, limited VM.
+
 ## Offline Lua to JavaScript translation
 
 To leave Lua behind, `lua2js` turns Lua source into JavaScript a developer can read and keep editing. It is separate from the runtime numeric compiler above: it never runs Lua, it prints idiomatic JavaScript from the source and marks what it cannot translate.

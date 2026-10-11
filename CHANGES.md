@@ -7,6 +7,9 @@
 - **Looking up a global ran outside the budget**: `call`, `callMulti`, `compile` and `coroutine` resolved their path before the budgeted call, so an `__index` metamethod on `_G` (or on a library table of the path) could loop forever, or raise outside a protected call. The lookup now runs in a protected call under the same budget (`vm.resolvePath`).
 - **`Coroutine#close()` ran without a budget**: pending `__close` handlers executed unbounded (a 10,000-iteration handler ran under a 1,000-instruction limit). `close()` now gets a fresh budget like the other top-level calls and fails with a `LimitError` if it is exceeded.
 
+### Documentation
+- **`compile` under `limits`**: the README now documents that `compile` is intentionally disabled while execution limits are active (generated JavaScript would need its own budget enforcement, a second mechanism to get right), and how to combine fast trusted code with limited untrusted code.
+
 ### `FengariVm` options and types
 - **`sandbox` leaked `__random`**: the host helper was a readable global (`type(__random) == 'function'`). Like `__fs_read` / `__fs_list`, it is no longer defined with `sandbox: true`. Nothing in Fengari calls it (`math.random` has its own generator); `vm.nextRandom()` remains available to the host.
 - **`print` option** (`'buffer'` default, `'native'`, `false`): `'native'` keeps the base library's `print` and `false` removes it, so a host that wants Lua's own `print` no longer has to build the VM with `libs: []` and re-open libraries (which restored `string.dump` after the sandbox removed it).
