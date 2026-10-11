@@ -629,6 +629,7 @@ const JS_RESERVED = ['break', 'case', 'catch', 'class', 'const', 'continue', 'de
 const HELPERS = {
     truthy: 'function truthy(value) {\n    return value !== undefined && value !== false;\n}',
     and: 'function and(value, rest) {\n    return truthy(value) ? rest() : value;\n}',
+    or: 'function or(value, rest) {\n    return truthy(value) ? value : rest();\n}',
     mod: 'function mod(a, b) {\n    const r = a % b;\n    return r !== 0 && (r < 0) !== (b < 0) ? r + b : r;\n}',
     sub: 'function sub(s, i, j = -1) {\n    const n = s.length;\n    if (i < 0) i = Math.max(n + i + 1, 1); else if (i === 0) i = 1;\n    if (j < 0) j = n + j + 1; else if (j > n) j = n;\n    return i > j ? "" : s.slice(i - 1, j);\n}',
     tonumber: 'function tonumber(value, base) {\n    if (typeof value === "number") return value;\n    if (typeof value !== "string") return undefined;\n    const text = value.trim();\n    if (base !== undefined) {\n        const n = parseInt(text, base);\n        return Number.isNaN(n) ? undefined : n;\n    }\n    return text === "" || Number.isNaN(Number(text)) ? undefined : Number(text);\n}',
@@ -675,7 +676,9 @@ const HELPERS = {
     });
 }`
 };
-const HELPER_DEPS = { assert: ['truthy'], and: ['truthy'], comparator: ['truthy'] };
+const HELPER_DEPS = { assert: ['truthy'], and: ['truthy'], or: ['truthy'], comparator: ['truthy'] };
+/* Kinds that can be nil but never false: `a or b` is then exactly `a ?? b`. */
+const NEVER_FALSE_KINDS = new Set(['nil', 'number', 'string', 'array', 'object', 'function']);
 const HELPER_ORDER = Object.keys(HELPERS);
 
 const MATH_FUNCTIONS = ['floor', 'ceil', 'abs', 'sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'exp'];
@@ -688,9 +691,10 @@ const LIB_ROOTS = new Set(['print', 'tostring', 'tonumber', 'type', 'assert', 'p
 const UNSUPPORTED = new Set(['select', 'ipairs', 'pairs', 'setmetatable', 'getmetatable', 'rawget', 'rawset', 'rawequal', 'rawlen', 'next', 'load', 'loadstring', 'dofile', 'loadfile', 'collectgarbage', 'coroutine', 'utf8', 'debug']);
 
 class Gen {
-    constructor(info, ast) {
+    constructor(info, ast, options = {}) {
         this.info = info;
         this.ast = ast;
+        this.options = options;
         this.scopes = [];
         this.fn = null;
         this.loops = [];
@@ -1363,11 +1367,18 @@ class Gen {
         const left = this.expr(e.l), right = this.expr(e.r);
         const kind = left.k === right.k ? left.k : 'unknown';
         const logicalOperand = (r, min, op) => wrap(r.op === '??' || (r.op && op === '??') ? { ...r, p: 0 } : r, min);
-        if (left.k === 'boolean') {
+        if (left.k === 'boolean' || left.k === 'flag') {
             const [js, p] = isAnd ? ['&&', PREC.AND] : ['||', PREC.OR];
             return R(`${logicalOperand(left, p, js)} ${js} ${logicalOperand(right, p + 1, js)}`, p, kind, js);
         }
-        if (!isAnd) return R(`${logicalOperand(left, PREC.OR, '??')} ?? ${logicalOperand(right, PREC.OR + 1, '??')}`, PREC.OR, kind, '??');
+        if (!isAnd) {
+            /* `a ?? b` keeps `false`, which Lua's `or` replaces: only used when `a` cannot be false or on request. */
+            if (this.options.nullishOr || NEVER_FALSE_KINDS.has(left.k)) {
+                return R(`${logicalOperand(left, PREC.OR, '??')} ?? ${logicalOperand(right, PREC.OR + 1, '??')}`, PREC.OR, kind, '??');
+            }
+            if (this.isSimple(e.l)) return R(`${this.use('truthy')}(${left.c}) ? ${left.c} : ${wrap(right, PREC.ASSIGN)}`, PREC.COND, kind);
+            return R(`${this.use('or')}(${wrap(left, PREC.ASSIGN)}, () => ${wrap(right, PREC.ASSIGN)})`, PREC.MEMBER, kind);
+        }
         if (this.isSimple(e.l)) return R(`${this.use('truthy')}(${left.c}) ? ${wrap(right, PREC.ASSIGN)} : ${left.c}`, PREC.COND, kind);
         return R(`${this.use('and')}(${wrap(left, PREC.ASSIGN)}, () => ${wrap(right, PREC.ASSIGN)})`, PREC.MEMBER, kind);
     }
@@ -1584,7 +1595,7 @@ function snapshot(info) {
 /**
  * Translates Lua source to JavaScript.
  * @param {string} source Lua 5.x source.
- * @param {{format?: 'none'|'esm'|'cjs', header?: boolean}} [options]
+ * @param {{format?: 'none'|'esm'|'cjs', header?: boolean, nullishOr?: boolean}} [options]
  * @returns {{code: string, warnings: {line: number, message: string}[], exports: string[], freeGlobals: string[]}}
  */
 function transpile(source, options = {}) {
@@ -1596,7 +1607,7 @@ function transpile(source, options = {}) {
      * functions return arrays, which is only known after a full pass. */
     for (let pass = 0; pass < 6; pass++) {
         const before = snapshot(info);
-        gen = new Gen(info, ast);
+        gen = new Gen(info, ast, options);
         lines = gen.chunk(ast);
         if (snapshot(info) === before) break;
     }

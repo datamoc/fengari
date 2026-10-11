@@ -93,7 +93,7 @@ An online version lives in `docs/lua2js/index.html`: paste Lua, read the JavaScr
 Things to know before trusting the output:
 - Every construct that cannot be translated faithfully gets a `// TODO(lua2js): ...` comment and an entry in `warnings`. This covers metatables, coroutines, Lua patterns that have no `RegExp` equivalent (`%b`, `%f`, position captures) or are not string literals, `goto` other than `continue`, bitwise operators (JavaScript uses 32 bits) and iterators that do not return arrays. `freeGlobals` lists the globals the host must provide.
 - Lua arrays are 1-based and JavaScript arrays are 0-based: indexes are shifted (`t[i]` becomes `t[i - 1]`) when the table or the index is known to be numeric; otherwise the index is left alone and flagged.
-- `nil` is `undefined`. `if x` becomes `truthy(x)` (Lua treats `0` and `""` as true) unless `x` is known to be a boolean. `a or b` becomes `a ?? b`, which differs from Lua only when `a` is `false`.
+- `nil` is `undefined`. `if x` becomes `truthy(x)` (Lua treats `0` and `""` as true) unless `x` is known to be a boolean. `a or b` keeps Lua's meaning (`truthy(a) ? a : b`, or `a ?? b` when `a` is known never to be `false`); the `nullishOr` option (`--nullish-or`) always emits the shorter `a ?? b`, which differs from Lua only when `a` is `false`.
 - Integers and floats are both JavaScript numbers: `2^53` and beyond, `1.0` printing as `1`, and string-to-number coercion (`"10" + 1`) are not preserved.
 - Small helpers (`truthy`, `mod`, `format`, ...) are emitted at the top of the output only when used.
 

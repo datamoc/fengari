@@ -178,6 +178,7 @@ class Coroutine {
             this.active = false;
         }
         if (result === lua.LUA_OK || result === lua.LUA_YIELD) {
+            vm.failIfLimitHit(T, 0);
             const values = [];
             const count = lua.lua_gettop(T);
             for (let index = 1; index <= count; index++) values.push(vm.read(index, 0, T));
@@ -199,9 +200,10 @@ class Coroutine {
     close() {
         const vm = this.vm;
         if (this.active) throw new LuaError('cannot close a running coroutine', 'cannot close a running coroutine');
-        const status = vm.lua.lua_closethread(this.thread, vm.state);
+        const status = vm.guarded(() => vm.lua.lua_closethread(this.thread, vm.state));
         try {
             if (status !== vm.lua.LUA_OK) vm.throwLuaError(this.thread);
+            vm.failIfLimitHit(this.thread, 0);
         } finally {
             vm.lua.lua_settop(this.thread, 0);
         }
@@ -305,6 +307,7 @@ class FengariVm {
    */
     setLimits(limits) {
         const { lua } = this;
+        this.limitHit = null;
         if (limits === null || limits === undefined) {
             this.limits = null;
             lua.lua_sethook(this.state, null, 0, 0);
@@ -418,6 +421,19 @@ class FengariVm {
     }
 
     /**
+   * Fails the host operation that just returned if a limit was exceeded while it ran. A script
+   * can catch the failure of a coroutine or pcall that hit the limit (and go on, or return a
+   * normal-looking result); the overrun must still be reported. Restores `L` to `base` first.
+   * @returns {void}
+   */
+    failIfLimitHit(L, base) {
+        if (this.limitHit === null) return;
+        this.lua.lua_settop(L, base);
+        const message = `${this.limitHit} limit exceeded`;
+        throw this.luaError(message, message);
+    }
+
+    /**
    * Runs the host callback `fn(L)` inside a Lua protected call, so that Lua errors raised
    * while it uses the C API (an `__index` metamethod that fails, `luaL_error`, a limit
    * overrun...) are reported as a LuaError (a LimitError after an overrun) instead of
@@ -449,6 +465,7 @@ class FengariVm {
         try {
             if (hostError !== null) throw hostError.error;
             if (status !== this.lua.LUA_OK) this.throwLuaError(L);
+            this.failIfLimitHit(L, base);
             return result;
         } finally {
             this.lua.lua_settop(L, base);
@@ -776,6 +793,28 @@ class FengariVm {
     }
 
     /**
+   * Like `pushPath`, for a path coming from a host call: runs it in a protected call under the
+   * limits, because looking up a global can run Lua code (an `__index` metamethod on `_G` or on
+   * a library table) that must be neither unbounded nor able to raise outside a protected call.
+   * Leaves the value on the stack; on failure restores the stack and throws.
+   */
+    resolvePath(L, path) {
+        const base = this.lua.lua_gettop(L);
+        this.lua.lua_pushcfunction(L, (state) => {
+            this.pushPath(state, path);
+            return 1;
+        });
+        const status = this.guarded(() => this.lua.lua_pcall(L, 0, 1, 0));
+        try {
+            if (status !== this.lua.LUA_OK) this.throwLuaError(L);
+            this.failIfLimitHit(L, base);
+        } catch (error) {
+            this.lua.lua_settop(L, base);
+            throw error;
+        }
+    }
+
+    /**
    * Runs Lua code and returns its first return value.
    */
     run(source, chunkName = '=chunk') {
@@ -837,7 +876,7 @@ class FengariVm {
         const base = this.lua.lua_gettop(L);
         let ref, compiled;
         try {
-            if (typeof target === 'string') this.pushPath(L, target);
+            if (typeof target === 'string') this.resolvePath(L, target);
             else this.push(target, L);
             if (!this.lua.lua_isfunction(L, -1)) throw new TypeError('compile expects a Lua function or its global path');
             const object = L.stack[L.top - 1];
@@ -880,10 +919,17 @@ class FengariVm {
     invoke(path, args, all) {
         const L = this.state;
         const base = this.lua.lua_gettop(L);
-        const handler = this.pushTracebackHandler();
-        this.pushPath(L, path);
-        for (const arg of args) this.push(arg, L);
-        return this.protectedCall(args.length, base, handler, all);
+        return this.guarded(() => {
+            const handler = this.pushTracebackHandler();
+            try {
+                this.resolvePath(L, path);
+            } catch (error) {
+                this.lua.lua_settop(L, base);
+                throw error;
+            }
+            for (const arg of args) this.push(arg, L);
+            return this.protectedCall(args.length, base, handler, all);
+        });
     }
 
     /**
@@ -906,7 +952,7 @@ class FengariVm {
     coroutine(target) {
         const T = this.lua.lua_newthread(this.state);
         this.lua.lua_pop(this.state, 1); /* the JS Coroutine holds the thread */
-        if (typeof target === 'string') this.pushPath(this.state, target);
+        if (typeof target === 'string') this.resolvePath(this.state, target);
         else this.push(target, this.state);
         if (!this.lua.lua_isfunction(this.state, -1)) {
             this.lua.lua_pop(this.state, 1);
@@ -942,6 +988,7 @@ class FengariVm {
             this.lua.lua_settop(L, base);
             throw this.luaError(trace.split('\n')[0], trace);
         }
+        this.failIfLimitHit(L, base);
         let value;
         if (all) {
             value = [];

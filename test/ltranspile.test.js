@@ -285,6 +285,27 @@ describe('translated programs agree with the Lua VM', () => {
         agree('function main() local r = ("a/b"):gsub("/", "%%") return r end');
     });
 
+    test('`or` keeps Lua truth semantics: false, nil, 0 and empty strings', () => {
+        const pick = 'function main(a, b) return a or b end';
+        for (const a of [false, 0, '', 7]) agree(pick, a, 'fallback');
+        agree('function main(a) a = a or "default" return a end', false);
+        agree('function main(a) a = a or "default" return a end');
+        agree('function main(o) return o.x or o.y or "none" end', { x: false, y: false });
+        agree('function main(o) return o.x or o.y or "none" end', { x: false, y: 5 });
+        agree('function main(a, b) return (a == b) or "different" end', 1, 2);
+        agree('function main() local s = "text" return s or "other" end');
+        expect(both(pick, false, 'fallback').code).not.toContain('??');
+    });
+
+    test('the nullishOr option emits the shorter a ?? b and documents the difference', () => {
+        const { code } = transpile('function main(a, b) return a or b end', { header: false, nullishOr: true });
+        expect(code).toContain('a ?? b');
+        expect(code).not.toContain('truthy');
+        const mod = { exports: {} };
+        new Function('module', transpile('function main(a, b) return a or b end', { format: 'cjs', nullishOr: true }).code)(mod);
+        expect(mod.exports.main(false, 'fallback')).toBe(false); /* Lua would return 'fallback' */
+    });
+
     test('reserved words and helper names are renamed, not captured', () => {
         agree(`function main()
             local new, class, var, args, mod, truthy = 1, 2, 3, 4, 5, 6
@@ -367,6 +388,13 @@ describe('lua2js command', () => {
         expect(fs.readFileSync(output, 'utf8')).toContain('export { f };');
         expect(result.stderr).toMatch(/setmetatable/);
         expect(result.stderr).toMatch(/1 item\(s\) need review/);
+    });
+
+    test('--nullish-or switches `or` to ??', () => {
+        const input = path.join(dir, 'or.lua');
+        fs.writeFileSync(input, 'function f(a, b) return a or b end');
+        expect(run(input, '--quiet', '--no-header').stdout).toContain('truthy(a) ? a : b');
+        expect(run(input, '--quiet', '--no-header', '--nullish-or').stdout).toContain('a ?? b');
     });
 
     test('prints to stdout and stays quiet with --quiet', () => {

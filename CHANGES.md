@@ -1,5 +1,16 @@
 # Changes in Fengari
 
+## Version 0.5.4
+
+### Security (execution limits)
+- **A limit overrun could be hidden by the script**: a coroutine created by Lua that exceeded the instruction (or time, or total memory) budget made `coroutine.resume` / `pcall` return normally, so `vm.run()` returned its value (`limitHit` was set but nothing failed). Every host entry point (`run`, `call`, `callRef`, `Coroutine#resume`, `protect`) now fails with a `LimitError` whenever a limit was hit during the call, even if Lua caught the failure. `setLimits` resets the flag, so a removed limit leaves nothing stale.
+- **Looking up a global ran outside the budget**: `call`, `callMulti`, `compile` and `coroutine` resolved their path before the budgeted call, so an `__index` metamethod on `_G` (or on a library table of the path) could loop forever, or raise outside a protected call. The lookup now runs in a protected call under the same budget (`vm.resolvePath`).
+- **`Coroutine#close()` ran without a budget**: pending `__close` handlers executed unbounded (a 10,000-iteration handler ran under a 1,000-instruction limit). `close()` now gets a fresh budget like the other top-level calls and fails with a `LimitError` if it is exceeded.
+
+### Fixes (`lua2js`)
+- **`a or b` changed Lua truth semantics silently**: it was translated to `a ?? b`, which returns `false` where Lua returns `b`. It is now `truthy(a) ? a : b` (or an `or()` helper for a complex `a`), `a || b` when `a` is a boolean, and `a ?? b` only when `a` is known never to be `false`. The new `nullishOr` option (`--nullish-or`) restores the always-`??` form for readability.
+- **Tests**: `test/fengari-vm-limits.test.js`, `test/ltranspile.test.js`.
+
 ## Version 0.5.3
 
 ### Fixes

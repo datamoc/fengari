@@ -130,6 +130,11 @@ export interface LuaToJsOptions {
     format?: 'none' | 'esm' | 'cjs';
     /** Prepend the "Translated from Lua" header comment. Default: true. */
     header?: boolean;
+    /**
+     * Translate `a or b` to `a ?? b` even when `a` may be `false` (shorter, but `false or b`
+     * yields `false` instead of `b`). Default: false, which keeps Lua's truth semantics exactly.
+     */
+    nullishOr?: boolean;
 }
 
 export interface LuaToJsWarning {
@@ -190,6 +195,17 @@ export class FengariVm {
 
     /** Pushes onto `L` the value designated by a dotted path of globals (nil if absent). */
     pushPath(L: any, path: string): void;
+    /**
+     * Like `pushPath`, but runs the lookup in a protected call under the limits (a global lookup
+     * can run an `__index` metamethod). Throws a LuaError / LimitError and restores the stack on failure.
+     */
+    resolvePath(L: any, path: string): void;
+    /**
+     * Throws a LimitError (after restoring `L` to stack height `base`) if a limit was exceeded
+     * since the current budget was armed, even when the script caught the failure. Call it after
+     * your own entry points into Lua; `run`, `call`, `callRef`, `resume` and `protect` already do.
+     */
+    failIfLimitHit(L: any, base: number): void;
     /**
      * Classifies the keys of the table at stack index `table` of `L`: `array` (keys 1..n),
      * `object` (string keys, or integer keys that are not a sequence) or `map` (keys that

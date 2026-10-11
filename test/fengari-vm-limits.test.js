@@ -4,6 +4,78 @@ const { FengariVm, LuaError, LimitError } = require("../src/fengari-vm.js");
 
 const limited = (limits, options = {}) => new FengariVm(undefined, undefined, { limits, ...options });
 
+describe('a limit overrun cannot be hidden by the script', () => {
+
+    test('a coroutine created by Lua that exceeds the budget fails the host call even if Lua catches it', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const run = () => vm.run('local co = coroutine.create(function() while true do end end); local ok = coroutine.resume(co); return 42');
+        expect(run).toThrow(LimitError);
+        expect(vm.limitHit).toBe('instructions');
+        expect(vm.run('return 1')).toBe(1);
+        expect(vm.limitHit).toBeNull();
+    });
+
+    test('coroutine.wrap inside pcall is covered too, and so is vm.call', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        expect(() => vm.run('local f = coroutine.wrap(function() while true do end end); local ok = pcall(f); return 43')).toThrow(LimitError);
+        vm.run('function caught() local co = coroutine.create(function() while true do end end); coroutine.resume(co); return 44 end');
+        expect(() => vm.call('caught')).toThrow(LimitError);
+        expect(() => vm.callMulti('caught')).toThrow(LimitError);
+    });
+
+    test('a host coroutine whose Lua code catches an inner overrun fails resume', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const co = vm.coroutineFromSource('local inner = coroutine.create(function() while true do end end); coroutine.resume(inner); return 45');
+        expect(() => co.resume()).toThrow(LimitError);
+    });
+
+    test('a removed limit leaves no stale overrun behind', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        expect(() => vm.run('while true do end')).toThrow(LimitError);
+        vm.setLimits(null);
+        expect(vm.run('return 46')).toBe(46);
+        expect(vm.limitHit).toBeNull();
+    });
+
+    test('Coroutine#close runs the pending __close handlers with a fresh budget', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const source = 'local x <close> = setmetatable({}, {__close = function() for i = 1, 10000 do end end}); coroutine.yield(1)';
+        const co = vm.coroutineFromSource(source);
+        co.resume();
+        expect(() => co.close()).toThrow(LimitError);
+        const quick = vm.coroutineFromSource('local x <close> = setmetatable({}, {__close = function() for i = 1, 100 do end end}); coroutine.yield(1)');
+        quick.resume();
+        expect(() => quick.close()).not.toThrow();
+        expect(quick.status).toBe('dead');
+    });
+});
+
+describe('looking up a global path runs under the limits', () => {
+    const hostile = 'setmetatable(_G, {__index = function(_, key) while true do end end})';
+
+    test('an endless __index on _G cannot hang call, callMulti, compile or coroutine', () => {
+        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 5000 } });
+        vm.run('function present() return 1 end');
+        vm.run(hostile);
+        expect(() => vm.call('missing')).toThrow(LimitError);
+        expect(() => vm.callMulti('missing')).toThrow(LimitError);
+        expect(() => vm.compile('missing')).toThrow(LimitError);
+        expect(() => vm.coroutine('missing')).toThrow(LimitError);
+        expect(vm.call('present')).toBe(1);
+    });
+
+    test('a failing __index is a LuaError, not an unprotected raise, and leaves the stack clean', () => {
+        const vm = new FengariVm();
+        vm.run('setmetatable(_G, {__index = function(_, key) error("no global " .. key) end}); function present() return 1 end');
+        const before = vm.lua.lua_gettop(vm.state);
+        expect(() => vm.call('absent')).toThrow(/no global absent/);
+        expect(() => vm.compile('absent')).toThrow(LuaError);
+        expect(() => vm.coroutine('absent')).toThrow(LuaError);
+        expect(vm.lua.lua_gettop(vm.state)).toBe(before);
+        expect(vm.call('present')).toBe(1);
+    });
+});
+
 describe("FengariVm execution limits", () => {
     test("an instruction budget stops an infinite loop", () => {
         const vm = limited({ instructions: 100000 });

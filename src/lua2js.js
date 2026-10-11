@@ -4,7 +4,7 @@
 const fs = require('fs');
 const { transpile, LuaSyntaxError } = require('./ltranspile.js');
 
-const USAGE = `Usage: lua2js <file.lua | -> [-o out.js] [--format none|esm|cjs] [--no-header] [--quiet]
+const USAGE = `Usage: lua2js <file.lua | -> [-o out.js] [--format none|esm|cjs] [--no-header] [--nullish-or] [--quiet]
 
 Translates Lua source to readable JavaScript for migrating a codebase.
 Review every "TODO(lua2js)" comment in the output: it marks a construct the
@@ -18,6 +18,7 @@ function main(argv) {
         if (arg === '-o' || arg === '--output') output = argv[++i];
         else if (arg === '--format') options.format = argv[++i];
         else if (arg === '--no-header') options.header = false;
+        else if (arg === '--nullish-or') options.nullishOr = true;
         else if (arg === '--quiet') quiet = true;
         else if (arg === '-h' || arg === '--help') { console.log(USAGE); return 0; }
         else if (input === null) input = arg;
