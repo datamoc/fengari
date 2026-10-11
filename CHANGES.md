@@ -7,6 +7,11 @@
 - **Looking up a global ran outside the budget**: `call`, `callMulti`, `compile` and `coroutine` resolved their path before the budgeted call, so an `__index` metamethod on `_G` (or on a library table of the path) could loop forever, or raise outside a protected call. The lookup now runs in a protected call under the same budget (`vm.resolvePath`).
 - **`Coroutine#close()` ran without a budget**: pending `__close` handlers executed unbounded (a 10,000-iteration handler ran under a 1,000-instruction limit). `close()` now gets a fresh budget like the other top-level calls and fails with a `LimitError` if it is exceeded.
 
+### `FengariVm` options and types
+- **`sandbox` leaked `__random`**: the host helper was a readable global (`type(__random) == 'function'`). Like `__fs_read` / `__fs_list`, it is no longer defined with `sandbox: true`. Nothing in Fengari calls it (`math.random` has its own generator); `vm.nextRandom()` remains available to the host.
+- **`print` option** (`'buffer'` default, `'native'`, `false`): `'native'` keeps the base library's `print` and `false` removes it, so a host that wants Lua's own `print` no longer has to build the VM with `libs: []` and re-open libraries (which restored `string.dump` after the sandbox removed it).
+- **Types**: `LuaRef.type` is `'function' | 'thread' | 'userdata'` (new `LuaRefType`; a table is never a reference), `FengariVmOptions.print`.
+
 ### Fixes (`lua2js`)
 - **`a or b` changed Lua truth semantics silently**: it was translated to `a ?? b`, which returns `false` where Lua returns `b`. It is now `truthy(a) ? a : b` (or an `or()` helper for a complex `a`), `a || b` when `a` is a boolean, and `a ?? b` only when `a` is known never to be `false`. The new `nullishOr` option (`--nullish-or`) restores the always-`??` form for readability.
 - **Tests**: `test/fengari-vm-limits.test.js`, `test/ltranspile.test.js`.

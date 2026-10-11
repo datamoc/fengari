@@ -61,12 +61,15 @@ export class LimitError extends LuaError {
 
 export type LimitName = 'instructions' | 'time' | 'memory';
 
+/** The Lua types a LuaRef can designate (tables are always converted to JavaScript values). */
+export type LuaRefType = 'function' | 'thread' | 'userdata';
+
 /** Reference to a Lua value with no JavaScript equivalent (function, thread, userdata). */
 export class LuaRef {
-    constructor(vm: FengariVm, id: number | null, type: string);
+    constructor(vm: FengariVm, id: number | null, type: LuaRefType);
     vm: FengariVm;
     id: number | null;
-    type: string;
+    type: LuaRefType;
     /** For a full userdata: its host-side content. */
     readonly value: unknown;
     /** Calls the referenced function; returns its first return value. */
@@ -120,6 +123,11 @@ export interface FengariVmOptions {
     sandbox?: boolean;
     /** Budget per top-level call, reset at every call. */
     limits?: VmLimits;
+    /**
+     * What `print` does. `'buffer'` (default) collects the lines in `vm.output`; `'native'` keeps
+     * the print of the base library; `false` removes it.
+     */
+    print?: 'buffer' | 'native' | false;
     /** Read Lua floats with an integral value as `LuaFloat` instead of numbers. */
     preserveFloats?: boolean;
 }

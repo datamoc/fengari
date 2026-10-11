@@ -23,6 +23,59 @@ describe("FengariVm libraries", () => {
     });
 });
 
+describe("FengariVm sandbox leaves no host helper behind", () => {
+    test("__random, __fs_read and __fs_list are not visible to a sandboxed script", () => {
+        const vm = new FengariVm(undefined, undefined, { sandbox: true });
+        expect(vm.run("return type(__random) .. type(__fs_read) .. type(__fs_list)")).toBe("nilnilnil");
+        const names = vm.run("local names = {} for key in pairs(_G) do names[#names + 1] = key end table.sort(names) return table.concat(names, ',')");
+        expect(names).not.toMatch(/__/);
+        expect(typeof vm.nextRandom()).toBe("number");
+    });
+
+    test("outside the sandbox the helpers keep working", () => {
+        const vm = new FengariVm();
+        expect(vm.run("return type(__random)")).toBe("function");
+        const value = vm.run("return __random()");
+        expect(value >= 0 && value < 1).toBe(true);
+    });
+});
+
+describe("FengariVm print option", () => {
+    test("'buffer' (default) collects the lines", () => {
+        const vm = new FengariVm();
+        vm.run("print('a', 1)");
+        expect(vm.output).toEqual(["a\t1"]);
+    });
+
+    test("'native' keeps the print of the base library and does not touch the buffer", () => {
+        const vm = new FengariVm(undefined, undefined, { print: "native" });
+        const written = [];
+        const write = process.stdout.write;
+        process.stdout.write = (chunk) => { written.push(String(chunk)); return true; };
+        try {
+            vm.run("print('native', 2)");
+        } finally {
+            process.stdout.write = write;
+        }
+        expect(vm.output).toEqual([]);
+        expect(written.join("")).toContain("native\t2");
+    });
+
+    test("false removes print", () => {
+        const vm = new FengariVm(undefined, undefined, { print: false });
+        expect(vm.run("return type(print)")).toBe("nil");
+    });
+
+    test("'native' with the sandbox keeps string.dump removed (no library re-opening needed)", () => {
+        const vm = new FengariVm(undefined, undefined, { sandbox: true, print: "native" });
+        expect(vm.run("return type(print) .. type(string.dump) .. type(os)")).toBe("functionnilnil");
+    });
+
+    test("rejects an unknown value", () => {
+        expect(() => new FengariVm(undefined, undefined, { print: "buffered" })).toThrow(RangeError);
+    });
+});
+
 describe("FengariVm conversions", () => {
     test("arrays vs objects", () => {
         const vm = new FengariVm();

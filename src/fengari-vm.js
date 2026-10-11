@@ -254,6 +254,10 @@ class FengariVm {
    *   or total overrun raises a LimitError and cannot be caught by the script (pcall included).
    *   Only acts on the VM created here: a script with `debug.sethook` can remove the
    *   hook, so combine with `sandbox`. See also setLimits.
+   * @param {'buffer'|'native'|false} [options.print] - What `print` does. 'buffer' (default):
+   *   replaced by a host function that collects the lines in `vm.output`. 'native': the print of
+   *   the base library is kept (the host does not need to re-open libraries to get it). false:
+   *   `print` is removed.
    * @param {boolean} [options.preserveFloats] - Read Lua floats with an integral value (5.0)
    *   as LuaFloat rather than as numbers (5). Default: false.
    */
@@ -288,12 +292,19 @@ class FengariVm {
         for (const path of [...(sandbox ? SANDBOX_REMOVE : []), ...(options.remove ?? [])]) this.removeGlobal(path);
 
         // Define the basic host functions
-        this.defineFunction('print', (...args) => {
-            this.output.push(args.map((value) => (typeof value === 'string' ? value : describe(value))).join('\t'));
-        });
+        const printMode = options.print ?? 'buffer';
+        if (!['buffer', 'native', false].includes(printMode)) throw new RangeError(`options.print must be 'buffer', 'native' or false, not ${describe(printMode)}`);
+        if (printMode === 'buffer') {
+            this.defineFunction('print', (...args) => {
+                this.output.push(args.map((value) => (typeof value === 'string' ? value : describe(value))).join('\t'));
+            });
+        } else if (printMode === false) {
+            this.removeGlobal('print');
+        }
 
-        this.defineFunction('__random', () => this.nextRandom());
+        /* Host helpers: a sandboxed script must not see any of them as a global. */
         if (!sandbox) {
+            this.defineFunction('__random', () => this.nextRandom());
             this.defineFunction('__fs_read', (path) => this.files.read(String(path)));
             this.defineFunction('__fs_list', (path) => this.files.list(String(path)));
         }
