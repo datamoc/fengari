@@ -194,10 +194,10 @@ module.exports.lua_closeslot           = lapi.lua_closeslot;
 module.exports.lua_closethread         = lapi.lua_closethread;
 module.exports.lua_toclose             = lapi.lua_toclose;
 module.exports.lua_pushjsfunction_ex   = lapi.lua_pushjsfunction_ex;
-// Fonction pour évaluer plusieurs expressions Lua en une seule fois
+// Function to evaluate several Lua expressions in one go
 const lua_eval_multiple = function(L, str) {
 
-    // Diviser la chaîne en plusieurs expressions Lua
+    // Split the string into several Lua expressions
     const expressions = str.split(';').map(s => s.trim()).filter(s => s.length > 0);
 
     let results = [];
@@ -205,7 +205,7 @@ const lua_eval_multiple = function(L, str) {
         const expr = expressions[i];
         if (expr.length === 0) continue;
 
-        // Charger l'expression Lua
+        // Load the Lua expression
         let source = defs.to_luastring(expr);
         const status = lapi.lua_load(L, () => {
             const chunk = source;
@@ -216,13 +216,13 @@ const lua_eval_multiple = function(L, str) {
             return { status, error: lapi.lua_tojsstring(L, -1) };
         }
 
-        // Exécuter l'expression
+        // Execute the expression
         const pcall_status = lapi.lua_pcall(L, 0, defs.LUA_MULTRET, 0);
         if (pcall_status !== defs.thread_status.LUA_OK) {
             return { status: pcall_status, error: lapi.lua_tojsstring(L, -1) };
         }
 
-        // Récupérer les résultats
+        // Collect the results
         const top = lapi.lua_gettop(L);
         let result = [];
         for (let j = 1; j <= top; j++) {
@@ -249,7 +249,7 @@ const lua_eval_multiple = function(L, str) {
             }
         }
         results.push(result);
-        lapi.lua_settop(L, 0); // Réinitialiser la pile
+        lapi.lua_settop(L, 0); // Reset the stack
     }
 
     return { status: defs.thread_status.LUA_OK, results };

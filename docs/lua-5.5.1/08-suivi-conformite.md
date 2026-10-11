@@ -1,91 +1,92 @@
-# Suivi de conformité
+# Conformance tracking
 
-Ce fichier est maintenu manuellement. Les outils régénèrent les observations et
-les inventaires, **pas ce tableau**. Ne pas ajouter des preuves uniquement aux
-fichiers générés : elles seraient perdues à la prochaine capture.
+This file is maintained by hand. The tools regenerate the observations and the
+inventories, **not this table**. Do not add evidence only to generated files:
+it would be lost at the next capture.
 
-## Statuts
+## Statuses
 
-- **À auditer** : du code existe, mais le contrat cible n'est pas entièrement vérifié.
-- **À implémenter** : au moins une lacune est confirmée ; le reste du domaine reste à auditer.
-- **En cours** : tâche et diff identifiés, validation encore incomplète.
-- **Validée** : toutes les exigences de la ligne ont des tests et résultats actuels,
-  avec le profil et les adaptations hôtes spécifiés.
+- **To audit**: code exists, but the target contract is not fully verified.
+- **To implement**: at least one gap is confirmed; the rest of the domain stays
+  to audit.
+- **In progress**: task and diff identified, validation still incomplete.
+- **Validated**: all requirements of the row have current tests and results,
+  with the profile and host adaptations specified.
 
-L'absence d'une preuve n'est pas une validation. Les observations ci-dessous sont
-des indices de travail, pas des tests de conformité complets. Le statut initial
-est conservateur ; aucune ligne n'est validée par ce dossier.
+The absence of evidence is not a validation. The observations below are work
+indicators, not complete conformance tests. The initial status is conservative;
+no row is validated by this folder.
 
-## Matrice de travail
+## Working matrix
 
-| ID | Domaine | Lot | Statut initial | Point de départ | Tests et preuve de clôture |
+| ID | Domain | Lot | Initial status | Starting point | Tests and closing evidence |
 | --- | --- | --- | --- | --- | --- |
-| L01 | Types et valeurs | M1 | À auditer | Entiers 32 bits, représentation des chaînes et tags existants | À renseigner |
-| L02 | Portées, `_ENV`, global | M3 | À implémenter | Sonde `global`, parseur actuel | À renseigner |
-| L03 | Erreurs et avertissements | M4 | À implémenter | Sondes nil-error et warnings | À renseigner |
-| L04 | Métaméthodes | M4 | À auditer | `ltm`, VM et limites `__call` | À renseigner |
-| L05 | GC, finalisation, weak/ephemeron | M5 | À implémenter | Sonde collectgarbage et stub lua_gc | À renseigner |
-| L06 | Coroutines | M4 | À implémenter | Sonde coroutine-close, contrats de resume | À renseigner |
-| L07 | Lexer | M3 | À implémenter | Global et attributs officiels absents/incomplets | À renseigner |
-| L08 | Instructions du langage | M3 | À implémenter | Attributs, boucles readonly et global | À renseigner |
-| L09 | Expressions, opérateurs, varargs | M2, M3 | À implémenter | Sonde named-varargs ; audit opérateurs | À renseigner |
-| L10 | Captures et visibilité | M3 | À auditer | Upvalues, closures, debug et scopes | À renseigner |
-| A01 | Contrat général de l'API | M6 | À auditer | API JS dérivée de 5.3 ; adaptations à spécifier | À renseigner |
-| A02 | Toutes les entrées de l'API | M6 | À implémenter | Inventaire, signatures et exports absents | À renseigner |
-| A03 | Bibliothèque auxiliaire | M6 | À implémenter | Inventaire luaL et nouveaux contrats | À renseigner |
-| B01 | Ouverture sélective des bibliothèques | M6 | À implémenter | luaL_openselectedlibs et masques absents | À renseigner |
-| B02 | Bibliothèque de base | M7 | À implémenter | warn, GC et changements d'erreurs | À renseigner |
-| B03 | Bibliothèque coroutine | M7 | À implémenter | close absent ; reste à auditer | À renseigner |
-| B04 | Bibliothèque package | M7 | À auditer | Loaders JS, chemins et API native à distinguer | À renseigner |
-| B05 | Bibliothèque string | M2, M7 | À implémenter | Format de dump 5.3 ; audit patterns/pack/format | À renseigner |
-| B06 | Bibliothèque utf8 | M7 | À implémenter | Sonde utf8-offset-results ; audit mode laxiste | À renseigner |
-| B07 | Bibliothèque table | M7 | À implémenter | Sonde table-create ; reste à auditer | À renseigner |
-| B08 | Bibliothèque math | M7 | À auditer | Profil numérique et génération aléatoire | À renseigner |
-| B09 | Bibliothèque io et fichiers | M7 | À implémenter | Fonctions NYI et fixtures de méthodes | À renseigner |
-| B10 | Bibliothèque os | M7 | À auditer | Services hôtes et variantes de plateforme | À renseigner |
-| B11 | Bibliothèque debug | M7 | À implémenter | Uservalues indexées et varargs nommés | À renseigner |
-| D01 | Interpréteur autonome | M8 | À auditer | Composant CLI externe à identifier | À renseigner |
-| D02 | Incompatibilités 5.4→5.5 | M3–M8 | À implémenter | Manuel §8, toutes les différences à couvrir | À renseigner |
-| D03 | Grammaire complète | M3 | À implémenter | Sondes de compilation ; corpus à créer | À renseigner |
-| V01 | Instructions et prototypes | M2 | À implémenter | lopcodes actuel 5.3 | À renseigner |
-| V02 | Lecture des chunks | M2 | À implémenter | Format actuel 0x53 | À renseigner |
-| V03 | Écriture des chunks | M2 | À implémenter | Format et protocole writer à porter | À renseigner |
-| P01 | Graphe acyclique et intégration | Tous | À auditer | Gate de dépendances existante, à maintenir à chaque lot | À renseigner |
+| L01 | Types and values | M1 | To audit | 32-bit integers, string representation and existing tags | To fill in |
+| L02 | Scopes, `_ENV`, global | M3 | To implement | `global` probe, current parser | To fill in |
+| L03 | Errors and warnings | M4 | To implement | nil-error and warnings probes | To fill in |
+| L04 | Metamethods | M4 | To audit | `ltm`, VM and `__call` limits | To fill in |
+| L05 | GC, finalization, weak/ephemeron | M5 | To implement | collectgarbage probe and lua_gc stub | To fill in |
+| L06 | Coroutines | M4 | To implement | coroutine-close probe, resume contracts | To fill in |
+| L07 | Lexer | M3 | To implement | Global and official attributes absent/incomplete | To fill in |
+| L08 | Language constructs | M3 | To implement | Attributes, readonly loops and global | To fill in |
+| L09 | Expressions, operators, varargs | M2, M3 | To implement | named-varargs probe; operator audit | To fill in |
+| L10 | Captures and visibility | M3 | To audit | Upvalues, closures, debug and scopes | To fill in |
+| A01 | General API contract | M6 | To audit | JS API derived from 5.3; adaptations to specify | To fill in |
+| A02 | All API entries | M6 | To implement | Inventory, signatures and missing exports | To fill in |
+| A03 | Auxiliary library | M6 | To implement | luaL inventory and new contracts | To fill in |
+| B01 | Selective library opening | M6 | To implement | luaL_openselectedlibs and missing masks | To fill in |
+| B02 | Base library | M7 | To implement | warn, GC and error changes | To fill in |
+| B03 | Coroutine library | M7 | To implement | close missing; rest to audit | To fill in |
+| B04 | Package library | M7 | To audit | JS loaders, paths and native API to distinguish | To fill in |
+| B05 | String library | M2, M7 | To implement | 5.3 dump format; patterns/pack/format audit | To fill in |
+| B06 | utf8 library | M7 | To implement | utf8-offset-results probe; lenient mode audit | To fill in |
+| B07 | table library | M7 | To implement | table-create probe; rest to audit | To fill in |
+| B08 | math library | M7 | To audit | Numeric profile and random generation | To fill in |
+| B09 | io library and files | M7 | To implement | NYI functions and method fixtures | To fill in |
+| B10 | os library | M7 | To audit | Host services and platform variants | To fill in |
+| B11 | debug library | M7 | To implement | Indexed uservalues and named varargs | To fill in |
+| D01 | Standalone interpreter | M8 | To audit | External CLI component to identify | To fill in |
+| D02 | 5.4→5.5 incompatibilities | M3–M8 | To implement | Manual §8, all differences to cover | To fill in |
+| D03 | Complete grammar | M3 | To implement | Compilation probes; corpus to create | To fill in |
+| V01 | Instructions and prototypes | M2 | To implement | Current 5.3 lopcodes | To fill in |
+| V02 | Chunk reading | M2 | To implement | Current 0x53 format | To fill in |
+| V03 | Chunk writing | M2 | To implement | Format and writer protocol to port | To fill in |
+| P01 | Acyclic graph and integration | All | To audit | Existing dependency gate, to maintain at every lot | To fill in |
 
-Références normatives et détails : [Exigences](03-exigences.md).
+Normative references and details: [Requirements](03-exigences.md).
 
-## Avancement des contrats
+## Contract progress
 
-Les contrats UTF-8, `table.create`, l'ouverture sélective et la normalisation des
-erreurs nil ont reçu un portage et des tests. Les preuves et limites figurent dans
-[Avancement vérifié](09-avancement.md). Les domaines L03, L07, B01, B06 et B07
-sont **en cours** ; leur statut initial dans le tableau ci-dessus reste un repère
-historique. Aucun domaine entier n'est encore déclaré validé.
+The UTF-8, `table.create`, selective opening and nil error normalization
+contracts have received a port and tests. Evidence and limits appear in
+[Verified progress](09-avancement.md). Domains L03, L07, B01, B06 and B07 are
+**in progress**; their initial status in the table above remains a historical
+marker. No whole domain is declared validated yet.
 
-## Preuves par entrée d'API ou de bibliothèque
+## Evidence per API or library entry
 
-Ajouter une fiche par contrat ou groupe de contrats, en citant les symboles exacts
-de [l'inventaire](inventaire-api.md). Une preuve de présence ne suffit pas à fermer
-le groupe. Les types C, macros de compilation et variables d'environnement doivent
-recevoir une classification explicite et leur contrat applicable.
+Add one record per contract or group of contracts, citing the exact symbols of
+the [inventory](inventaire-api.md). Evidence of presence is not enough to close
+the group. C types, build macros and environment variables must receive an
+explicit classification and their applicable contract.
 
 ```text
-Exigence / symboles :
-Statut :
-Lot et tâche :
-Implémentation (fichiers/commit) :
-Référence officielle :
-Tests (fichiers/cas) :
-Résultat oracle 5.5.1 / profil / date :
-Résultat Fengari / profil / date :
-Normalisations et adaptations hôtes :
-Tests ignorés et couverture équivalente :
-Lacunes restantes :
+Requirement / symbols:
+Status:
+Lot and task:
+Implementation (files/commit):
+Official reference:
+Tests (files/cases):
+Oracle 5.5.1 result / profile / date:
+Fengari result / profile / date:
+Normalizations and host adaptations:
+Skipped tests and equivalent coverage:
+Remaining gaps:
 ```
 
-## Audit de livraison
+## Delivery audit
 
-Vérifier chaque ligne, puis chaque entrée inventoriée. Relever toute exigence sans
-preuve, tout test ignoré non remplacé et toute adaptation non publiée. Le statut
-global reste incomplet tant qu'un de ces éléments appartient au périmètre annoncé.
-Les portes détaillées G0–G8 figurent dans [Validation](06-validation.md).
+Check every row, then every inventoried entry. Note any requirement without
+evidence, any unreplaced skipped test and any unpublished adaptation. The
+overall status stays incomplete while one of these belongs to the announced
+scope. The detailed gates G0–G8 appear in [Validation](06-validation.md).

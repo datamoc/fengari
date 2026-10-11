@@ -4,21 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fengari vs JavaScript benchmark</title>
-<meta name="description" content="Live benchmark of Lua running in Fengari against the same algorithms in plain JavaScript, measured in your own browser.">
+<meta name="description" content="Compare interpreted Lua, compiled numeric Lua and native JavaScript, measured in your own browser.">
 <style>
 :root {
   --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --panel: #f6f8fa;
-  --js: #d4a000; --lua: #2c4fa3; --ok: #1a7f37; --bad: #cf222e; --accent: #2c4fa3;
+  --js: #d4a000; --lua: #2c4fa3; --compiled: #8c42b5; --ok: #1a7f37; --bad: #cf222e; --accent: #2c4fa3;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --line: #30363d; --panel: #161b22;
-    --js: #e3b341; --lua: #6d8fe0; --ok: #3fb950; --bad: #f85149; --accent: #6d8fe0;
+    --js: #e3b341; --lua: #6d8fe0; --compiled: #c58bf0; --ok: #3fb950; --bad: #f85149; --accent: #6d8fe0;
   }
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-main { max-width: 60rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+main { max-width: 80rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
 h1 { font-size: 1.8rem; margin: 0 0 .25rem; }
 h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
 p { margin: .5rem 0; }
@@ -33,6 +33,7 @@ button.secondary { cursor: pointer; }
 .summary { display: none; margin: 1rem 0; padding: 1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
 .summary strong { font-size: 1.4rem; }
 table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+.table-scroll { overflow-x: auto; }
 th, td { text-align: left; padding: .55rem .5rem; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-size: .85rem; color: var(--muted); font-weight: 600; }
 td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -43,10 +44,13 @@ th.num { text-align: right; }
 .bar { height: .6rem; border-radius: 3px; margin: .3rem 0; min-width: 2px; }
 .bar.js { background: var(--js); }
 .bar.lua { background: var(--lua); }
-.legend { display: flex; gap: 1.25rem; font-size: .85rem; color: var(--muted); margin-top: .5rem; }
+.bar.compiled { background: var(--compiled); }
+.legend { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: .85rem; color: var(--muted); margin-top: .5rem; }
 .legend span::before { content: ""; display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
 .legend .js::before { background: var(--js); }
 .legend .lua::before { background: var(--lua); }
+.legend .compiled::before { background: var(--compiled); }
+.compiler-note { font-size: .8rem; color: var(--muted); }
 .ok { color: var(--ok); } .bad { color: var(--bad); font-weight: 700; }
 details { border: 1px solid var(--line); border-radius: 8px; margin: .6rem 0; background: var(--panel); }
 summary { cursor: pointer; padding: .6rem .9rem; font-weight: 600; }
@@ -63,9 +67,9 @@ noscript { color: var(--bad); }
 <body>
 <main>
   <h1>Fengari vs JavaScript</h1>
-  <p class="muted">Lua 5.4 running in <a href="https://github.com/datamoc/fengari">@datamoc/fengari</a> compared with the same algorithms written in plain JavaScript. Everything runs in <em>your</em> browser, right now.</p>
+  <p class="muted">Interpreted Lua, compiled numeric Lua and native JavaScript running the same algorithms. Everything runs in <em>your</em> browser, right now.</p>
 
-  <p>Fengari is a Lua interpreter written in JavaScript: every Lua instruction is executed by JavaScript code, while the native JavaScript versions below are compiled to machine code by your browser's JIT. Expect Lua-in-Fengari to be much slower on tight numeric loops. This page measures exactly how much, so you can decide whether Fengari fits your workload (scripting, rules, configuration, game logic) or not (number crunching).</p>
+  <p><a href="https://github.com/datamoc/fengari">Fengari</a> normally interprets Lua bytecode in JavaScript. Its optional numeric compiler converts supported functions and complete numeric loops into JavaScript that your browser can optimize. This page measures both execution modes against hand-written JavaScript. To move a Lua program to JavaScript for good, try the <a href="../lua2js/">Lua to JavaScript translator</a>. Algorithms outside the supported subset are marked <em>Interpreter fallback</em>.</p>
 
   <noscript><p>This page needs JavaScript.</p></noscript>
 
@@ -84,23 +88,28 @@ noscript { color: var(--bad); }
 
   <div class="summary" id="summary" aria-live="polite"></div>
 
+  <div class="table-scroll">
   <table id="results">
     <thead>
       <tr>
         <th>Benchmark</th>
         <th class="num">JavaScript</th>
-        <th class="num">Lua (Fengari)</th>
-        <th class="num">Slowdown</th>
+        <th class="num">Interpreted Lua</th>
+        <th class="num">Compiled Lua</th>
+        <th class="num">Interpreter / JS</th>
+        <th class="num">Compiler speedup</th>
         <th class="bars">Time, log scale</th>
         <th>Same result</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
-  <div class="legend"><span class="js">JavaScript</span><span class="lua">Lua in Fengari</span></div>
+  </div>
+  <div class="legend"><span class="js">JavaScript</span><span class="lua">Interpreted Lua</span><span class="compiled">Compiled Lua</span></div>
 
   <h2>Method</h2>
-  <p>Each benchmark runs the same algorithm in both languages with the same input size and returns a checksum; the last column checks that both agree. JavaScript times are averaged over enough repetitions to last at least 80&nbsp;ms (browsers coarsen <code>performance.now()</code>). With 3 or 5 runs, one untimed warm-up run is done first and the median of the timed runs is reported. The Lua side is called through <code>FengariVm</code> with only the <code>base</code>, <code>string</code>, <code>table</code> and <code>math</code> libraries opened.</p>
+  <p>Each benchmark uses the same input size and returns a checksum; the last column checks all measured modes. Every mode gets an untimed warm-up. Each timed sample repeats the function for at least 80&nbsp;ms, then divides by the number of calls; the median sample is reported. This keeps short expressions measurable despite browser clock rounding. Interpreter times include <code>vm.call</code> overhead; compiled times include the guards in the callable returned by <code>vm.compile</code>.</p>
+  <p>Lua loading and compilation happen outside the timed samples. Numeric compilation supports arithmetic, locals and integer numeric <code>for</code> loops; calls, tables and branches use the interpreter. Fallback rows show no compiled timing or speedup, and are excluded from the compiler summary. A browser policy that blocks dynamic JavaScript compilation also causes fallback. Only the <code>base</code>, <code>string</code>, <code>table</code> and <code>math</code> libraries are opened.</p>
   <p class="muted" id="env"></p>
 
   <h2>The algorithms</h2>
@@ -120,14 +129,15 @@ const summary = document.getElementById("summary");
 const tbody = document.querySelector("#results tbody");
 let lastMarkdown = "";
 
-const MIN_JS_MS = 80;
+const MIN_SAMPLE_MS = 80;
 
 function pause() {
   return new Promise((resolve) => setTimeout(resolve, 40));
 }
 
 function format(ms) {
-  if (ms < 0.01) return "<0.01 ms";
+  if (ms < 0.001) return (ms * 1000000).toFixed(1) + " ns";
+  if (ms < 1) return (ms * 1000).toFixed(2) + " µs";
   if (ms < 10) return ms.toFixed(2) + " ms";
   if (ms < 1000) return ms.toFixed(1) + " ms";
   return (ms / 1000).toFixed(2) + " s";
@@ -139,14 +149,8 @@ function median(values) {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
-function timeOnce(fn) {
-  const start = performance.now();
-  const value = fn();
-  return { value, ms: performance.now() - start };
-}
-
-/* JavaScript is far too fast for one call to be measurable: repeat until MIN_JS_MS has elapsed. */
-function timeJs(fn, size, runs) {
+/* Use the same sampling method for all three modes, including short expressions. */
+function timeFunction(fn, size, runs) {
   let result = fn(size); /* warm-up */
   const samples = [];
   for (let sample = 0; sample < runs; sample++) {
@@ -155,30 +159,19 @@ function timeJs(fn, size, runs) {
     do {
       result = fn(size);
       iterations++;
-    } while (performance.now() - start < MIN_JS_MS);
+    } while (performance.now() - start < MIN_SAMPLE_MS);
     samples.push((performance.now() - start) / iterations);
   }
   return { value: result, ms: median(samples) };
-}
-
-function timeLua(vm, size, runs) {
-  const samples = [];
-  let value;
-  if (runs > 1) vm.call("run", size); /* warm-up */
-  for (let sample = 0; sample < runs; sample++) {
-    const timed = timeOnce(() => vm.call("run", size));
-    value = timed.value;
-    samples.push(timed.ms);
-  }
-  return { value, ms: median(samples) };
 }
 
 function makeRow(bench) {
   const row = document.createElement("tr");
   row.innerHTML = `
     <td><div class="bench-name"></div><div class="bench-what"></div></td>
-    <td class="num js-time">…</td><td class="num lua-time">…</td><td class="num ratio">…</td>
-    <td class="bars"><div class="bar js" style="width:0"></div><div class="bar lua" style="width:0"></div></td>
+    <td class="num js-time">…</td><td class="num lua-time">…</td><td class="num compiled-time">…</td>
+    <td class="num ratio">…</td><td class="num speedup">…</td>
+    <td class="bars"><div class="bar js" style="width:0"></div><div class="bar lua" style="width:0"></div><div class="bar compiled" style="width:0" hidden></div></td>
     <td class="check"></td>`;
   row.querySelector(".bench-name").textContent = bench.title;
   row.querySelector(".bench-what").textContent = `${bench.what} (n = ${bench.size.toLocaleString("en-US")})`;
@@ -187,13 +180,18 @@ function makeRow(bench) {
 }
 
 function drawBars(results) {
-  const times = results.flatMap((r) => [r.js.ms, r.lua.ms]);
+  const times = results.flatMap((r) => [r.js.ms, r.lua.ms, ...(r.compiled ? [r.compiled.ms] : [])]);
   const low = Math.log10(Math.max(Math.min(...times) / 2, 0.001));
   const high = Math.log10(Math.max(...times));
   const scale = (ms) => (high === low ? 100 : 4 + 96 * (Math.log10(Math.max(ms, 0.001)) - low) / (high - low));
   for (const r of results) {
     r.row.querySelector(".bar.js").style.width = scale(r.js.ms) + "%";
     r.row.querySelector(".bar.lua").style.width = scale(r.lua.ms) + "%";
+    if (r.compiled) {
+      const bar = r.row.querySelector(".bar.compiled");
+      bar.hidden = false;
+      bar.style.width = scale(r.compiled.ms) + "%";
+    }
   }
 }
 
@@ -204,21 +202,33 @@ function geometricMean(values) {
 function showSummary(results) {
   const ratios = results.map((r) => r.lua.ms / r.js.ms);
   const mean = geometricMean(ratios);
-  const allMatch = results.every((r) => r.js.value === r.lua.value);
+  const eligible = results.filter((r) => r.compiled);
+  const allMatch = results.every((r) => r.match);
   summary.style.display = "block";
-  summary.innerHTML = `On these ${results.length} benchmarks, Lua in Fengari was <strong>${mean.toFixed(0)}× slower</strong> than JavaScript (geometric mean; range ${Math.min(...ratios).toFixed(0)}× to ${Math.max(...ratios).toFixed(0)}×).` +
-    (allMatch ? "" : ' <span class="bad">Warning: some results differ between the two languages.</span>');
+  summary.innerHTML = `Across ${results.length} benchmarks, interpreted Lua took <strong>${mean.toFixed(1)}×</strong> the JavaScript time (geometric mean).`;
+  if (eligible.length) {
+    const speedup = geometricMean(eligible.map((r) => r.lua.ms / r.compiled.ms));
+    const relative = geometricMean(eligible.map((r) => r.compiled.ms / r.js.ms));
+    summary.innerHTML += `<p>On the ${eligible.length} compiled benchmarks, compilation gave a <strong>${speedup.toFixed(1)}× speedup</strong> over the interpreter; compiled Lua took ${relative.toFixed(1)}× the JavaScript time (geometric means). The remaining ${results.length - eligible.length} benchmarks use interpreter fallback.</p>`;
+  } else {
+    summary.innerHTML += '<p>No functions could be compiled in this run; all use interpreter fallback.</p>';
+  }
+  if (!allMatch) summary.innerHTML += '<p class="bad">Warning: some execution modes returned different results.</p>';
 }
 
 function toMarkdown(results, runs) {
   const lines = [
-    "| Benchmark | JavaScript | Lua (Fengari) | Slowdown |",
-    "| --- | ---: | ---: | ---: |",
-    ...results.map((r) => `| ${r.bench.title} (n=${r.bench.size}) | ${format(r.js.ms)} | ${format(r.lua.ms)} | ${(r.lua.ms / r.js.ms).toFixed(0)}× |`),
+    "| Benchmark | JavaScript | Interpreted Lua | Compiled Lua | Interpreter / JS | Compiler speedup | Same result |",
+    "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+    ...results.map((r) => `| ${r.bench.title} (n=${r.bench.size}) | ${format(r.js.ms)} | ${format(r.lua.ms)} | ${r.compiled ? format(r.compiled.ms) : 'Interpreter fallback'} | ${(r.lua.ms / r.js.ms).toFixed(1)}× | ${r.compiled ? (r.lua.ms / r.compiled.ms).toFixed(1) + '×' : '—'} | ${r.match ? 'Yes' : 'No'} |`),
     "",
-    `Geometric mean slowdown: ${geometricMean(results.map((r) => r.lua.ms / r.js.ms)).toFixed(0)}×. ` +
-      `${runs} timed run(s), median. ${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}`
+    `Interpreted Lua / JavaScript geometric mean: ${geometricMean(results.map((r) => r.lua.ms / r.js.ms)).toFixed(1)}×.`
   ];
+  const eligible = results.filter((r) => r.compiled);
+  if (eligible.length) {
+    lines.push(`Compiler speedup on ${eligible.length} compiled benchmarks only: ${geometricMean(eligible.map((r) => r.lua.ms / r.compiled.ms)).toFixed(1)}× (geometric mean).`);
+  }
+  lines.push(`${runs} timed sample(s), median; at least ${MIN_SAMPLE_MS} ms per sample; one warm-up per mode; loading and compilation excluded. ${Fengari.lua.LUA_RELEASE}. ${navigator.userAgent}`);
   return lines.join("\n");
 }
 
@@ -230,28 +240,47 @@ async function runAll() {
   tbody.textContent = "";
   const vm = new Fengari.FengariVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
   const results = [];
+  let compiledFunction = null;
 
   try {
     for (const [index, bench] of BENCHMARKS.entries()) {
       const row = makeRow(bench);
       statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running JavaScript…`;
       await pause();
-      const js = timeJs(bench.js, bench.size, runs);
+      const js = timeFunction(bench.js, bench.size, runs);
       row.querySelector(".js-time").textContent = format(js.ms);
 
       statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running Lua in Fengari…`;
       await pause();
       vm.run(bench.lua, "=" + bench.id);
-      const lua = timeLua(vm, bench.size, runs);
+      compiledFunction = vm.compile("run");
+      const lua = timeFunction((size) => vm.call("run", size), bench.size, runs);
       row.querySelector(".lua-time").textContent = format(lua.ms);
-      row.querySelector(".ratio").textContent = (lua.ms / js.ms).toFixed(0) + "×";
+      row.querySelector(".ratio").textContent = (lua.ms / js.ms).toFixed(1) + "×";
 
-      const match = js.value === lua.value;
+      let compiled = null;
+      const compiledCell = row.querySelector(".compiled-time");
+      if (compiledFunction.compiled) {
+        statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running compiled Lua…`;
+        await pause();
+        compiled = timeFunction(compiledFunction, bench.size, runs);
+        compiledCell.textContent = format(compiled.ms);
+        row.querySelector(".speedup").textContent = (lua.ms / compiled.ms).toFixed(1) + "×";
+      } else {
+        compiledCell.textContent = "Interpreter fallback";
+        compiledCell.classList.add("compiler-note");
+        compiledCell.title = compiledFunction.reason;
+        row.querySelector(".speedup").textContent = "—";
+      }
+
+      const match = js.value === lua.value && (!compiled || js.value === compiled.value);
       const check = row.querySelector(".check");
-      check.textContent = match ? "✓" : `✗ (${js.value} vs ${lua.value})`;
+      check.textContent = match ? "✓" : `✗ (JS: ${js.value}; Lua: ${lua.value}${compiled ? '; compiled: ' + compiled.value : ''})`;
       check.className = "check " + (match ? "ok" : "bad");
-      results.push({ bench, row, js, lua });
+      results.push({ bench, row, js, lua, compiled, match });
       drawBars(results);
+      compiledFunction.release();
+      compiledFunction = null;
     }
     showSummary(results);
     lastMarkdown = toMarkdown(results, runs);
@@ -261,6 +290,7 @@ async function runAll() {
     statusLine.textContent = "Benchmark failed: " + (error && error.message ? error.message : error);
     console.error(error);
   } finally {
+    if (compiledFunction) compiledFunction.release();
     runButton.disabled = false;
   }
 }

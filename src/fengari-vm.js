@@ -1,18 +1,20 @@
 "use strict";
 
 const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').fengari;
+const { transpile } = require('./ltranspile.js');
+const { compileNumeric, FALLBACK, MIN_SAFE: NUMERIC_MIN, MAX_SAFE: NUMERIC_MAX } = require('./lnumeric.js');
 
 const MAX_DEPTH = 128;
 const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation'];
-const INTERRUPT_STEPS = 65536; /* étapes de filtrage de motif entre deux appels de l'interruption */
-const HOOK_GRANULARITY = 1000; /* instructions Lua entre deux vérifications des limites */
+const INTERRUPT_STEPS = 65536; /* pattern-matching steps between two calls to the interrupt point */
+const HOOK_GRANULARITY = 1000; /* Lua instructions between two limit checks */
 const now = () => (typeof performance === 'object' ? performance.now() : Date.now());
 const INTEGER_KEY = /^-?\d+$/;
 const MIN_SAFE = BigInt(Number.MIN_SAFE_INTEGER);
 const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
 
 /**
- * Plusieurs valeurs de retour depuis une fonction hôte.
+ * Multiple return values from a host function.
  */
 class Multi {
     constructor(values) {
@@ -21,8 +23,8 @@ class Multi {
 }
 
 /**
- * Nombre à pousser comme flottant Lua (JavaScript ne distingue pas 5 de 5.0).
- * Avec l'option `preserveFloats`, les flottants Lua de valeur entière sont lus sous cette forme.
+ * Number to push as a Lua float (JavaScript does not tell 5 apart from 5.0).
+ * With the `preserveFloats` option, Lua floats with an integral value are read in this form.
  */
 class LuaFloat {
     constructor(value) {
@@ -35,8 +37,8 @@ class LuaFloat {
 }
 
 /**
- * Valeur hôte opaque, poussée comme light userdata Lua (et lue sous cette forme).
- * Lua ne peut que la stocker, la comparer et la repasser à l'hôte.
+ * Opaque host value, pushed as Lua light userdata (and read as such).
+ * Lua can only store it, compare it and pass it back to the host.
  */
 class Userdata {
     constructor(value) {
@@ -45,14 +47,14 @@ class Userdata {
 }
 
 /**
- * Retourné par une fonction hôte : suspend la coroutine appelante et lui fait
- * céder `values`. À la reprise, les arguments de `resume` deviennent les valeurs
- * de retour de la fonction hôte.
+ * Returned by a host function: suspends the calling coroutine and hands it
+ * `values`. On resumption, the `resume` arguments become the return values of
+ * the host function.
  */
 class Yield extends Multi {}
 
 /**
- * JSON.stringify tolérant pour les messages : BigInt, références Lua et cycles ne font pas échouer.
+ * Tolerant JSON.stringify for messages: BigInt, Lua references and cycles do not fail it.
  */
 function describe(value) {
     const seen = new WeakSet();
@@ -76,7 +78,7 @@ function describe(value) {
 }
 
 /**
- * Erreur Lua avec traceback.
+ * Lua error with traceback.
  */
 class LuaError extends Error {
     constructor(message, traceback) {
@@ -87,8 +89,8 @@ class LuaError extends Error {
 }
 
 /**
- * Un script a dépassé sa limite d'instructions ou de temps (voir l'option `limits`).
- * `limit` vaut 'instructions', 'time' ou 'memory'.
+ * A script exceeded its instruction or time limit (see the `limits` option).
+ * `limit` is 'instructions', 'time' or 'memory'.
  */
 class LimitError extends LuaError {
     constructor(limit, message, traceback) {
@@ -99,8 +101,8 @@ class LimitError extends LuaError {
 }
 
 /**
- * Référence vers une valeur Lua qui n'a pas d'équivalent JavaScript
- * (fonction ou thread), ancrée dans le registre Lua.
+ * Reference to a Lua value that has no JavaScript equivalent
+ * (function or thread), anchored in the Lua registry.
  */
 class LuaRef {
     constructor(vm, id, type) {
@@ -110,7 +112,7 @@ class LuaRef {
         vm.refRegistry?.register(this, { state: vm.state, id }, this);
     }
 
-    /** Pour un userdata complet : son contenu côté hôte (undefined pour les autres types). */
+    /** For a full userdata: its host-side content (undefined for the other types). */
     get value() {
         if (this.type !== 'userdata' || this.id === null) return undefined;
         const { lua, state } = this.vm;
@@ -120,12 +122,12 @@ class LuaRef {
         return value;
     }
 
-    /** Appelle la fonction référencée ; retourne sa première valeur de retour. */
+    /** Calls the referenced function; returns its first return value. */
     call(...args) {
         return this.vm.callRef(this, ...args);
     }
 
-    /** Libère la référence (automatique à la collecte de l'objet). */
+    /** Releases the reference (automatic when the object is collected). */
     release() {
         if (this.id === null) return;
         this.vm.refRegistry?.unregister(this);
@@ -135,7 +137,7 @@ class LuaRef {
 }
 
 /**
- * Coroutine Lua pilotée depuis l'hôte (créée par FengariVm#coroutine).
+ * Lua coroutine driven from the host (created by FengariVm#coroutine).
  */
 class Coroutine {
     constructor(vm, thread) {
@@ -150,15 +152,15 @@ class Coroutine {
         if (this.active) return 'running';
         const status = lua.lua_status(this.thread);
         if (status === lua.LUA_YIELD) return 'suspended';
-        if (status === lua.LUA_OK && lua.lua_gettop(this.thread) > 0) return 'suspended'; /* pas encore démarrée */
+        if (status === lua.LUA_OK && lua.lua_gettop(this.thread) > 0) return 'suspended'; /* not started yet */
         return 'dead';
     }
 
     /**
-     * Démarre ou reprend la coroutine avec `args`.
-     * @returns {{done: boolean, values: Array}} `done` vaut true quand le corps de la
-     *   coroutine est terminé (`values` = ses retours), false si elle a cédé (`values` = valeurs cédées).
-     * @throws {LuaError} si la coroutine échoue ; elle est alors morte (voir `close`).
+     * Starts or resumes the coroutine with `args`.
+     * @returns {{done: boolean, values: Array}} `done` is true when the coroutine
+     *   body finished (`values` = its returns), false if it yielded (`values` = yielded values).
+     * @throws {LuaError} if the coroutine fails; it is then dead (see `close`).
      */
     resume(...args) {
         const vm = this.vm;
@@ -191,8 +193,8 @@ class Coroutine {
     }
 
     /**
-     * Ferme la coroutine (exécute les variables `<close>` en attente) ; elle devient morte.
-     * @throws {LuaError} si une fermeture échoue.
+     * Closes the coroutine (runs the pending `<close>` variables); it becomes dead.
+     * @throws {LuaError} if a closing fails.
      */
     close() {
         const vm = this.vm;
@@ -207,52 +209,52 @@ class Coroutine {
     }
 }
 
-/* Préréglage `sandbox` : bibliothèques sans accès au système, au débogage ni aux modules. */
+/* `sandbox` preset: libraries without access to the system, debugging or modules. */
 const SANDBOX_LIBS = ['base', 'coroutine', 'table', 'string', 'utf8', 'math'];
 const SANDBOX_FORBIDDEN_LIBS = ['os', 'io', 'debug', 'package'];
 const SANDBOX_REMOVE = ['dofile', 'loadfile', 'string.dump'];
-/* `load` ne doit jamais accepter de bytecode (un chunk binaire forgé peut corrompre la VM) ; `...` garde l'absence d'`env`. */
+/* `load` must never accept bytecode (a forged binary chunk can corrupt the VM); `...` keeps the absence of `env`. */
 const SANDBOX_TEXT_ONLY_LOAD = `local load = load
 function _G.load(chunk, chunkname, mode, ...) return load(chunk, chunkname, 't', ...) end`;
 
-/* Bibliothèques sélectionnables via l'option `libs` (nom → nom de table globale). */
+/* Libraries selectable via the `libs` option (name → global table name). */
 const LIBRARIES = {
     base: '_G', coroutine: 'coroutine', table: 'table', string: 'string', utf8: 'utf8',
     math: 'math', os: 'os', debug: 'debug', package: 'package', io: 'io', fengari: 'fengari'
 };
 
 /**
- * Une machine virtuelle Lua persistante pour Fengari.
- * Permet de maintenir un état entre les évaluations et d'exposer des objets JavaScript à Lua.
+ * A persistent Lua virtual machine for Fengari.
+ * Keeps state between evaluations and exposes JavaScript objects to Lua.
  */
 class FengariVm {
     /**
-   * Crée une nouvelle machine virtuelle Lua.
-   * @param {Object} files - Un objet pour lire les fichiers Lua (optionnel).
-   * @param {number} seed - Une graine pour le générateur aléatoire (optionnel).
-   * @param {Object} options - Options (optionnel).
-   * @param {string[]} [options.libs] - Bibliothèques à ouvrir parmi base, coroutine, table, string,
-   *   utf8, math, os, debug, package, io, fengari. Par défaut : toutes (luaL_openlibs).
-   * @param {string[]} [options.remove] - Chemins pointillés de globals à retirer après
-   *   ouverture (ex. ['load', 'dofile', 'os.execute']).
-   * @param {boolean} [options.sandbox] - Préréglage pour du code Lua non fiable : seulement base,
-   *   coroutine, table, string, utf8 et math ; ni os, io, debug, package ni require ; dofile,
-   *   loadfile et string.dump retirés ; load n'accepte que du texte. `libs` peut restreindre
-   *   davantage mais pas ajouter os, io, debug ou package ; `remove` s'ajoute. `__fs_read` et
-   *   `__fs_list` (qui servent `files`) ne sont pas définies : le script n'a aucun accès aux fichiers
-   *   de l'hôte. Ne limite ni le temps ni la mémoire (voir `limits`) ; les fonctions que vous
-   *   définissez avec `defineFunction` restent appelables par le script.
-   * @param {Object} [options.limits] - Budget par appel de haut niveau (run, call, callRef, Coroutine#resume),
-   *   remis à zéro à chaque appel. `instructions` : nombre d'instructions Lua (approximatif, vérifié
-   *   toutes les 1000 instructions au plus, et 65536 étapes de filtrage de motif comptent pour 65536
-   *   instructions) ; `timeMs` : durée réelle en ms, JS hôte inclus ; `allocation` : taille maximale
-   *   en octets d'une allocation interne de chaîne ou de tampon (« not enough memory », rattrapable) ;
-   *   `totalAllocation` : total d'octets alloués par appel. Un dépassement d'instructions, de temps
-   *   ou de total lève une LimitError et ne peut pas être rattrapé par le script (pcall inclus).
-   *   N'agit que sur la VM créée ici : un script qui dispose de `debug.sethook` peut retirer le
-   *   hook, donc combiner avec `sandbox`. Voir aussi setLimits.
-   * @param {boolean} [options.preserveFloats] - Lire les flottants Lua de valeur entière (5.0)
-   *   comme des LuaFloat plutôt que comme des nombres (5). Par défaut : false.
+   * Creates a new Lua virtual machine.
+   * @param {Object} files - An object to read Lua files (optional).
+   * @param {number} seed - A seed for the random generator (optional).
+   * @param {Object} options - Options (optional).
+   * @param {string[]} [options.libs] - Libraries to open among base, coroutine, table, string,
+   *   utf8, math, os, debug, package, io, fengari. Default: all (luaL_openlibs).
+   * @param {string[]} [options.remove] - Dotted paths of globals to remove after
+   *   opening (e.g. ['load', 'dofile', 'os.execute']).
+   * @param {boolean} [options.sandbox] - Preset for untrusted Lua code: only base,
+   *   coroutine, table, string, utf8 and math; no os, io, debug, package nor require; dofile,
+   *   loadfile and string.dump removed; load only accepts text. `libs` can restrict
+   *   further but cannot add os, io, debug or package; `remove` is added on top. `__fs_read` and
+   *   `__fs_list` (which serve `files`) are not defined: the script has no access to the host
+   *   files. Limits neither time nor memory (see `limits`); the functions you
+   *   define with `defineFunction` remain callable by the script.
+   * @param {Object} [options.limits] - Budget per top-level call (run, call, callRef, Coroutine#resume),
+   *   reset at every call. `instructions`: number of Lua instructions (approximate, checked at
+   *   most every 1000 instructions, and 65536 pattern-matching steps count as 65536
+   *   instructions); `timeMs`: real duration in ms, host JS included; `allocation`: maximum
+   *   size in bytes of an internal string or buffer allocation ("not enough memory", catchable);
+   *   `totalAllocation`: total of bytes allocated per call. An instruction, time
+   *   or total overrun raises a LimitError and cannot be caught by the script (pcall included).
+   *   Only acts on the VM created here: a script with `debug.sethook` can remove the
+   *   hook, so combine with `sandbox`. See also setLimits.
+   * @param {boolean} [options.preserveFloats] - Read Lua floats with an integral value (5.0)
+   *   as LuaFloat rather than as numbers (5). Default: false.
    */
     constructor(files = { read: () => null, list: () => null }, seed = 0x57e5a07, options = {}) {
         this.files = files;
@@ -261,8 +263,8 @@ class FengariVm {
         this.refRegistry = typeof FinalizationRegistry === 'function'
             ? new FinalizationRegistry(({ state, id }) => lauxlib.luaL_unref(state, lua.LUA_REGISTRYINDEX, id))
             : null;
-        this.output = []; // Messages imprimés par Lua (print, wesnoth.log).
-        this.thread = null; // Coroutine depuis laquelle une fonction hôte est appelée.
+        this.output = []; // Messages printed by Lua (print, wesnoth.log).
+        this.thread = null; // Coroutine from which a host function is called.
         this.lua = lua;
         this.lauxlib = lauxlib;
         this.lualib = lualib;
@@ -271,9 +273,9 @@ class FengariVm {
 
         this.preserveFloats = options.preserveFloats === true;
         this.limits = null;
-        this.limitDepth = 0; /* appels de haut niveau imbriqués en cours */
-        this.limitHit = null; /* 'instructions' ou 'time' une fois la limite dépassée */
-        this.limitedThreads = new Set(); /* threads passés en mode « un contrôle par instruction » */
+        this.limitDepth = 0; /* nested top-level calls in progress */
+        this.limitHit = null; /* 'instructions' or 'time' once the limit is exceeded */
+        this.limitedThreads = new Set(); /* threads switched to "one check per instruction" mode */
         const sandbox = options.sandbox === true;
         const libs = options.libs ?? (sandbox ? SANDBOX_LIBS : undefined);
         if (sandbox) {
@@ -284,7 +286,7 @@ class FengariVm {
         if (sandbox && libs.includes('base')) this.run(SANDBOX_TEXT_ONLY_LOAD, '=sandbox'); /* avant les retraits : `remove` peut viser `load` */
         for (const path of [...(sandbox ? SANDBOX_REMOVE : []), ...(options.remove ?? [])]) this.removeGlobal(path);
 
-        // Définir les fonctions hôtes de base
+        // Define the basic host functions
         this.defineFunction('print', (...args) => {
             this.output.push(args.map((value) => (typeof value === 'string' ? value : describe(value))).join('\t'));
         });
@@ -299,8 +301,8 @@ class FengariVm {
     }
 
     /**
-   * Installe, remplace ou retire (`null`) les limites d'exécution (voir l'option `limits`).
-   * Les threads existants gardent l'ancien hook : à appeler avant de créer des coroutines.
+   * Installs, replaces or removes (`null`) the execution limits (see the `limits` option).
+   * Existing threads keep the old hook: call before creating coroutines.
    */
     setLimits(limits) {
         const { lua } = this;
@@ -319,13 +321,13 @@ class FengariVm {
         this.hookCount = Math.max(1, Math.min(HOOK_GRANULARITY, Math.floor(limits.instructions ?? HOOK_GRANULARITY)));
         this.limitHook = (L) => this.checkLimits(L);
         lua.lua_sethook(this.state, this.limitHook, lua.LUA_MASKCOUNT, this.hookCount);
-        /* Les fonctions natives (motifs de string, allocations) ne passent pas par le hook de comptage. */
+        /* Native functions (string patterns, allocations) do not go through the counting hook. */
         this.state.l_G.interrupt = (L) => this.checkInterrupt(L);
         lua.lua_setallocf(this.state, (ud, size) => this.checkAllocation(size), null);
     }
 
     /**
-   * Exécute `fn` (un appel dans Lua) avec un budget neuf s'il s'agit d'un appel de haut niveau.
+   * Runs `fn` (a call into Lua) with a fresh budget when it is a top-level call.
    */
     guarded(fn) {
         if (this.limits === null) return fn();
@@ -347,8 +349,8 @@ class FengariVm {
     }
 
     /**
-   * Hook de comptage : une fois la limite dépassée, il lève une erreur à chaque instruction du thread
-   * courant, de sorte qu'un pcall (ou un resume) qui l'attrape ne laisse jamais le script continuer.
+   * Counting hook: once the limit is exceeded, it raises an error at every instruction of the
+   * current thread, so that a pcall (or a resume) catching it never lets the script continue.
    */
     checkLimits(L) {
         if (this.limitDepth === 0) return;
@@ -361,8 +363,8 @@ class FengariVm {
     }
 
     /**
-   * Appelé toutes les 65536 étapes d'un filtrage de motif de `string` : une seule instruction Lua peut sinon
-   * durer indéfiniment (`('a'):rep(20000):find('.-.-.-.-b')`). Chaque appel compte pour 65536 instructions.
+   * Called every 65536 steps of a `string` pattern match: a single Lua instruction could otherwise
+   * run forever (`('a'):rep(20000):find('.-.-.-.-b')`). Each call counts as 65536 instructions.
    */
     checkInterrupt(L) {
         if (this.limitDepth === 0) return;
@@ -375,9 +377,9 @@ class FengariVm {
     }
 
     /**
-   * Appelé avant chaque allocation interne de chaîne ou de tampon (`lua_setallocf`). Lever refuse
-   * l'allocation : « not enough memory », que le script peut rattraper. Dépasser le total par appel
-   * déclenche en plus la limite 'memory', qui n'est pas rattrapable.
+   * Called before each internal string or buffer allocation (`lua_setallocf`). Throwing refuses
+   * the allocation: "not enough memory", which the script can catch. Exceeding the per-call total
+   * additionally triggers the 'memory' limit, which is not catchable.
    */
     checkAllocation(size) {
         if (this.limitDepth === 0) return;
@@ -393,21 +395,21 @@ class FengariVm {
             this.lua.lua_sethook(L, this.limitHook, this.lua.LUA_MASKCOUNT, 1);
             this.limitedThreads.add(L);
         }
-        /* Les hooks sont coupés pendant un hook : sans cela, le gestionnaire de messages d'un xpcall
-           s'exécuterait sans contrôle et pourrait boucler indéfiniment. */
+        /* Hooks are cut during a hook: otherwise the message handler of an xpcall
+           would run without control and could loop indefinitely. */
         L.allowhook = 1;
         this.lauxlib.luaL_error(L, this.to_luastring(`${this.limitHit} limit exceeded`));
     }
 
     /**
-   * Construit l'erreur JavaScript pour un échec Lua : LimitError si une limite a été dépassée.
+   * Builds the JavaScript error for a Lua failure: LimitError if a limit was exceeded.
    */
     luaError(message, traceback) {
         return this.limitHit === null ? new LuaError(message, traceback) : new LimitError(this.limitHit, message, traceback);
     }
 
     /**
-   * Ouvre les bibliothèques demandées (toutes si `libs` est absent).
+   * Opens the requested libraries (all if `libs` is absent).
    */
     openLibraries(libs) {
         const L = this.state;
@@ -424,8 +426,8 @@ class FengariVm {
     }
 
     /**
-   * Met à nil un global désigné par un chemin pointillé (ex. 'os.execute'). Retirer un global de
-   * premier niveau le retire aussi de package.loaded et package.preload.
+   * Sets to nil a global designated by a dotted path (e.g. 'os.execute'). Removing a top-level
+   * global also removes it from package.loaded and package.preload.
    */
     removeGlobal(path) {
         const L = this.state;
@@ -434,7 +436,7 @@ class FengariVm {
         if (parts.length === 0) {
             this.lua.lua_pushnil(L);
             this.lua.lua_setglobal(L, this.to_luastring(last));
-            /* sinon require('os') ou package.loaded.os redonnerait l'accès */
+            /* otherwise require('os') or package.loaded.os would grant access again */
             for (const registry of ['package.loaded', 'package.preload']) this.removeGlobal(`${registry}.${last}`);
             return;
         }
@@ -447,7 +449,7 @@ class FengariVm {
     }
 
     /**
-   * Génère un nombre aléatoire (mulberry32, un flottant dans [0, 1)).
+   * Produces a random number (mulberry32, a float in [0, 1)).
    */
     nextRandom() {
         this.randomState = (this.randomState + 0x6d2b79f5) >>> 0;
@@ -458,8 +460,9 @@ class FengariVm {
     }
 
     /**
-   * Pousse une valeur JavaScript sur la pile Lua (celle de `L`, par défaut le thread courant).
-   * Accepte aussi LuaFloat, BigInt (entier 64 bits), Userdata, les fonctions JS (converties en fonctions hôtes), LuaRef et Coroutine.
+   * Pushes a JavaScript value onto the Lua stack (that of `L`, the current thread by default).
+   * Also accepts LuaFloat, BigInt (64-bit integer), Userdata, JS functions (converted into host
+   * functions), LuaRef and Coroutine.
    */
     push(value, L = this.thread ?? this.state, depth = 0) {
         if (depth > MAX_DEPTH) throw new RangeError('Value too deeply nested (cyclic?) to convert to Lua');
@@ -516,12 +519,12 @@ class FengariVm {
     }
 
     /**
-   * Lit une valeur Lua depuis la pile (celle de `L`, par défaut le thread courant) et la
-   * convertit en JavaScript. Chaînes → string, ou Uint8Array si ce n'est pas de l'UTF-8 valide.
-   * Tables → tableau (clés 1..n), objet (clés chaînes/entiers) ou Map (clés booléennes, flottantes,
-   * tables, fonctions, chaînes binaires, ou collision entre la chaîne "1" et l'entier 1).
-   * Fonctions, threads et userdata → LuaRef (light userdata → Userdata) ; entiers hors de ±2^53 → BigInt.
-   * Les références circulaires sont préservées.
+   * Reads a Lua value from the stack (that of `L`, the current thread by default) and
+   * converts it to JavaScript. Strings → string, or Uint8Array if it is not valid UTF-8.
+   * Tables → array (keys 1..n), object (string/integer keys) or Map (boolean, float,
+   * table, function, binary string keys, or collision between the string "1" and the integer 1).
+   * Functions, threads and userdata → LuaRef (light userdata → Userdata); integers outside ±2^53 → BigInt.
+   * Circular references are preserved.
    */
     read(index, depth = 0, L = this.thread ?? this.state, seen = new Map()) {
         if (depth > MAX_DEPTH) throw new RangeError('Lua value too deeply nested to convert to JavaScript');
@@ -529,7 +532,7 @@ class FengariVm {
         if (type === this.lua.LUA_TBOOLEAN) return this.lua.lua_toboolean(L, index);
         if (type === this.lua.LUA_TNUMBER) {
             if (this.lua.lua_isinteger(L, index)) {
-                const integer = this.lua.lua_tointeger(L, index); /* BigInt dans le build 64 bits */
+                const integer = this.lua.lua_tointeger(L, index); /* BigInt in the 64-bit build */
                 if (typeof integer !== 'bigint') return integer;
                 return integer >= MIN_SAFE && integer <= MAX_SAFE ? Number(integer) : integer;
             }
@@ -564,7 +567,7 @@ class FengariVm {
                 const key = this.lua.lua_type(L, -2) === this.lua.LUA_TSTRING
                     ? this.readString(L, -2) : String(this.lua.lua_tointeger(L, -2));
                 const entry = this.read(-1, depth + 1, L, seen);
-                /* "__proto__" doit rester une clé ordinaire, pas changer le prototype de l'objet */
+                /* "__proto__" must stay an ordinary key, not change the prototype of the object */
                 if (key === '__proto__') Object.defineProperty(result, key, { value: entry, enumerable: true, writable: true, configurable: true });
                 else result[key] = entry;
             }
@@ -574,20 +577,20 @@ class FengariVm {
     }
 
     /**
-   * Lit une chaîne Lua : string JavaScript si c'est de l'UTF-8 valide, sinon Uint8Array.
+   * Reads a Lua string: a JavaScript string if it is valid UTF-8, otherwise a Uint8Array.
    */
     readString(L, index) {
         const bytes = this.lua.lua_tostring(L, index);
         try {
             return this.to_jsstring(bytes);
         } catch {
-            return Uint8Array.from(bytes); /* UTF-8 invalide : on garde les octets */
+            return Uint8Array.from(bytes); /* invalid UTF-8: keep the bytes */
         }
     }
 
     /**
-   * Choisit la représentation JavaScript de la table à `table` : 'array' (clés entières 1..n),
-   * 'object' (clés chaînes UTF-8 et entiers) ou 'map' (toute autre clé, ou collision "1" / 1).
+   * Chooses the JavaScript representation of the table at `table`: 'array' (integer keys 1..n),
+   * 'object' (UTF-8 string and integer keys) or 'map' (any other key, or "1" / 1 collision).
    */
     classifyKeys(L, table) {
         const { lua } = this;
@@ -626,7 +629,7 @@ class FengariVm {
     }
 
     /**
-   * Message d'une valeur d'erreur Lua à l'index donné.
+   * Message of a Lua error value at the given index.
    */
     errorMessage(L, index) {
         const raw = this.lua.lua_type(L, index) === this.lua.LUA_TSTRING || this.lua.lua_type(L, index) === this.lua.LUA_TNUMBER
@@ -637,8 +640,8 @@ class FengariVm {
     }
 
     /**
-   * Enregistre une fonction JavaScript sous un nom donné (chemin pointillé) dans les globals Lua.
-   * La fonction peut retourner `new Yield([...])` pour suspendre la coroutine appelante.
+   * Registers a JavaScript function under a given name (dotted path) in the Lua globals.
+   * The function may return `new Yield([...])` to suspend the calling coroutine.
    */
     defineFunction(name, fn) {
         const L = this.state;
@@ -672,7 +675,7 @@ class FengariVm {
     }
 
     /**
-   * Enveloppe une fonction JavaScript pour qu'elle puisse être appelée depuis Lua.
+   * Wraps a JavaScript function so it can be called from Lua.
    */
     wrap(fn) {
         return (L) => {
@@ -709,7 +712,7 @@ class FengariVm {
     }
 
     /**
-   * Pousse sur `L` la valeur Lua désignée par un chemin pointillé de globals (nil si absente).
+   * Pushes onto `L` the Lua value designated by a dotted path of globals (nil if absent).
    */
     pushPath(L, path) {
         const parts = path.split('.');
@@ -726,14 +729,14 @@ class FengariVm {
     }
 
     /**
-   * Exécute du code Lua et retourne sa première valeur de retour.
+   * Runs Lua code and returns its first return value.
    */
     run(source, chunkName = '=chunk') {
         return this.execute(source, chunkName, false);
     }
 
     /**
-   * Exécute du code Lua et retourne toutes ses valeurs de retour dans un tableau.
+   * Runs Lua code and returns all its return values in an array.
    */
     runMulti(source, chunkName = '=chunk') {
         return this.execute(source, chunkName, true);
@@ -754,17 +757,77 @@ class FengariVm {
     }
 
     /**
-   * Appelle une fonction Lua globale par son chemin pointillé avec des arguments JSON.
+   * Calls a global Lua function by its dotted path with JSON arguments.
    */
     call(path, ...args) {
         return this.invoke(path, args, false);
     }
 
     /**
-   * Comme `call`, mais retourne toutes les valeurs de retour dans un tableau.
+   * Like `call`, but returns all return values in an array.
    */
     callMulti(path, ...args) {
         return this.invoke(path, args, true);
+    }
+
+    /**
+     * Offline migration helper: translates Lua source to readable JavaScript
+     * without running it. Returns `{ code, warnings, exports, freeGlobals }`;
+     * see ltranspile.js for what is translated and what is flagged.
+     */
+    static toJs(source, options) {
+        return transpile(source, options);
+    }
+
+    /**
+     * Compiles a pure numeric Lua function to JavaScript where supported.
+     * The returned callable captures the current function and returns its first
+     * result, like callRef. Unsupported code/inputs transparently use the VM.
+     * `compiled`, `source` and `reason` describe compilation eligibility.
+     */
+    compile(target) {
+        const L = this.state;
+        const base = this.lua.lua_gettop(L);
+        let ref, compiled;
+        try {
+            if (typeof target === 'string') this.pushPath(L, target);
+            else this.push(target, L);
+            if (!this.lua.lua_isfunction(L, -1)) throw new TypeError('compile expects a Lua function or its global path');
+            const object = L.stack[L.top - 1];
+            compiled = object.ttisLclosure() ? compileNumeric(object.value.p)
+                : { fn: null, source: null, reason: 'Target is a host function' };
+            this.lua.lua_pushvalue(L, -1);
+            ref = new LuaRef(this, this.lauxlib.luaL_ref(L, this.lua.LUA_REGISTRYINDEX), 'function');
+        } finally {
+            this.lua.lua_settop(L, base);
+        }
+        const callable = (...args) => {
+            if (ref.id === null) throw new Error('Compiled function was released');
+            if (compiled.fn && !this.limits && !L.hookmask && args.every(arg => typeof arg === 'number' || arg instanceof LuaFloat)) {
+                const values = [], types = [];
+                for (const arg of args) {
+                    values.push(arg instanceof LuaFloat ? arg.value : arg);
+                    types.push(!(arg instanceof LuaFloat) && Number.isSafeInteger(arg));
+                }
+                try {
+                    for (let index = 0; index < values.length; index++) {
+                        if (types[index] && (values[index] < NUMERIC_MIN || values[index] > NUMERIC_MAX)) throw FALLBACK;
+                        if (types[index] && values[index] === 0) values[index] = 0;
+                    }
+                    const [value, isInteger] = compiled.fn(values, types);
+                    if (this.preserveFloats && !isInteger && typeof value === 'number' && Number.isInteger(value)) return new LuaFloat(value);
+                    return value === undefined ? null : value;
+                } catch (error) {
+                    if (error !== FALLBACK) throw error;
+                }
+            }
+            return this.callRef(ref, ...args);
+        };
+        callable.compiled = compiled.fn !== null;
+        callable.source = compiled.source;
+        callable.reason = compiled.reason;
+        callable.release = () => ref.release();
+        return callable;
     }
 
     invoke(path, args, all) {
@@ -777,7 +840,7 @@ class FengariVm {
     }
 
     /**
-   * Appelle une fonction Lua référencée par un LuaRef.
+   * Calls a Lua function referenced by a LuaRef.
    */
     callRef(ref, ...args) {
         const L = this.state;
@@ -789,13 +852,13 @@ class FengariVm {
     }
 
     /**
-   * Crée une coroutine pilotée par l'hôte (non démarrée).
-   * @param {string|LuaRef} target - Chemin pointillé d'une fonction globale, ou LuaRef de fonction.
+   * Creates a host-driven coroutine (not started).
+   * @param {string|LuaRef} target - Dotted path of a global function, or a function LuaRef.
    * @returns {Coroutine}
    */
     coroutine(target) {
         const T = this.lua.lua_newthread(this.state);
-        this.lua.lua_pop(this.state, 1); /* le Coroutine JS retient le thread */
+        this.lua.lua_pop(this.state, 1); /* the JS Coroutine holds the thread */
         if (typeof target === 'string') this.pushPath(this.state, target);
         else this.push(target, this.state);
         if (!this.lua.lua_isfunction(this.state, -1)) {
@@ -807,7 +870,7 @@ class FengariVm {
     }
 
     /**
-   * Crée une coroutine dont le corps est le chunk Lua `source` (non démarrée).
+   * Creates a coroutine whose body is the Lua chunk `source` (not started).
    * @returns {Coroutine}
    */
     coroutineFromSource(source, chunkName = '=chunk') {
@@ -822,7 +885,7 @@ class FengariVm {
     }
 
     /**
-   * Appelle une fonction Lua de manière protégée.
+   * Calls a Lua function in protected mode.
    */
     protectedCall(argCount, base, handler, all = false) {
         const L = this.state;
@@ -844,7 +907,7 @@ class FengariVm {
     }
 
     /**
-   * Ajoute un gestionnaire de traceback pour les erreurs Lua.
+   * Pushes a traceback handler for Lua errors.
    */
     pushTracebackHandler() {
         const L = this.state;

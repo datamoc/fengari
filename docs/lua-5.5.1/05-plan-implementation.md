@@ -1,65 +1,65 @@
-# Plan d'implémentation
+# Implementation plan
 
-Ce plan ordonne le travail sans annoncer de dates non étayées. Aucun lot n'est
-marqué terminé à la création de ce dossier. Une tâche est fermée avec un diff,
-des tests, leurs résultats et les exigences couvertes.
+This plan orders the work without announcing unsupported dates. No lot is
+marked complete at the creation of this folder. A task is closed with a diff,
+tests, their results and the requirements covered.
 
-Les statuts et preuves sont conservés dans le [suivi de conformité](08-suivi-conformite.md),
-séparément des inventaires générés.
+Statuses and evidence are kept in the [conformance tracking](08-suivi-conformite.md),
+separately from the generated inventories.
 
-## Lots et dépendances
+## Lots and dependencies
 
-| Lot | Dépend de | Travail | Exigences principales | Critère de sortie |
+| Lot | Depends on | Work | Main requirements | Exit criterion |
 | --- | --- | --- | --- | --- |
-| M0 — Référence et oracle | — | Installer/compiler l'oracle 5.5.1, enregistrer son profil, importer les cas et produire une baseline différentielle | Toutes, P01 | Version/hachage/profil enregistrés ; runner JS et oracle comparables ; exclusions visibles |
-| M1 — Contrats et valeurs | M0 | Fixer profil numérique/API, porter tags et représentations, prototypes, userdata et conversions | L01, A01 | Tests de limites numériques, octets, identité et conversions hôtes ; aucune perte silencieuse |
-| M2 — VM et format | M1 | Porter les instructions et prototypes 5.5.1, dispatch, émission compatible, dump/undump et debug structurel | V01–V03, L09, B05, B11 | Chaque opcode couvert ; échanges de chunks avec l'oracle au profil correspondant ; rejet des chunks incompatibles |
-| M3 — Grammaire et résolution | M2 | Attributs, readonly, global, varargs nommés, boucles readonly, scopes et diagnostics | L02, L07–L10, D02–D03 | Corpus d'acceptations/rejets ; mutations/captures des varargs et déclarations globales conformes |
-| M4 — Appels et fermeture | M2, M3 | Call frames, continuations, yields, ressources, close slots/threads/states et gestion des erreurs | L03, L04, L06, A01–A02, B03 | Matrice des sorties de scope, erreurs, réentrance et coroutines entièrement couverte |
-| M5 — GC et tables faibles | M1, M4 | Tas/racines logiques, modes/paramètres, finalisation/résurrection, ephemerons, chaînes externes | L05, A02, B02 | Tests contrôlés de collecte, cycles, ordre, warnings et callbacks de libération ; pas de stubs déclarés conformes |
-| M6 — API et auxiliaire | M1–M5 | Chaque entrée inventoriée : signatures, effets de pile, erreurs/yields, buffers et chargement sélectif | A01–A03, B01 | Inventaire complet avec tests par contrat et adaptations JS documentées |
-| M7 — Bibliothèques et hôtes | M3–M6 | Base, package, string, utf8, table, math, debug, io, os et services hôtes | B02–B11 | Toutes les entrées testées ; profils Node/navigateur distincts ; absence de trous masqués par skips |
-| M8 — Distribution et CLI | M6, M7 | Version, chemins, documentation, entrypoints, CLI/luac ou composants identifiés, migration des utilisateurs | D01–D02, P01 | Version publiée reflète les capacités ; options et environnement testés ; incompatibilités annoncées |
-| M9 — Audit final | M0–M8 | Suite officielle, différentiels, tests internes adaptés, régressions, mémoire et navigateur | Toutes | Chaque exigence possède une preuve actuelle ; aucun statut inconnu dans le périmètre annoncé |
+| M0 — Reference and oracle | — | Install/compile the 5.5.1 oracle, record its profile, import the cases and produce a differential baseline | All, P01 | Version/hash/profile recorded; JS runner and oracle comparable; exclusions visible |
+| M1 — Contracts and values | M0 | Settle numeric/API profile, port tags and representations, prototypes, userdata and conversions | L01, A01 | Numeric bound, byte, identity and host conversion tests; no silent loss |
+| M2 — VM and format | M1 | Port the 5.5.1 instructions and prototypes, dispatch, compatible emission, dump/undump and structural debug | V01–V03, L09, B05, B11 | Every opcode covered; chunk exchange with the oracle on the matching profile; incompatible chunks rejected |
+| M3 — Grammar and resolution | M2 | Attributes, readonly, global, named varargs, readonly loops, scopes and diagnostics | L02, L07–L10, D02–D03 | Acceptance/rejection corpus; conformant varargs mutation/capture and global declarations |
+| M4 — Calls and closing | M2, M3 | Call frames, continuations, yields, resources, close slots/threads/states and error handling | L03, L04, L06, A01–A02, B03 | Scope-exit, error, reentrancy and coroutine matrix fully covered |
+| M5 — GC and weak tables | M1, M4 | Logical heap/roots, modes/parameters, finalization/resurrection, ephemerons, external strings | L05, A02, B02 | Controlled tests of collection, cycles, order, warnings and release callbacks; no stub declared conformant |
+| M6 — API and auxiliary | M1–M5 | Every inventoried entry: signatures, stack effects, errors/yields, buffers and selective loading | A01–A03, B01 | Complete inventory with per-contract tests and documented JS adaptations |
+| M7 — Libraries and hosts | M3–M6 | Base, package, string, utf8, table, math, debug, io, os and host services | B02–B11 | Every entry tested; distinct Node/browser profiles; no gaps hidden by skips |
+| M8 — Distribution and CLI | M6, M7 | Version, paths, documentation, entrypoints, CLI/luac or identified components, user migration | D01–D02, P01 | Published version reflects capabilities; options and environment tested; incompatibilities announced |
+| M9 — Final audit | M0–M8 | Official suite, differentials, adapted internal tests, regressions, memory and browser | All | Every requirement has current evidence; no unknown status within the announced scope |
 
-M6 et M7 peuvent préparer leurs tests avant la fin des dépendances. Ils ne sont pas
-validés tant que les mécanismes sous-jacents sont incomplets. Éviter un long fork
-où parseur, VM et format désignent des générations différentes.
+M6 and M7 may prepare their tests before their dependencies finish. They are not
+validated while the underlying mechanisms are incomplete. Avoid a long fork
+where parser, VM and format refer to different generations.
 
-## Première séquence concrète
+## First concrete sequence
 
-1. Régénérer `observations.json` et l'inventaire, puis enregistrer une vraie exécution
-   de `npm test -- --runInBand` sur l'état choisi comme baseline.
-2. Ouvrir les décisions de [07-decisions.md](07-decisions.md). Ne pas convertir le
-   numéro annoncé en 5.5.1 pour simuler une migration.
-3. Compiler la distribution officielle et vérifier `lua -v`, les tailles numériques
-   et les options de compatibilité. Ne pas comparer des profils numériques différents.
-4. Écrire le runner différentiel, ses règles de normalisation et les cas de test
-   minimaux du [protocole](06-validation.md). Les sondes actuelles servent de cas rouges.
-5. Lancer M1 puis M2, en conservant le test de graphe des imports comme invariant.
+1. Regenerate `observations.json` and the inventory, then record a real run of
+   `npm test -- --runInBand` on the state chosen as baseline.
+2. Open the decisions of [07-decisions.md](07-decisions.md). Do not convert the
+   announced number to 5.5.1 to simulate a migration.
+3. Compile the official distribution and check `lua -v`, the numeric sizes and
+   the compatibility options. Do not compare different numeric profiles.
+4. Write the differential runner, its normalization rules and the minimal test
+   cases of the [protocol](06-validation.md). The current probes serve as red cases.
+5. Run M1 then M2, keeping the import graph test as an invariant.
 
-## Format d'une tâche
+## Task format
 
 ```text
-Titre : Mx / exigence / comportement observable
-État : à faire | en cours | à vérifier | validée | bloquée
-Référence : section/entrée du manuel figé, source C 5.5.1
-Constat : observation actuelle, reproduction
-Changement : fichiers, structure et contrats affectés
-Tests : cas nominal, limites, erreur, yield/réentrance si applicables
-Preuve : commande, version/profil, date et résultat
-Adaptation hôte : aucune ou décision référencée
-Restant : lacunes explicites, sans renommer l'objectif pour les exclure
+Title: Mx / requirement / observable behavior
+State: to do | in progress | to verify | validated | blocked
+Reference: section/entry of the frozen manual, C 5.5.1 source
+Observation: current observation, reproduction
+Change: files, structure and contracts affected
+Tests: nominal, boundary, error, yield/reentrancy cases where applicable
+Evidence: command, version/profile, date and result
+Host adaptation: none or referenced decision
+Remaining: explicit gaps, without renaming the goal to exclude them
 ```
 
-## Conditions de livraison
+## Delivery conditions
 
-La migration n'est pas livrable si `<close>` n'est qu'une syntaxe reconnue, si
-`lua_gc` reste vide, si le bytecode garde une disposition 5.3 avec un octet 5.5,
-ou si des fonctions nouvelles ne font que porter le nom de l'API officielle.
+The migration is not deliverable if `<close>` is only recognized syntax, if
+`lua_gc` stays empty, if the bytecode keeps a 5.3 layout with a 5.5 byte, or if
+new functions only carry the name of the official API.
 
-Chaque bibliothèque, type, fonction et constante de l'inventaire est auditée.
-Les tests ignorés sont justifiés individuellement. Un profil partiel peut être
-livré comme tel pendant le développement, mais il ne termine pas la cible de
-conformité complète. Les contraintes liées à l'ABI native et à l'hôte nécessitent
-une décision explicite et une formulation exacte des capacités publiées.
+Every library, type, function and constant of the inventory is audited. Skipped
+tests are justified individually. A partial profile may be delivered as such
+during development, but it does not complete the full-conformance target.
+Constraints related to the native ABI and the host require an explicit decision
+and an exact statement of the published capabilities.

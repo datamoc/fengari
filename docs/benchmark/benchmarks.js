@@ -1,7 +1,7 @@
 /*
 ** Benchmark definitions: each algorithm exists twice, as a Lua chunk (run by
 ** Fengari) and as a plain JavaScript function. Both take one size parameter
-** and return an integer checksum so the page can verify they computed the
+** and return a numeric checksum so the page can verify they computed the
 ** same thing. All arithmetic is exact in both languages (integers < 2^53,
 ** IEEE doubles for the float benchmark).
 */
@@ -12,6 +12,54 @@
     "use strict";
 
     return [
+        {
+            id: "expression",
+            title: "Simple numeric expression",
+            what: "parameters and floating-point arithmetic",
+            size: 100000,
+            lua: `function run(n) return (n + 0.5) * 1.25 - 3.0 end`,
+            js: function run(n) {
+                return (n + 0.5) * 1.25 - 3.0;
+            }
+        },
+        {
+            id: "sum",
+            title: "Integer sum",
+            what: "a complete numeric loop",
+            size: 100000,
+            lua: `
+function run(n)
+  local sum = 0
+  for i = 1, n do sum = sum + i end
+  return sum
+end`,
+            js: function run(n) {
+                let sum = 0;
+                for (let i = 1; i <= n; i++) sum += i;
+                return sum;
+            }
+        },
+        {
+            id: "nested",
+            title: "Nested numeric loops",
+            what: "integer loop controls and float accumulation",
+            size: 300,
+            lua: `
+function run(n)
+  local sum = 0.0
+  for i = 1, n do
+    for j = 1, n do sum = sum + (i * j) / 2.0 end
+  end
+  return sum
+end`,
+            js: function run(n) {
+                let sum = 0.0;
+                for (let i = 1; i <= n; i++) {
+                    for (let j = 1; j <= n; j++) sum += (i * j) / 2.0;
+                }
+                return sum;
+            }
+        },
         {
             id: "fib",
             title: "Recursive Fibonacci",

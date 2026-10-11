@@ -196,7 +196,7 @@ module.exports = function createLstate(dependencies) {
         close_state(L);
     };
 
-    // Fonction pour sauvegarder l'état du moteur Lua
+    // Function to save the state of the Lua engine
     const lua_save_state = function(L) {
         const savedState = {
             stack: [...L.stack],
@@ -216,7 +216,7 @@ module.exports = function createLstate(dependencies) {
         return savedState;
     };
 
-    // Fonction pour restaurer l'état du moteur Lua
+    // Function to restore the state of the Lua engine
     const lua_restore_state = function(L, savedState) {
         L.stack = [...savedState.stack];
         L.top = savedState.top;

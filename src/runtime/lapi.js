@@ -1239,12 +1239,12 @@ module.exports = function createLapi(dependencies) {
     exports.lua_upvaluejoin       = lua_upvaluejoin;
     exports.lua_version           = lua_version;
     exports.lua_xmove             = lua_xmove;
-    // Fonction pour exposer une fonction JavaScript à Lua avec gestion des arguments et résultats
+    // Function to expose a JavaScript function to Lua with argument and result handling
     const lua_pushjsfunction_ex = function(L, jsFunc) {
         fengari_argcheck(typeof jsFunc === "function");
 
         const wrappedFunc = function(L) {
-            // Récupérer les arguments depuis la pile Lua
+            // Collect the arguments from the Lua stack
             const nargs = lua_gettop(L);
             let args = [];
             for (let i = 1; i <= nargs; i++) {
@@ -1280,7 +1280,7 @@ module.exports = function createLapi(dependencies) {
                 }
             }
 
-            // Appeler la fonction JavaScript
+            // Call the JavaScript function
             let result;
             try {
                 result = jsFunc.apply(null, args);
@@ -1290,7 +1290,7 @@ module.exports = function createLapi(dependencies) {
                 return 0;
             }
 
-            // Gérer les résultats multiples
+            // Handle multiple results
             if (Array.isArray(result)) {
                 for (let i = 0; i < result.length; i++) {
                     push_jsvalue(L, result[i]);
@@ -1302,11 +1302,11 @@ module.exports = function createLapi(dependencies) {
             }
         };
 
-        // Pousser la fonction enveloppée sur la pile Lua
+        // Push the wrapped function onto the Lua stack
         lua_pushcclosure(L, wrappedFunc, 0);
     };
 
-    // Fonction utilitaire pour pousser une valeur JavaScript sur la pile Lua
+    // Utility function to push a JavaScript value onto the Lua stack
     const push_jsvalue = function(L, value) {
         if (value === null || value === undefined) {
             lua_pushnil(L);
@@ -1322,11 +1322,11 @@ module.exports = function createLapi(dependencies) {
             lua_pushstring(L, to_luastring(value));
         } else if (typeof value === "object") {
             if (value.type === "table" && value.ref) {
-                value.ref(L); // Restaurer la référence Lua
+                value.ref(L); // Restore the Lua reference
             } else if (value.type === "function" && value.ref) {
-                value.ref(L); // Restaurer la référence Lua
+                value.ref(L); // Restore the Lua reference
             } else {
-                // Pour les objets JavaScript simples, les convertir en userdata
+                // For plain JavaScript objects, convert them to userdata
                 const ud = lua_newuserdata(L, 0);
                 ud.jsobject = value;
             }

@@ -1,12 +1,19 @@
-# Documentation du projet
+# Project documentation
 
-La documentation technique est conservée dans ce répertoire, au format Markdown.
+Technical documentation is kept in this directory, in Markdown format.
 
-## Migration vers Lua 5.5.1
+## Migration to Lua 5.5.1
 
-Le [dossier Lua 5.5.1](lua-5.5.1/README.md) contient les références officielles figées,
-l'état du dépôt, les exigences de conformité, l'architecture proposée, le plan
-d'implémentation et la stratégie de validation.
+The [Lua 5.5.1 folder](lua-5.5.1/README.md) contains the frozen official
+references, the state of the repository, the conformance requirements, the
+proposed architecture, the implementation plan and the validation strategy.
 
-L'implémentation actuelle n'est pas conforme à l'ensemble de Lua 5.5.1. Les
-documents distinguent les constats, les exigences et les décisions encore ouvertes.
+The current implementation is not conformant to Lua 5.5.1 as a whole. The
+documents separate observations, requirements and decisions still open.
+
+## Lua to JavaScript translation
+
+`lua2js` (`src/lua2js.js`, `FengariVm.toJs`) translates Lua source to readable
+JavaScript for projects leaving Lua. Usage, the mapping choices and the known
+differences are described in the "Offline Lua to JavaScript translation"
+section of the [main README](../README.md).

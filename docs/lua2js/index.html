@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lua to JavaScript translator</title>
+<meta name="description" content="Paste Lua, get readable JavaScript, and benchmark the result against Fengari in your own browser.">
+<style>
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --panel: #f6f8fa;
+  --js: #d4a000; --lua: #2c4fa3; --ok: #1a7f37; --bad: #cf222e; --warn: #9a6700; --accent: #2c4fa3;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117; --fg: #e6edf3; --muted: #8b949e; --line: #30363d; --panel: #161b22;
+    --js: #e3b341; --lua: #6d8fe0; --ok: #3fb950; --bad: #f85149; --warn: #d29922; --accent: #6d8fe0;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 88rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+h1 { font-size: 1.8rem; margin: 0 0 .25rem; }
+h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
+p { margin: .5rem 0; }
+a { color: var(--accent); }
+.muted { color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; margin: 1rem 0; }
+button, select, input { font: inherit; padding: .4rem .8rem; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); }
+input[type=number], input[type=text] { width: 8rem; }
+button { cursor: pointer; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+button:disabled { opacity: .55; cursor: progress; }
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.pane h2 { margin-top: 0; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+textarea, pre#output { width: 100%; height: 30rem; margin: 0; padding: .7rem .9rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow: auto; tab-size: 4; resize: vertical; }
+pre#output { white-space: pre; }
+#warnings { margin: .75rem 0 0; padding: .6rem .9rem .6rem 2rem; border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 6px; background: var(--panel); font-size: .9rem; }
+#warnings:empty { display: none; }
+#warnings li { margin: .15rem 0; }
+#globals { font-size: .9rem; color: var(--muted); }
+#error { color: var(--bad); font-weight: 600; white-space: pre-wrap; }
+#status { min-height: 1.5em; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+.table-scroll { overflow-x: auto; }
+th, td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--line); }
+th { font-size: .85rem; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar { height: .6rem; border-radius: 3px; margin: .2rem 0; min-width: 2px; }
+.bar.js { background: var(--js); }
+.bar.lua { background: var(--lua); }
+.ok { color: var(--ok); } .bad { color: var(--bad); font-weight: 700; }
+.summary { margin: 1rem 0; padding: 1rem 1.25rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.summary strong { font-size: 1.4rem; }
+@media (max-width: 52rem) { .panes { grid-template-columns: 1fr; } }
+noscript { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lua to JavaScript</h1>
+  <p class="muted">Paste Lua, get readable JavaScript you can keep. Translation runs in your browser; nothing is uploaded.</p>
+  <p>This is the offline translator behind <code>lua2js</code> and <code>FengariVm.toJs()</code> from <a href="https://github.com/datamoc/fengari">Fengari</a>. It prints idiomatic JavaScript from the Lua source and marks with <code>TODO(lua2js)</code> whatever it cannot translate faithfully. The benchmark below runs the same function as Lua in Fengari's interpreter and as the translated JavaScript. See also the <a href="../benchmark/">Fengari vs JavaScript benchmark</a>.</p>
+
+  <noscript><p>This page needs JavaScript.</p></noscript>
+
+  <div class="controls">
+    <label>Example <select id="example"></select></label>
+    <label>Output <select id="format">
+      <option value="none">plain script</option>
+      <option value="esm">ES module</option>
+      <option value="cjs">CommonJS</option>
+    </select></label>
+    <button id="copy" type="button">Copy JavaScript</button>
+  </div>
+
+  <div class="panes">
+    <div class="pane">
+      <h2>Lua</h2>
+      <textarea id="lua" spellcheck="false" aria-label="Lua source"></textarea>
+    </div>
+    <div class="pane">
+      <h2>JavaScript</h2>
+      <pre id="output" tabindex="0" aria-label="Translated JavaScript" aria-live="polite"></pre>
+    </div>
+  </div>
+  <div id="error" role="alert"></div>
+  <ul id="warnings"></ul>
+  <p id="globals"></p>
+
+  <h2>Benchmark</h2>
+  <p>Calls <code>entry(n)</code> in Lua (Fengari interpreter, <code>vm.call</code>) and in the translated JavaScript. For a built-in example, the original hand-written JavaScript is timed too. Results must match.</p>
+  <div class="controls">
+    <label>Function <input id="entry" type="text" value="run" spellcheck="false"></label>
+    <label>n <input id="size" type="number" min="1" value="150000"></label>
+    <label>Timed runs
+      <select id="runs">
+        <option value="1">1 (quick)</option>
+        <option value="3" selected>3 + warm-up (median)</option>
+        <option value="5">5 + warm-up (median)</option>
+      </select>
+    </label>
+    <button id="bench" class="primary" type="button">Run benchmark</button>
+  </div>
+  <div id="status" role="status" aria-live="polite">Ready. The page may freeze briefly while the Lua version runs.</div>
+  <div id="summary" class="summary" hidden aria-live="polite"></div>
+  <div class="table-scroll">
+    <table id="results" hidden>
+      <thead><tr><th>Version</th><th class="num">Time per call</th><th class="num">vs interpreted Lua</th><th>Time, log scale</th><th>Result</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <h2>What to know</h2>
+  <p>Arrays are shifted to 0-based, <code>nil</code> is <code>undefined</code>, <code>if x</code> becomes <code>truthy(x)</code> because Lua treats <code>0</code> and <code>""</code> as true, and multiple returns become arrays. Literal Lua patterns become <code>RegExp</code> calls; metatables, coroutines, patterns using <code>%b</code> or <code>%f</code>, general <code>goto</code> and 64-bit bitwise operators are not translated. The benchmark executes the translated code in this page, so only run Lua you wrote or trust.</p>
+  <p class="muted" id="env"></p>
+</main>
+
+<script src="../benchmark/fengari.bundle.js"></script>
+<script src="../benchmark/benchmarks.js"></script>
+<script>
+"use strict";
+
+const $ = (id) => document.getElementById(id);
+const luaBox = $("lua"), output = $("output"), exampleSelect = $("example"), formatSelect = $("format");
+const benchButton = $("bench"), statusLine = $("status");
+const MIN_SAMPLE_MS = 80;
+const DEFAULT_EXAMPLE = "sieve"; /* the most expensive example of the benchmark page for the interpreter */
+let current = null;      /* last successful translation */
+let reference = null;    /* hand-written JavaScript matching the selected, unedited example */
+
+function format(ms) {
+  if (ms < 0.001) return (ms * 1000000).toFixed(1) + " ns";
+  if (ms < 1) return (ms * 1000).toFixed(2) + " µs";
+  if (ms < 10) return ms.toFixed(2) + " ms";
+  if (ms < 1000) return ms.toFixed(1) + " ms";
+  return (ms / 1000).toFixed(2) + " s";
+}
+
+function median(values) {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+function timeFunction(fn, size, runs) {
+  let result = fn(size); /* warm-up */
+  const samples = [];
+  for (let sample = 0; sample < runs; sample++) {
+    let iterations = 0;
+    const start = performance.now();
+    do {
+      result = fn(size);
+      iterations++;
+    } while (performance.now() - start < MIN_SAMPLE_MS);
+    samples.push((performance.now() - start) / iterations);
+  }
+  return { value: result, ms: median(samples) };
+}
+
+function translate() {
+  $("error").textContent = "";
+  const warnings = $("warnings");
+  warnings.textContent = "";
+  try {
+    const shown = Fengari.FengariVm.toJs(luaBox.value, { format: formatSelect.value });
+    output.textContent = shown.code;
+    for (const w of shown.warnings) {
+      const item = document.createElement("li");
+      item.textContent = `line ${w.line}: ${w.message}`;
+      warnings.appendChild(item);
+    }
+    $("globals").textContent = shown.freeGlobals.length ? `Globals the host must provide: ${shown.freeGlobals.join(", ")}` : "";
+    /* Execution always uses CommonJS so that the exported functions can be called. */
+    current = Fengari.FengariVm.toJs(luaBox.value, { format: "cjs", header: false });
+  } catch (error) {
+    current = null;
+    output.textContent = "";
+    $("globals").textContent = "";
+    $("error").textContent = error.message;
+  }
+}
+
+function loadExample() {
+  const bench = BENCHMARKS.find((b) => b.id === exampleSelect.value);
+  luaBox.value = bench.lua.trim() + "\n";
+  $("size").value = bench.size;
+  $("entry").value = "run";
+  reference = bench;
+  translate();
+}
+
+function resetBars(rows) {
+  const times = rows.map((r) => r.ms);
+  const low = Math.log10(Math.max(Math.min(...times) / 2, 0.001));
+  const high = Math.log10(Math.max(...times));
+  return (ms) => (high === low ? 100 : 4 + 96 * (Math.log10(Math.max(ms, 0.001)) - low) / (high - low));
+}
+
+const pause = () => new Promise((resolve) => setTimeout(resolve, 40));
+
+async function runBenchmark() {
+  const entry = $("entry").value.trim();
+  const size = Number($("size").value);
+  const runs = Number($("runs").value);
+  if (!current) { statusLine.textContent = "Fix the Lua syntax error first."; return; }
+  const flagged = current.warnings.length;
+  if (!Number.isFinite(size) || size < 1) { statusLine.textContent = "n must be a positive number."; return; }
+  benchButton.disabled = true;
+  $("summary").hidden = true;
+  $("results").hidden = true;
+  try {
+    const mod = { exports: {} };
+    new Function("module", current.code)(mod);
+    const translated = mod.exports[entry];
+    if (typeof translated !== "function") throw new Error(`The translated code does not export a function named '${entry}'.`);
+    const vm = new Fengari.FengariVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
+    vm.run(luaBox.value, "=lua");
+
+    const rows = [];
+    statusLine.textContent = "Running Lua in Fengari…";
+    await pause();
+    rows.push({ label: "Lua (Fengari interpreter)", cls: "lua", ...timeFunction((n) => vm.call(entry, n), size, runs) });
+    statusLine.textContent = "Running translated JavaScript…";
+    await pause();
+    rows.push({ label: "Translated JavaScript", cls: "js", ...timeFunction(translated, size, runs) });
+    const same = reference && reference.lua.trim() + "\n" === luaBox.value && entry === "run";
+    if (same) {
+      statusLine.textContent = "Running hand-written JavaScript…";
+      await pause();
+      rows.push({ label: "Hand-written JavaScript", cls: "js", ...timeFunction(reference.js, size, runs) });
+    }
+
+    const body = $("results").querySelector("tbody");
+    body.textContent = "";
+    const scale = resetBars(rows);
+    const lua = rows[0];
+    for (const row of rows) {
+      const match = row.value === lua.value;
+      const tr = document.createElement("tr");
+      tr.innerHTML = '<td></td><td class="num"></td><td class="num"></td><td><div class="bar"></div></td><td></td>';
+      const cells = tr.children;
+      cells[0].textContent = row.label;
+      cells[1].textContent = format(row.ms);
+      cells[2].textContent = row === lua ? "1×" : (lua.ms / row.ms).toFixed(1) + "× faster";
+      cells[3].firstChild.classList.add(row.cls);
+      cells[3].firstChild.style.width = scale(row.ms) + "%";
+      cells[4].textContent = match ? `✓ ${row.value}` : `✗ ${row.value} (Lua: ${lua.value})`;
+      cells[4].className = match ? "ok" : "bad";
+      body.appendChild(tr);
+    }
+    $("results").hidden = false;
+    const speed = lua.ms / rows[1].ms;
+    const allMatch = rows.every((r) => r.value === lua.value);
+    const summary = $("summary");
+    summary.hidden = false;
+    summary.innerHTML = `The translated JavaScript ran <strong>${speed.toFixed(1)}×</strong> faster than the interpreted Lua (${format(rows[1].ms)} vs ${format(lua.ms)} per call).`;
+    if (rows[2]) summary.innerHTML += ` It took ${(rows[1].ms / rows[2].ms).toFixed(1)}× the time of the hand-written version.`;
+    if (!allMatch) summary.innerHTML += '<p class="bad">Warning: the versions returned different results; review the TODO comments in the translation.</p>';
+    statusLine.textContent = flagged ? `Done. The translation has ${flagged} flagged item(s) (see above): results may differ from Lua.` : "Done.";
+  } catch (error) {
+    statusLine.textContent = "Benchmark failed: " + (error && error.message ? error.message : error) + (flagged ? ` The translation has ${flagged} flagged item(s) (see the warnings above): fix those TODOs first.` : "");
+  } finally {
+    benchButton.disabled = false;
+  }
+}
+
+for (const bench of BENCHMARKS) {
+  const option = document.createElement("option");
+  option.value = bench.id;
+  option.textContent = bench.title + (bench.id === DEFAULT_EXAMPLE ? " (most expensive)" : "");
+  exampleSelect.appendChild(option);
+}
+exampleSelect.value = DEFAULT_EXAMPLE;
+
+let timer = null;
+luaBox.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(translate, 200); });
+formatSelect.addEventListener("change", translate);
+exampleSelect.addEventListener("change", loadExample);
+benchButton.addEventListener("click", runBenchmark);
+$("copy").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+    statusLine.textContent = "JavaScript copied to the clipboard.";
+  } catch {
+    statusLine.textContent = "Could not access the clipboard; select the output manually.";
+  }
+});
+$("env").textContent = `${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}.`;
+loadExample();
+</script>
+</body>
+</html>

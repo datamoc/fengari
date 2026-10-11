@@ -1,114 +1,116 @@
-# Exigences de conformité Lua 5.5.1
+# Lua 5.5.1 conformance requirements
 
-Les identifiants ci-dessous servent à relier implémentation, tests et décisions.
-Tous sont **à implémenter ou à auditer** au départ. Le manuel figé fait foi ; ces
-exigences en sont un guide de travail, pas une spécification de remplacement.
-Les [inventaires](inventaire-api.md) complètent les lignes regroupant de nombreuses API.
+The identifiers below link implementation, tests and decisions. All of them are
+**to implement or to audit** at the start. The frozen manual is authoritative;
+these requirements are a working guide, not a replacement specification. The
+[inventories](inventaire-api.md) complement the rows that group many APIs.
 
-## Couvrir toute la spécification
+## Cover the whole specification
 
-| ID | Référence du manuel local | Exigence et preuve attendue |
+| ID | Local manual reference | Requirement and expected evidence |
 | --- | --- | --- |
-| L01 | [§2.1](reference/lua-5.5.1/doc/manual.html#2.1) | Huit types, identité des objets, nil/false, entiers/flottants, chaînes d'octets ; tests de valeurs et conversions |
-| L02 | [§2.2](reference/lua-5.5.1/doc/manual.html#2.2) | Portées lexicales, upvalues, `_ENV`, environnement global et déclarations ; tests de captures et masquages |
-| L03 | [§2.3](reference/lua-5.5.1/doc/manual.html#2.3) | Erreurs protégées, handlers, panic et avertissements ; tests imbriqués et erreurs hôtes |
-| L04 | [§2.4](reference/lua-5.5.1/doc/manual.html#2.4) | Ensemble des métaméthodes, ordre de recherche, raw access, chaînes `__call` ; tests de chaque événement |
-| L05 | [§2.5](reference/lua-5.5.1/doc/manual.html#2.5) | Modes de GC, paramètres, racines, finalisation, résurrection, tables faibles et éphemerons ; tests de cycles et ressources |
-| L06 | [§2.6](reference/lua-5.5.1/doc/manual.html#2.6) | États des coroutines, transferts, yields, fermeture et erreurs ; tests de transitions et continuations |
-| L07 | [§3.1](reference/lua-5.5.1/doc/manual.html#3.1) | Lexer complet : mots réservés, commentaires, littéraux, échappements et erreurs de syntaxe |
-| L08 | [§3.2–3.3](reference/lua-5.5.1/doc/manual.html#3.2) | Variables, blocs, affectations, contrôle, labels/goto, boucles et déclarations ; tests de portée et limites |
-| L09 | [§3.4](reference/lua-5.5.1/doc/manual.html#3.4) | Tous les opérateurs, précédences, coercitions, constructeurs, appels, varargs et ajustement multirésultats |
-| L10 | [§2.2](reference/lua-5.5.1/doc/manual.html#2.2) | Visibilité des variables et fermetures, y compris réentrance et scopes créés dans les boucles |
-| A01 | [§4](reference/lua-5.5.1/doc/manual.html#4) | Contrat de l'API : pile, pseudo-indices, registry, callbacks, erreurs, yields, allocateurs et stabilité des pointeurs ; contrat JS explicite |
-| A02 | [§4.6](reference/lua-5.5.1/doc/manual.html#4.6) | Chaque fonction/type/constante documenté : signature, résultats, effet de pile, erreurs et yields ; test identifié par entrée d'inventaire |
-| A03 | [§5](reference/lua-5.5.1/doc/manual.html#5) | Chaque fonction/type de la bibliothèque auxiliaire, buffers, refs, loaders et diagnostics |
-| B01 | [§6.1](reference/lua-5.5.1/doc/manual.html#6.1) | Chargement sélectif et préchargement des bibliothèques ; masques `LUA_*LIBK` et `luaL_openselectedlibs` |
-| B02 | [§6.2](reference/lua-5.5.1/doc/manual.html#6.2) | Bibliothèque de base complète, dont `warn`, collectgarbage, loaders, erreurs et environnement |
-| B03 | [§6.3](reference/lua-5.5.1/doc/manual.html#6.3) | Coroutine : create/resume/yield/wrap/running/status/isyieldable/close, arguments optionnels et erreurs |
-| B04 | [§6.4](reference/lua-5.5.1/doc/manual.html#6.4) | Package : require, searchers, searchpath, chemins, loaded/preload, loader data et loadlib |
-| B05 | [§6.5](reference/lua-5.5.1/doc/manual.html#6.5) | String : toutes les fonctions, patterns, formats, pack/unpack/packsize, dump et chaînes binaires |
-| B06 | [§6.6](reference/lua-5.5.1/doc/manual.html#6.6) | UTF-8 : validation, mode laxiste, indices, itération et double résultat d'offset |
-| B07 | [§6.7](reference/lua-5.5.1/doc/manual.html#6.7) | Table : opérations complètes, métaméthodes applicables, séquences et `table.create` |
-| B08 | [§6.8](reference/lua-5.5.1/doc/manual.html#6.8) | Math : profil numérique, arrondis, random/randomseed, limites et conversions |
-| B09 | [§6.9](reference/lua-5.5.1/doc/manual.html#6.9) | IO : fonctions et méthodes de fichiers, formats, itérateurs, fermeture, modes et erreurs système |
-| B10 | [§6.10](reference/lua-5.5.1/doc/manual.html#6.10) | OS : dates, locales, environnement, fichiers, commandes et résultats portables/non portables |
-| B11 | [§6.11](reference/lua-5.5.1/doc/manual.html#6.11) | Debug : hooks, informations, locaux, upvalues, valeurs utilisateur indexées et varargs nommés |
-| D01 | [§7](reference/lua-5.5.1/doc/manual.html#7) | Interpréteur autonome : options, init, arg, stdin/REPL, avertissements et fermeture ; composant à identifier, pas omission implicite |
-| D02 | [§8](reference/lua-5.5.1/doc/manual.html#8) | Incompatibilités 5.4→5.5 toutes couvertes par tests de migration ; pas d'options de compatibilité silencieuses |
-| D03 | [§9](reference/lua-5.5.1/doc/manual.html#9) | Grammaire complète : corpus d'acceptations/rejets et tests de précédence |
-| V01 | [Source : lopcodes.h](reference/lua-5.5.1/src/lopcodes.h) | Ensemble des instructions 5.5.1, encodage, registres, constantes et flags ; émission/exécution couplées |
-| V02 | [§4.6 lua_load](reference/lua-5.5.1/doc/manual.html#lua_load) | Chunks texte/binaire, modes, lecteurs fractionnés, données tronquées et incompatibilités de format |
-| V03 | [§4.6 lua_dump](reference/lua-5.5.1/doc/manual.html#lua_dump) | Chunks 5.5.1 valides, protocole writer, strip debug et compatibilité avec le profil de l'oracle |
-| P01 | [Architecture](04-architecture.md) | Aucun cycle d'import réintroduit ; chargement à froid, navigateur et intégration JS préservés |
+| L01 | [§2.1](reference/lua-5.5.1/doc/manual.html#2.1) | Eight types, object identity, nil/false, integers/floats, byte strings; value and conversion tests |
+| L02 | [§2.2](reference/lua-5.5.1/doc/manual.html#2.2) | Lexical scopes, upvalues, `_ENV`, global environment and declarations; capture and shadowing tests |
+| L03 | [§2.3](reference/lua-5.5.1/doc/manual.html#2.3) | Protected errors, handlers, panic and warnings; nested tests and host errors |
+| L04 | [§2.4](reference/lua-5.5.1/doc/manual.html#2.4) | Set of metamethods, lookup order, raw access, `__call` chains; a test per event |
+| L05 | [§2.5](reference/lua-5.5.1/doc/manual.html#2.5) | GC modes, parameters, roots, finalization, resurrection, weak tables and ephemerons; cycle and resource tests |
+| L06 | [§2.6](reference/lua-5.5.1/doc/manual.html#2.6) | Coroutine states, transfers, yields, closing and errors; transition and continuation tests |
+| L07 | [§3.1](reference/lua-5.5.1/doc/manual.html#3.1) | Full lexer: keywords, comments, literals, escapes and syntax errors |
+| L08 | [§3.2–3.3](reference/lua-5.5.1/doc/manual.html#3.2) | Variables, blocks, assignments, control, labels/goto, loops and declarations; scope and boundary tests |
+| L09 | [§3.4](reference/lua-5.5.1/doc/manual.html#3.4) | All operators, precedences, coercions, constructors, calls, varargs and multi-result adjustment |
+| L10 | [§2.2](reference/lua-5.5.1/doc/manual.html#2.2) | Variable visibility and closures, including reentrancy and scopes created in loops |
+| A01 | [§4](reference/lua-5.5.1/doc/manual.html#4) | API contract: stack, pseudo-indices, registry, callbacks, errors, yields, allocators and pointer stability; explicit JS contract |
+| A02 | [§4.6](reference/lua-5.5.1/doc/manual.html#4.6) | Every documented function/type/constant: signature, results, stack effect, errors and yields; test identified by inventory entry |
+| A03 | [§5](reference/lua-5.5.1/doc/manual.html#5) | Every auxiliary library function/type, buffers, refs, loaders and diagnostics |
+| B01 | [§6.1](reference/lua-5.5.1/doc/manual.html#6.1) | Selective loading and preloading of libraries; `LUA_*LIBK` masks and `luaL_openselectedlibs` |
+| B02 | [§6.2](reference/lua-5.5.1/doc/manual.html#6.2) | Complete base library, including `warn`, collectgarbage, loaders, errors and environment |
+| B03 | [§6.3](reference/lua-5.5.1/doc/manual.html#6.3) | Coroutine: create/resume/yield/wrap/running/status/isyieldable/close, optional arguments and errors |
+| B04 | [§6.4](reference/lua-5.5.1/doc/manual.html#6.4) | Package: require, searchers, searchpath, paths, loaded/preload, loader data and loadlib |
+| B05 | [§6.5](reference/lua-5.5.1/doc/manual.html#6.5) | String: all functions, patterns, formats, pack/unpack/packsize, dump and binary strings |
+| B06 | [§6.6](reference/lua-5.5.1/doc/manual.html#6.6) | UTF-8: validation, lenient mode, indices, iteration and the double result of offset |
+| B07 | [§6.7](reference/lua-5.5.1/doc/manual.html#6.7) | Table: complete operations, applicable metamethods, sequences and `table.create` |
+| B08 | [§6.8](reference/lua-5.5.1/doc/manual.html#6.8) | Math: numeric profile, rounding, random/randomseed, limits and conversions |
+| B09 | [§6.9](reference/lua-5.5.1/doc/manual.html#6.9) | IO: functions and file methods, formats, iterators, closing, modes and system errors |
+| B10 | [§6.10](reference/lua-5.5.1/doc/manual.html#6.10) | OS: dates, locales, environment, files, commands and portable/non-portable results |
+| B11 | [§6.11](reference/lua-5.5.1/doc/manual.html#6.11) | Debug: hooks, information, locals, upvalues, indexed user values and named varargs |
+| D01 | [§7](reference/lua-5.5.1/doc/manual.html#7) | Standalone interpreter: options, init, arg, stdin/REPL, warnings and closing; a component to identify, not an implicit omission |
+| D02 | [§8](reference/lua-5.5.1/doc/manual.html#8) | All 5.4→5.5 incompatibilities covered by migration tests; no silent compatibility options |
+| D03 | [§9](reference/lua-5.5.1/doc/manual.html#9) | Complete grammar: acceptance/rejection corpus and precedence tests |
+| V01 | [Source: lopcodes.h](reference/lua-5.5.1/src/lopcodes.h) | Full 5.5.1 instruction set, encoding, registers, constants and flags; emission/execution coupled |
+| V02 | [§4.6 lua_load](reference/lua-5.5.1/doc/manual.html#lua_load) | Text/binary chunks, modes, chunked readers, truncated data and format incompatibilities |
+| V03 | [§4.6 lua_dump](reference/lua-5.5.1/doc/manual.html#lua_dump) | Valid 5.5.1 chunks, writer protocol, debug stripping and compatibility with the oracle profile |
+| P01 | [Architecture](04-architecture.md) | No reintroduced import cycle; cold start, browser and JS integration preserved |
 
-## Changements de langage à implémenter explicitement
+## Language changes to implement explicitly
 
-### Attributs et fermeture hérités de Lua 5.4, précisés par 5.5
+### Attributes and closing inherited from Lua 5.4, specified by 5.5
 
-Le parseur doit reconnaître les attributs selon
-[§3.3.7](reference/lua-5.5.1/doc/manual.html#3.3.7) et leur portée. En 5.5,
-un attribut peut aussi précéder la liste de noms. `const` et `close` sont des noms
-d'attribut, pas des mots réservés supplémentaires à inventer.
+The parser must recognize the attributes according to
+[§3.3.7](reference/lua-5.5.1/doc/manual.html#3.3.7) and their scope. In 5.5, an
+attribute may also precede the name list. `const` and `close` are attribute
+names, not extra keywords to invent.
 
-- Une variable en lecture seule refuse les affectations, y compris via une closure.
-- `<close>` est réservé aux variables locales ; une liste contient au plus une telle variable.
-- La valeur à fermer doit être nil, false ou disposer de `__close`.
-- Fermer en ordre inverse lors de sortie normale, break, goto, return et erreurs.
-- En cas d'erreur, transmettre l'objet d'erreur à `__close` ; sans erreur, respecter
-  l'absence de second argument du manuel 5.5.1, vérifiée notamment avec `select('#', ...)`.
-- Une erreur dans une fermeture ne dispense pas d'exécuter les autres fermetures.
-- La coroutine suspendue conserve ses ressources ; la fermeture explicite les libère
-  conformément au contrat. Ne pas confondre `__close` déterministe et `__gc`.
+- A read-only variable rejects assignments, including through a closure.
+- `<close>` is reserved for local variables; a list contains at most one such
+  variable.
+- The value to close must be nil, false or provide `__close`.
+- Close in reverse order on normal exit, break, goto, return and errors.
+- On error, pass the error object to `__close`; without error, respect the
+  absence of a second argument from the 5.5.1 manual, checked notably with
+  `select('#', ...)`.
+- An error in one closing does not exempt from running the other closings.
+- A suspended coroutine keeps its resources; explicit closing releases them
+  according to the contract. Do not confuse deterministic `__close` and `__gc`.
 
-### Déclarations globales 5.5
+### 5.5 global declarations
 
-`global` devient un mot réservé. Implémenter les déclarations de noms, les attributs,
-`global *`, `global<const> *` et `global function`, avec l'état lexical approprié.
-Une déclaration globale avec initialisation échoue à l'exécution si la valeur
-existante n'est pas nil ; une déclaration sans initialisation ne l'efface pas.
-Les déclarations contrôlent les accès syntaxiques ; elles ne rendent pas `_G`
-physiquement immuable. Tester les accès via `_ENV`, les blocs et les closures.
+`global` becomes a keyword. Implement name declarations, attributes,
+`global *`, `global<const> *` and `global function`, with the appropriate
+lexical state. A global declaration with an initialization fails at run time if
+the existing value is not nil; a declaration without initialization does not
+erase it. Declarations control syntactic accesses; they do not make `_G`
+physically immutable. Test accesses through `_ENV`, blocks and closures.
 
-### Varargs nommés et boucles
+### Named varargs and loops
 
-`function(...args)` lie un local en lecture seule à une table contenant les arguments
-et leur nombre dans `args.n`. La table reste mutable : une modification de ses entrées
-ou de `n` peut modifier les valeurs produites par `...`. Ne pas remplacer ce contrat
-par une simple copie indépendante de la pile. Tester capture, retour de la table,
-valeurs nil, zéro argument, modifications et formes optimisées, avec
+`function(...args)` binds a read-only local to a table holding the arguments and
+their count in `args.n`. The table stays mutable: modifying its entries or `n`
+can modify the values produced by `...`. Do not replace this contract with a
+plain copy detached from the stack. Test capture, returning the table, nil
+values, zero arguments, modifications and optimized forms, with
 [§3.4.11](reference/lua-5.5.1/doc/manual.html#3.4.11).
 
-Les variables de contrôle des boucles numériques et génériques sont en lecture
-seule. Tester l'affectation directe et capturée, ainsi que le masquage par un local.
+The control variables of numeric and generic for loops are read-only. Test
+direct and captured assignment, as well as shadowing by a local.
 
-### Autres incompatibilités
+### Other incompatibilities
 
-Appliquer la limite de 15 objets dans une chaîne `__call`, le remplacement d'un
-objet d'erreur nil par un message, et la conversion décimale des flottants permettant
-leur relecture sans perte. Les optimisations internes 5.5 (taille des tableaux,
-partage de chaînes, varargs optimisés) peuvent être portées après la sémantique,
-mais les contrats observables ne doivent pas être différés avec elles.
+Apply the 15-object limit in a `__call` chain, the replacement of a nil error
+object by a message, and the decimal conversion of floats allowing lossless
+round-tripping. The internal 5.5 optimizations (array size, string sharing,
+optimized varargs) may be ported after the semantics, but the observable
+contracts must not be delayed along with them.
 
-## Points d'API à haut risque
+## High-risk API points
 
-Lire les contrats complets dans le manuel et les signatures dans les en-têtes figés :
+Read the full contracts in the manual and the signatures in the frozen headers:
 
-- `lua_newstate` reçoit une graine de hachage ; `luaL_makeseed` doit avoir un contrat hôte.
-- `lua_resume` et la gestion des continuations changent par rapport à la base 5.3 ;
-  définir le transport du nombre de résultats dans l'API JS.
-- `lua_closethread`, `lua_toclose`, `lua_closeslot`, `lua_settop` et `lua_close` doivent
-  participer à la fermeture des ressources. `lua_resetthread` est dépréciée en 5.5.
-- Userdata : `lua_newuserdatauv`, valeurs utilisateur indexées et fonctions associées.
-- Avertissements : `lua_setwarnf`, `lua_warning`, fragments et callback hôte.
-- Chaînes externes : `lua_pushexternalstring`, stabilité des octets et callback de libération.
-- `lua_call` et fonctions apparentées : au plus 250 résultats explicitement demandés ;
-  `LUA_MULTRET` conserve son contrat distinct.
-- `lua_dump` : pile et dernier appel au writer selon le contrat 5.5.1.
-- `lua_pushvfstring` signale ses erreurs selon le nouveau contrat ; ne pas conserver
-  automatiquement le comportement qui levait une erreur.
-- GC : `LUA_GCPARAM` et les six paramètres du header ; distinction des modes et des réglages.
-- `luaL_openselectedlibs` charge/précharge selon les masques ; `luaL_openlibs` conserve
-  le comportement dérivé défini par `lualib.h`.
+- `lua_newstate` receives a hash seed; `luaL_makeseed` must have a host contract.
+- `lua_resume` and continuation handling change compared to the 5.3 base;
+  define how the number of results is carried in the JS API.
+- `lua_closethread`, `lua_toclose`, `lua_closeslot`, `lua_settop` and `lua_close`
+  must take part in closing resources. `lua_resetthread` is deprecated in 5.5.
+- Userdata: `lua_newuserdatauv`, indexed user values and associated functions.
+- Warnings: `lua_setwarnf`, `lua_warning`, fragments and host callback.
+- External strings: `lua_pushexternalstring`, byte stability and release callback.
+- `lua_call` and related functions: at most 250 explicitly requested results;
+  `LUA_MULTRET` keeps its distinct contract.
+- `lua_dump`: stack and last call to the writer per the 5.5.1 contract.
+- `lua_pushvfstring` reports its errors per the new contract; do not
+  automatically keep the behavior that raised an error.
+- GC: `LUA_GCPARAM` and the six header parameters; distinction of modes and settings.
+- `luaL_openselectedlibs` loads/preloads according to the masks; `luaL_openlibs`
+  keeps the derived behavior defined by `lualib.h`.
 
-Cet ensemble n'est pas une liste exhaustive des API : toutes les entrées de
-l'[inventaire](inventaire-api.md) doivent être traitées, même si leur nom existait en 5.3.
+This set is not an exhaustive list of APIs: every entry of the
+[inventory](inventaire-api.md) must be handled, even if its name existed in 5.3.

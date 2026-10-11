@@ -1,55 +1,55 @@
-# Implémenter Lua 5.5.1 dans Fengari
+# Implementing Lua 5.5.1 in Fengari
 
-État documentaire au 10 octobre 2026. Cible figée : **Lua 5.5.1**, publiée le
-24 juillet 2026. Ce dossier prépare l'implémentation ; il ne déclare pas la migration réalisée.
+Documentation state as of October 10, 2026. Frozen target: **Lua 5.5.1**, released on
+July 24, 2026. This folder prepares the implementation; it does not claim the migration is done.
 
-## Parcours de lecture
+## Reading path
 
-| Document | Utilité |
+| Document | Purpose |
 | --- | --- |
-| [Références](01-references.md) | Manuel, sources, tests, versions, empreintes et licences |
-| [État des lieux](02-etat-des-lieux.md) | Écarts constatés et limites des preuves actuelles |
-| [Exigences](03-exigences.md) | Couverture du langage, de la VM, des bibliothèques et de l'API |
-| [Architecture](04-architecture.md) | Composants à modifier et contraintes propres à JavaScript |
-| [Plan d'implémentation](05-plan-implementation.md) | Lots ordonnés, dépendances et critères de sortie |
-| [Validation](06-validation.md) | Oracle officiel, tests différentiels et définition de terminé |
-| [Décisions](07-decisions.md) | Choix techniques à prendre sans réduire la cible de conformité |
-| [Suivi de conformité](08-suivi-conformite.md) | Matrice manuelle des exigences, tâches et preuves de validation |
-| [Avancement vérifié](09-avancement.md) | Changements du moteur, commandes reproductibles et lacunes restantes |
-| [Inventaire des API](inventaire-api.md) | Symboles officiels rapprochés des exports et bibliothèques actuels |
-| [Observations](observations.json) | Résultats reproductibles de sondes exécutées sur ce worktree |
+| [References](01-references.md) | Manual, sources, tests, versions, checksums and licenses |
+| [State of the repository](02-etat-des-lieux.md) | Observed gaps and limits of the current evidence |
+| [Requirements](03-exigences.md) | Coverage of the language, the VM, the libraries and the API |
+| [Architecture](04-architecture.md) | Components to change and JavaScript-specific constraints |
+| [Implementation plan](05-plan-implementation.md) | Ordered lots, dependencies and exit criteria |
+| [Validation](06-validation.md) | Official oracle, differential tests and definition of done |
+| [Decisions](07-decisions.md) | Technical choices to make without lowering the conformance target |
+| [Conformance tracking](08-suivi-conformite.md) | Manual matrix of requirements, tasks and validation evidence |
+| [Verified progress](09-avancement.md) | Engine changes, reproducible commands and remaining gaps |
+| [API inventory](inventaire-api.md) | Official symbols matched against current exports and libraries |
+| [Observations](observations.json) | Reproducible results of probes run on this worktree |
 
-## Références hors ligne
+## Offline references
 
-- [Manuel livré avec Lua 5.5.1](reference/lua-5.5.1/doc/manual.html).
-- [Index du manuel](reference/lua-5.5.1/doc/contents.html).
-- [Informations de distribution et licence](reference/lua-5.5.1/doc/readme.html).
-- [Sources complètes officielles, archivées](reference/lua-5.5.1.tar.gz).
-- [Suite officielle 5.5.1, archivée](reference/lua-5.5.1-tests.tar.gz).
-- [Manifest des références et empreintes](reference/manifest.json).
+- [Manual shipped with Lua 5.5.1](reference/lua-5.5.1/doc/manual.html).
+- [Manual index](reference/lua-5.5.1/doc/contents.html).
+- [Distribution and license information](reference/lua-5.5.1/doc/readme.html).
+- [Official full sources, archived](reference/lua-5.5.1.tar.gz).
+- [Official 5.5.1 test suite, archived](reference/lua-5.5.1-tests.tar.gz).
+- [Reference manifest and checksums](reference/manifest.json).
 
-Les en-têtes publics et `lopcodes.h` sont également extraits sous
-`reference/lua-5.5.1/src/`. Les sources C complètes restent dans l'archive : elles
-servent de référence de portage, sans devenir une dépendance du moteur JS.
+The public headers and `lopcodes.h` are also extracted under
+`reference/lua-5.5.1/src/`. The full C sources stay in the archive: they serve as
+a porting reference, without becoming a dependency of the JS engine.
 
-## Actualiser et vérifier
+## Refreshing and checking
 
-Depuis la racine du dépôt, avec ses dépendances installées :
+From the repository root, with dependencies installed:
 
 ```powershell
 node docs/lua-5.5.1/tools/capture-baseline.cjs
 node docs/lua-5.5.1/tools/check-docs.cjs
 ```
 
-La première commande actualise les observations et les inventaires ; la seconde
-vérifie les liens locaux, les ancres locales et l'intégrité des références. Aucun
-de ces outils ne certifie la conformité du moteur. Le protocole de certification
-est décrit dans [Validation](06-validation.md).
+The first command refreshes the observations and the inventories; the second
+checks local links, local anchors and the integrity of the references. Neither
+of these tools certifies the conformance of the engine. The certification
+protocol is described in [Validation](06-validation.md).
 
-## Règle de suivi
+## Tracking rule
 
-Un symbole exporté ou une syntaxe reconnue ne suffit pas à valider son contrat.
-Toute exigence passe de « à implémenter / à auditer » à « validée » seulement avec
-des tests comportementaux référencés, un résultat daté et le profil d'exécution.
-Les adaptations JavaScript restent visibles ; elles ne doivent pas être présentées
-comme une conformité à l'ABI native C.
+An exported symbol or a recognized syntax is not enough to validate its contract.
+A requirement moves from "to implement / to audit" to "validated" only with
+referenced behavioral tests, a dated result and the execution profile. JavaScript
+adaptations stay visible; they must not be presented as conformance to the native
+C ABI.

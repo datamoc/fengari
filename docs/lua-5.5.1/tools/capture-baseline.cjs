@@ -98,7 +98,7 @@ function add(symbol, kind, header) {
     const moduleName = symbol.startsWith("luaopen_") || ["luaL_openlibs", "luaL_openselectedlibs"].includes(symbol)
         ? "lualib" : symbol.startsWith("luaL_") ? "lauxlib" : "lua";
     const actual = Object.prototype.hasOwnProperty.call(modules[moduleName], symbol) ? typeof modules[moduleName][symbol] : "absent";
-    const status = kind === "type" ? "contrat-type-a-definir" : actual === "absent" ? "export-absent" : "present-contrat-non-verifie";
+    const status = kind === "type" ? "type-contract-to-define" : actual === "absent" ? "export-absent" : "present-contract-unverified";
     const key = moduleName + ":" + symbol;
     if (!rows.has(key) || kind === "type") rows.set(key, { symbol, kind, module: moduleName, observedType: actual, status, header });
 }
@@ -112,7 +112,7 @@ for (const header of ["lua.h", "lauxlib.h", "lualib.h"]) {
         const moduleName = header === "lualib.h" ? "lualib" : header === "lauxlib.h" ? "lauxlib" : "lua";
         const actual = Object.prototype.hasOwnProperty.call(modules[moduleName], symbol) ? typeof modules[moduleName][symbol] : "absent";
         rows.set(moduleName + ":" + symbol, { symbol, kind: "constant-or-build-macro", module: moduleName, observedType: actual,
-            status: actual === "absent" ? "export-ou-adaptation-a-auditer" : "present-contrat-non-verifie", header });
+            status: actual === "absent" ? "export-or-adaptation-to-audit" : "present-contract-unverified", header });
     }
 }
 for (const symbol of anchors.filter(anchor => /^(lua_|luaL_|luaopen_)/.test(anchor))) {
@@ -122,37 +122,37 @@ for (const symbol of anchors.filter(anchor => /^(lua_|luaL_|luaopen_)/.test(anch
 
 const api = [...rows.values()].sort((a, b) => a.module.localeCompare(b.module) || a.symbol.localeCompare(b.symbol));
 const contextEntries = anchors.filter(anchor => /^pdf-(?:LUA|lua\.h)/.test(anchor)).map(anchor => ({
-    symbol: anchor.slice(4), status: "configuration-environnement-ou-constante-a-auditer"
+    symbol: anchor.slice(4), status: "environment-or-configuration-constant-to-audit"
 }));
 const library = anchors.filter(anchor => anchor.startsWith("pdf-") && !/^pdf-(?:LUA|lua\.h)/.test(anchor)).map(anchor => {
     const symbol = anchor.slice(4);
-    if (symbol.includes(":")) return { symbol, status: "fixture-fichier-requise", observed: null };
-    return { symbol, status: "contrat-non-verifie", observed: evaluate(`return type(${symbol})`) };
+    if (symbol.includes(":")) return { symbol, status: "file-fixture-required", observed: null };
+    return { symbol, status: "contract-unverified", observed: evaluate(`return type(${symbol})`) };
 }).sort((a, b) => a.symbol.localeCompare(b.symbol));
 fs.writeFileSync(path.join(directory, "inventaire-api.json"), JSON.stringify({ capturedAt: observations.capturedAt,
     note: "Presence is not semantic conformance; header macros include build-only contracts to classify explicitly.", api, library, contextEntries }, null, 2) + "\n");
 
-const lines = ["# Inventaire des API Lua 5.5.1", "", `Capture : ${observations.capturedAt}.`, "",
-    "Généré depuis les en-têtes et ancres du manuel livré avec 5.5.1, rapprochés du worktree actuel.",
-    "**La présence d'un export ne valide pas son contrat.** Les macros de configuration/build et types C demandent une classification explicite, pas forcément un export JS.", "",
-    "Les méthodes de fichiers exigent une fixture de fichier. Les autres entrées de bibliothèques sont sondées sous Node uniquement : leur type ne valide pas leur comportement ni leur disponibilité navigateur.", "",
-    "Données détaillées : [inventaire-api.json](inventaire-api.json). Actualisation : `node docs/lua-5.5.1/tools/capture-baseline.cjs`.", "",
-    `## API, types et macros (${api.length} entrées)`, "", "| Symbole | Module JS | Nature | Type observé | Statut | Référence |", "| --- | --- | --- | --- | --- | --- |"];
+const lines = ["# Lua 5.5.1 API inventory", "", `Captured: ${observations.capturedAt}.`, "",
+    "Generated from the headers and manual anchors shipped with 5.5.1, matched against the current worktree.",
+    "**The presence of an export does not validate its contract.** Configuration/build macros and C types require an explicit classification, not necessarily a JS export.", "",
+    "File methods require a file fixture. Other library entries are probed under Node only: their type does not validate their behavior nor their browser availability.", "",
+    "Detailed data: [inventaire-api.json](inventaire-api.json). Refresh: `node docs/lua-5.5.1/tools/capture-baseline.cjs`.", "",
+    `## APIs, types and macros (${api.length} entries)`, "", "| Symbol | JS module | Kind | Observed type | Status | Reference |", "| --- | --- | --- | --- | --- | --- |"];
 for (const row of api) {
     const link = anchors.includes(row.symbol) ? `reference/lua-5.5.1/doc/manual.html#${row.symbol}`
         : anchors.includes("pdf-" + row.symbol) ? `reference/lua-5.5.1/doc/manual.html#pdf-${row.symbol}` : `reference/lua-5.5.1/src/${row.header}`;
-    lines.push(`| \`${row.symbol}\` | ${row.module} | ${row.kind} | ${row.observedType} | ${row.status} | [officiel](${link}) |`);
+    lines.push(`| \`${row.symbol}\` | ${row.module} | ${row.kind} | ${row.observedType} | ${row.status} | [official](${link}) |`);
 }
-lines.push("", `## Bibliothèques standard (${library.length} entrées documentées)`, "", "| Entrée | Type observé / état | Référence |", "| --- | --- | --- |");
+lines.push("", `## Standard libraries (${library.length} documented entries)`, "", "| Entry | Observed type / status | Reference |", "| --- | --- | --- |");
 for (const row of library) {
     const value = row.observed?.values?.[0]?.value || row.status;
-    lines.push(`| \`${row.symbol}\` | ${value} — ${row.status} | [officiel](reference/lua-5.5.1/doc/manual.html#pdf-${row.symbol}) |`);
+    lines.push(`| \`${row.symbol}\` | ${value} — ${row.status} | [official](reference/lua-5.5.1/doc/manual.html#pdf-${row.symbol}) |`);
 }
-lines.push("", "Chaque ligne doit ensuite recevoir ses tests de contrat, le résultat oracle/JS et son profil, selon [Validation](06-validation.md).", "");
-lines.push(`## Constantes, environnement et configuration documentés (${contextEntries.length} entrées)`, "",
-    "Les constantes peuvent également apparaître dans l'inventaire des en-têtes. Les variables d'environnement et options de compilation ne sont pas des fonctions de bibliothèque.", "",
-    "| Entrée | Statut | Référence |", "| --- | --- | --- |");
-for (const row of contextEntries) lines.push(`| \`${row.symbol}\` | ${row.status} | [officiel](reference/lua-5.5.1/doc/manual.html#pdf-${row.symbol}) |`);
+lines.push("", "Each row must then receive its contract tests, the oracle/JS result and its profile, per [Validation](06-validation.md).", "");
+lines.push(`## Documented constants, environment and configuration (${contextEntries.length} entries)`, "",
+    "Constants may also appear in the header inventory. Environment variables and compilation options are not library functions.", "",
+    "| Entry | Status | Reference |", "| --- | --- | --- |");
+for (const row of contextEntries) lines.push(`| \`${row.symbol}\` | ${row.status} | [official](reference/lua-5.5.1/doc/manual.html#pdf-${row.symbol}) |`);
 lines.push("");
 fs.writeFileSync(path.join(directory, "inventaire-api.md"), lines.join("\n"));
 console.log(JSON.stringify({ probes: probes.length, apiEntries: api.length, libraryEntries: library.length, capturedAt: observations.capturedAt }));

@@ -1,54 +1,55 @@
-# Avancement vérifié
+# Verified progress
 
-État au 10 octobre 2026. L'objectif reste l'ensemble de Lua 5.5.1 décrit dans ce
-dossier. Aucun des grands lots M0–M9 n'est déclaré entièrement terminé.
+State as of October 10, 2026. The goal remains the whole of Lua 5.5.1 described
+in this folder. None of the major lots M0–M9 is declared fully complete.
 
-## Oracle et comparaison
+## Oracle and comparison
 
-`tools/lua55/build-oracle.cjs` vérifie l'archive officielle et compile les profils
-int64/double et int32/double. Le second change uniquement le type entier par
-défaut ; il ne sélectionne pas `LUA_32BITS`, qui changerait aussi les flottants.
-Les deux exécutables annoncent Lua 5.5.1 ; leurs manifests enregistrent les
-empreintes, le compilateur et les tailles numériques.
+`tools/lua55/build-oracle.cjs` verifies the official archive and compiles the
+int64/double and int32/double profiles. The second only changes the default
+integer type; it does not select `LUA_32BITS`, which would also change the
+floats. Both executables report Lua 5.5.1; their manifests record the
+checksums, the compiler and the numeric sizes.
 
-Le corpus différentiel couvre les résultats scalaires, leurs types et leur nombre,
-les rejets à la compilation et les erreurs d'exécution. Les traces des effets
-doivent être renvoyées explicitement. Voir les rapports
-[int32](differential-int32.json) et [int64](differential-int64.json), avec la source
-de chaque cas et les résultats des deux moteurs. La comparaison int64 reste utile
-pour la cible, mais le profil numérique actuel de Fengari est int32/double.
+The differential corpus covers scalar results, their types and count,
+compilation rejections and run-time errors. Traces of effects must be returned
+explicitly. See the [int32](differential-int32.json) and [int64](differential-int64.json)
+reports, with the source of each case and the results of both engines. The int64
+comparison remains useful for the target, but the current numeric profile of
+Fengari is int32/double.
 
-Résultat actuel : **60 cas**, dont **46 concordances / 14 écarts** avec le profil
-int32 et **38 concordances / 22 écarts** avec le profil int64. Les huit cas de
-profil, grandes valeurs, wrap, comparaisons mixtes, clés de table, shifts, pack et
-division/modulo concordent en int32 et exposent tous un écart en int64. Ce corpus
-sert de point de départ à M1 ; il n'est pas une mesure de couverture globale.
+Current result: **60 cases**, of which **46 matches / 14 differences** with the
+int32 profile and **38 matches / 22 differences** with the int64 profile. The
+eight profile cases — large values, wrap, mixed comparisons, table keys, shifts,
+pack and division/modulo — match in int32 and all expose a difference in int64.
+This corpus serves as a starting point for M1; it is not a measure of overall
+coverage.
 
-La première exécution de la suite officielle portable complète sur l'oracle
-Windows (`lua -e '_U=true' all.lua`) a échoué dans `files.lua:467` lors de
-l'ouverture de `/dev/null`. Le bloc suivant utilise aussi `/dev/full`. C'est une
-dépendance aux périphériques POSIX, pas une réussite de la suite portable.
-Le log local est `.lua55-build/tests/oracle-portable.log`. Une exécution sur un
-hôte POSIX ou une adaptation séparée des tests de périphériques reste nécessaire.
+The first run of the full official portable suite on the Windows oracle
+(`lua -e '_U=true' all.lua`) failed in `files.lua:467` when opening `/dev/null`.
+The following block also uses `/dev/full`. This is a dependency on POSIX
+devices, not a pass of the portable suite. The local log is
+`.lua55-build/tests/oracle-portable.log`. A run on a POSIX host or a separate
+adaptation of the device tests remains necessary.
 
-## Contrats portés
+## Contracts ported
 
-| Contrat | Changement | Preuve | Limites restantes |
+| Contract | Change | Evidence | Remaining limits |
 | --- | --- | --- | --- |
-| UTF-8 | Décodage strict/laxiste, rejet des surrogates en strict, encodage jusqu'à `0x7fffffff`, itérateurs, charpattern et deux résultats de offset | Suite officielle `utf8.lua` comparée aux deux profils ; fixtures et tests JS | Déclaration global retirée uniquement côté JS ; profil numérique et autres environnements à valider |
-| Échappements UTF-8 | Lexer et encodeur partagent la limite 31 bits ; overflow vérifié avant le shift | Suite UTF-8 officielle, fixtures overflow et tests literals | Reste du lexer et de la grammaire non porté |
-| table.create | Table neuve vide ; paramètres entiers et capacités entre 0 et INT_MAX | Fixtures nominales, défauts, coercition et erreurs ; tests JS | Capacités utilisées comme hints par l'API JS existante ; bibliothèque table entière à auditer |
-| Bibliothèques sélectionnées | Masques officiels, load prioritaire sur preload, ordre officiel, conservation de la pile et registration dans preload | Tests API pour pile, globals, registry et require | IO indisponible sans services Node ; comparaison API C et navigateur à compléter |
-| Objet d'erreur nil | Remplacé par `<no error object>` après le handler ; autres objets préservés | Fixtures différentielles, xpcall, assert, identité et appel hôte lua_error | Fermeture, continuations et autres contrats d'erreur restent à porter |
+| UTF-8 | Strict/lenient decoding, surrogates rejected in strict, encoding up to `0x7fffffff`, iterators, charpattern and two offset results | Official `utf8.lua` suite compared on both profiles; fixtures and JS tests | Global declaration removed on the JS side only; numeric profile and other environments to validate |
+| UTF-8 escapes | Lexer and encoder share the 31-bit limit; overflow checked before the shift | Official UTF-8 suite, overflow fixtures and literals tests | Rest of the lexer and grammar not ported |
+| table.create | Fresh empty table; integer parameters and capacities between 0 and INT_MAX | Nominal fixtures, defaults, coercion and errors; JS tests | Capacities used as hints by the existing JS API; whole table library to audit |
+| Selected libraries | Official masks, load takes precedence over preload, official order, stack preserved and registration in preload | API tests for stack, globals, registry and require | IO unavailable without Node services; C API and browser comparison to complete |
+| nil error object | Replaced by `<no error object>` after the handler; other objects preserved | Differential fixtures, xpcall, assert, identity and host lua_error call | Closing, continuations and other error contracts remain to port |
 
-`luaL_openlibs` continue à charger l'extension Fengari après les bibliothèques
-standard. `luaL_openselectedlibs` sélectionne seulement les bibliothèques
-standard. Le numéro de version et le format binaire n'ont pas été changés pour
-faire croire que la VM est déjà migrée.
+`luaL_openlibs` keeps loading the Fengari extension after the standard
+libraries. `luaL_openselectedlibs` selects only the standard libraries. The
+version number and the binary format were not changed to make the VM look
+already migrated.
 
-## Commandes de validation
+## Validation commands
 
-Depuis la racine, après compilation des oracles :
+From the root, after compiling the oracles:
 
 ```powershell
 node tools/lua55/differential.cjs --report-only
@@ -59,21 +60,21 @@ node docs/lua-5.5.1/tools/capture-baseline.cjs
 node docs/lua-5.5.1/tools/check-docs.cjs
 ```
 
-Les tests historiques dont les attentes étaient propres à Lua 5.3 ont été
-actualisés selon 5.5.1 : limite UTF-8, diagnostics de bornes et objets d'erreur nil.
-Les contrôles d'erreur sont conservés. Le lint du code modifié passe avec
-`no-undef` activé et la règle de fins de ligne désactivée pour les CRLF du worktree.
+Historical tests whose expectations were specific to Lua 5.3 were updated for
+5.5.1: UTF-8 limit, boundary diagnostics and nil error objects. The error
+checks are kept. The lint of the changed code passes with `no-undef` enabled and
+the line-ending rule disabled for the CRLF of the worktree.
 
-Dernière exécution complète : **43 suites réussies, 635 tests réussis, 21 ignorés,
-656 au total**, aucun échec. La suite UTF-8 officielle conserve toutes ses
-assertions et passe sur Fengari avec l'adaptation déclarée ainsi que sur les deux
-oracles sans adaptation. Le test de graphe des imports passe dans la suite complète.
+Last full run: **43 suites passed, 635 tests passed, 21 skipped, 656 total**,
+no failure. The official UTF-8 suite keeps all its assertions and passes on
+Fengari with the declared adaptation as well as on both oracles without
+adaptation. The import graph test passes in the full suite.
 
-## Travail restant
+## Remaining work
 
-M1 doit porter le profil numérique 64 bits et ses conversions hôtes ; M2 doit
-porter ensemble instructions, prototypes, émission et chunks binaires. Les
-déclarations globales, attributs, varargs nommés et boucles readonly restent en
-écart. La fermeture des ressources et coroutines, le GC logique, les nouvelles
-API et le reste des bibliothèques doivent ensuite recevoir leurs implémentations
-et preuves. Les réussites ci-dessus ne ferment pas ces exigences.
+M1 must port the 64-bit numeric profile and its host conversions; M2 must port
+instructions, prototypes, emission and binary chunks together. Global
+declarations, attributes, named varargs and readonly loops remain off target.
+Resource and coroutine closing, logical GC, the new APIs and the rest of the
+libraries must then receive their implementations and evidence. The successes
+above do not close these requirements.

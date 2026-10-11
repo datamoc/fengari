@@ -1,23 +1,23 @@
-# Références et provenance
+# References and provenance
 
-## Référence normative
+## Normative reference
 
-La cible est le manuel **livré dans la distribution 5.5.1**, conservé localement.
-Le [manuel en ligne](https://www.lua.org/manual/5.5/manual.html) peut recevoir des
-corrections ; une modification de référence doit être datée et expliquée.
+The target is the manual **shipped in the 5.5.1 distribution**, kept locally.
+The [online manual](https://www.lua.org/manual/5.5/manual.html) may receive
+corrections; a change of reference must be dated and explained.
 
-| Source officielle | Copie locale | Rôle |
+| Official source | Local copy | Role |
 | --- | --- | --- |
-| [Distribution 5.5.1](https://www.lua.org/ftp/lua-5.5.1.tar.gz) | [Archive](reference/lua-5.5.1.tar.gz) | Source exacte du portage, manuel et en-têtes |
-| [Manuel 5.5](https://www.lua.org/manual/5.5/manual.html) | [Manuel figé](reference/lua-5.5.1/doc/manual.html) | Syntaxe, sémantique, bibliothèques et contrats de l'API |
-| [Notes 5.5](https://www.lua.org/manual/5.5/readme.html) | [Notes figées](reference/lua-5.5.1/doc/readme.html) | Nouveautés et instructions de compilation |
-| [Tests 5.5.1](https://www.lua.org/tests/lua-5.5.1-tests.tar.gz) | [Archive de tests](reference/lua-5.5.1-tests.tar.gz) | Tests de la version exacte |
-| [Instructions des tests](https://www.lua.org/tests/) | Protocole résumé dans [Validation](06-validation.md) | Modes portable, complet et interne |
-| [Téléchargements](https://www.lua.org/download.html) | Empreintes dans [manifest.json](reference/manifest.json) | Version publiée et vérification de provenance |
-| [Historique des anomalies](https://www.lua.org/bugs.html) | Pas de copie figée | Vérifier les anomalies connues, sans changer silencieusement la cible |
+| [5.5.1 distribution](https://www.lua.org/ftp/lua-5.5.1.tar.gz) | [Archive](reference/lua-5.5.1.tar.gz) | Exact source of the port, manual and headers |
+| [5.5 manual](https://www.lua.org/manual/5.5/manual.html) | [Frozen manual](reference/lua-5.5.1/doc/manual.html) | Syntax, semantics, libraries and API contracts |
+| [5.5 notes](https://www.lua.org/manual/5.5/readme.html) | [Frozen notes](reference/lua-5.5.1/doc/readme.html) | New features and build instructions |
+| [5.5.1 tests](https://www.lua.org/tests/lua-5.5.1-tests.tar.gz) | [Test archive](reference/lua-5.5.1-tests.tar.gz) | Tests of the exact version |
+| [Test instructions](https://www.lua.org/tests/) | Protocol summarized in [Validation](06-validation.md) | Portable, complete and internal modes |
+| [Downloads](https://www.lua.org/download.html) | Checksums in [manifest.json](reference/manifest.json) | Published version and provenance verification |
+| [Bug history](https://www.lua.org/bugs.html) | No frozen copy | Check known bugs, without silently changing the target |
 
-Les deux archives ont été téléchargées le 10 octobre 2026. Leur SHA-256 a été
-comparé aux valeurs publiées sur les pages officielles :
+The two archives were downloaded on October 10, 2026. Their SHA-256 was
+compared against the values published on the official pages:
 
 ```text
 lua-5.5.1.tar.gz
@@ -27,34 +27,34 @@ lua-5.5.1-tests.tar.gz
 da07b543872dc0bb2ff12aabd0c248578d78df3eb6b67efdc537a46d455c7f31
 ```
 
-## Lire le code de référence
+## Reading the reference code
 
-Les fichiers ci-dessous sont sous `lua-5.5.1/src/` dans l'archive officielle.
+The files below are under `lua-5.5.1/src/` in the official archive.
 
-| Domaine | Sources C à comparer |
+| Area | C sources to compare |
 | --- | --- |
-| Lexer, portée, déclarations, émission | `llex.c`, `lparser.c`, `lcode.c`, `lopcodes.h`, `lopcodes.c` |
-| Instructions, opérateurs et appels | `lvm.c`, `ldo.c`, `ltm.c` |
-| Valeurs, fonctions, états | `lobject.h`, `lobject.c`, `lfunc.c`, `lstate.h`, `lstate.c` |
-| Tables, chaînes et mémoire | `ltable.c`, `lstring.c`, `lgc.c`, `lmem.c` |
-| API et diagnostics | `lapi.c`, `lua.h`, `ldebug.c`, `ldebug.h` |
-| Chunks binaires | `ldump.c`, `lundump.c`, `lundump.h` |
-| Bibliothèque auxiliaire | `lauxlib.c`, `lauxlib.h` |
-| Bibliothèques standard | `lbaselib.c`, `lcorolib.c`, `ldblib.c`, `liolib.c`, `lmathlib.c`, `loadlib.c`, `loslib.c`, `lstrlib.c`, `ltablib.c`, `lutf8lib.c`, `linit.c`, `lualib.h` |
-| Interpréteur et compilateur autonomes | `lua.c`, `luac.c`, `Makefile`, `luaconf.h` |
+| Lexer, scopes, declarations, code emission | `llex.c`, `lparser.c`, `lcode.c`, `lopcodes.h`, `lopcodes.c` |
+| Instructions, operators and calls | `lvm.c`, `ldo.c`, `ltm.c` |
+| Values, functions, states | `lobject.h`, `lobject.c`, `lfunc.c`, `lstate.h`, `lstate.c` |
+| Tables, strings and memory | `ltable.c`, `lstring.c`, `lgc.c`, `lmem.c` |
+| API and diagnostics | `lapi.c`, `lua.h`, `ldebug.c`, `ldebug.h` |
+| Binary chunks | `ldump.c`, `lundump.c`, `lundump.h` |
+| Auxiliary library | `lauxlib.c`, `lauxlib.h` |
+| Standard libraries | `lbaselib.c`, `lcorolib.c`, `ldblib.c`, `liolib.c`, `lmathlib.c`, `loadlib.c`, `loslib.c`, `lstrlib.c`, `ltablib.c`, `lutf8lib.c`, `linit.c`, `lualib.h` |
+| Standalone interpreter and compiler | `lua.c`, `luac.c`, `Makefile`, `luaconf.h` |
 
-Le portage doit partir de ces fichiers **5.5.1**, et non des pages de sources 5.3
-ou 5.4 ni d'une branche Git non figée. Les tests historiques du dépôt restent des
-tests de régression ; ils ne remplacent pas la suite 5.5.1.
+The port must start from these **5.5.1** files, not from the 5.3 or 5.4 source
+pages nor from an unfrozen Git branch. The repository's historical tests remain
+regression tests; they do not replace the 5.5.1 suite.
 
-## Licence et intégrité
+## License and integrity
 
-Lua est distribué sous une licence permissive de type MIT. Le texte de licence
-complet est conservé dans [lua.h](reference/lua-5.5.1/src/lua.h) et dans
-[readme.html](reference/lua-5.5.1/doc/readme.html). Les mentions originales ne sont
-pas supprimées. Les archives officielles sont conservées sans modification.
+Lua is distributed under a permissive MIT-style license. The full license text
+is kept in [lua.h](reference/lua-5.5.1/src/lua.h) and in
+[readme.html](reference/lua-5.5.1/doc/readme.html). The original notices are
+not removed. The official archives are kept unmodified.
 
-Le manifest enregistre la taille, l'empreinte et l'origine des archives ainsi que
-l'empreinte de chaque fichier extrait. Ne pas éditer les copies de référence pour
-faire correspondre le manuel au comportement du port JS : les adaptations et les
-écarts se documentent dans les fichiers de travail.
+The manifest records the size, checksum and origin of the archives, as well as
+the checksum of every extracted file. Do not edit the reference copies to make
+the manual match the behavior of the JS port: adaptations and deviations are
+documented in the working files.

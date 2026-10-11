@@ -7,7 +7,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -15,7 +15,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "object",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -23,7 +23,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lauxlib.h"
     },
     {
@@ -31,7 +31,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "object",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -39,7 +39,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -47,7 +47,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "object",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -55,7 +55,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -63,7 +63,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -71,7 +71,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -79,7 +79,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -87,7 +87,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -95,7 +95,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -103,7 +103,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -119,7 +119,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -127,7 +127,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -135,7 +135,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -143,7 +143,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -151,7 +151,7 @@
       "kind": "type",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -159,7 +159,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -167,7 +167,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -175,7 +175,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -183,7 +183,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -191,7 +191,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -199,7 +199,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -207,7 +207,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -215,7 +215,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -223,7 +223,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -231,7 +231,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -239,7 +239,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -247,7 +247,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -255,7 +255,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -263,7 +263,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -271,7 +271,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -279,7 +279,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -287,7 +287,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -295,7 +295,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -303,7 +303,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -311,7 +311,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -319,7 +319,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -327,7 +327,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -335,7 +335,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -343,7 +343,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -351,7 +351,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -359,7 +359,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -367,7 +367,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -375,7 +375,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -383,7 +383,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -391,7 +391,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -399,7 +399,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -407,7 +407,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -415,7 +415,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -423,7 +423,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -431,7 +431,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -439,7 +439,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -447,7 +447,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -455,7 +455,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -463,7 +463,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -471,7 +471,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -479,7 +479,7 @@
       "kind": "constant-or-build-macro",
       "module": "lauxlib",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lauxlib.h"
     },
     {
@@ -487,7 +487,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -495,7 +495,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -503,7 +503,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -511,7 +511,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -519,7 +519,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -527,7 +527,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -535,7 +535,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -543,7 +543,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -551,7 +551,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -559,7 +559,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -567,7 +567,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -575,7 +575,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -583,7 +583,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -591,7 +591,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -599,7 +599,7 @@
       "kind": "type",
       "module": "lauxlib",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -607,7 +607,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -615,7 +615,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -623,7 +623,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -631,7 +631,7 @@
       "kind": "type",
       "module": "lauxlib",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -639,7 +639,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -647,7 +647,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -655,7 +655,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -663,7 +663,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -671,7 +671,7 @@
       "kind": "macro-function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -679,7 +679,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -687,7 +687,7 @@
       "kind": "function",
       "module": "lauxlib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lauxlib.h"
     },
     {
@@ -695,7 +695,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -703,7 +703,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -711,7 +711,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -719,7 +719,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -727,7 +727,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -735,7 +735,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -743,7 +743,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -751,7 +751,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -759,7 +759,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -767,7 +767,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -775,7 +775,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -791,7 +791,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -799,7 +799,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -807,7 +807,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -815,7 +815,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -823,7 +823,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -831,7 +831,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "function",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -839,7 +839,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -847,7 +847,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -855,7 +855,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -863,7 +863,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -871,7 +871,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -879,7 +879,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -887,7 +887,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -895,7 +895,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -903,7 +903,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -911,7 +911,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -919,7 +919,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -927,7 +927,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -935,7 +935,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -943,7 +943,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -951,7 +951,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -959,7 +959,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -967,7 +967,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -975,7 +975,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -983,7 +983,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -991,7 +991,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -999,7 +999,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1007,7 +1007,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1015,7 +1015,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1023,7 +1023,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1031,7 +1031,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1039,7 +1039,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1047,7 +1047,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1055,7 +1055,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1063,7 +1063,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1071,7 +1071,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1079,7 +1079,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1087,7 +1087,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1095,7 +1095,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1111,7 +1111,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1119,7 +1119,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1127,7 +1127,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1135,7 +1135,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1143,7 +1143,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1151,7 +1151,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1159,7 +1159,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1167,7 +1167,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1175,7 +1175,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1183,7 +1183,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1191,7 +1191,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1199,7 +1199,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1207,7 +1207,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1215,7 +1215,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1223,7 +1223,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1231,7 +1231,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1239,7 +1239,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1247,7 +1247,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1255,7 +1255,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1263,7 +1263,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1271,7 +1271,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1279,7 +1279,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1287,7 +1287,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1295,7 +1295,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1303,7 +1303,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1311,7 +1311,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1319,7 +1319,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1327,7 +1327,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1335,7 +1335,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1343,7 +1343,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1351,7 +1351,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1359,7 +1359,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1367,7 +1367,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1375,7 +1375,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1383,7 +1383,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1391,7 +1391,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1399,7 +1399,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1407,7 +1407,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1415,7 +1415,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1423,7 +1423,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1431,7 +1431,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1439,7 +1439,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1447,7 +1447,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1455,7 +1455,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1471,7 +1471,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1479,7 +1479,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1503,7 +1503,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -1511,7 +1511,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1519,7 +1519,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1527,7 +1527,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1535,7 +1535,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1543,7 +1543,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1551,7 +1551,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1559,7 +1559,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1567,7 +1567,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1575,7 +1575,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1583,7 +1583,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1591,7 +1591,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1599,7 +1599,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1607,7 +1607,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1615,7 +1615,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1623,7 +1623,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1631,7 +1631,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1639,7 +1639,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1647,7 +1647,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1655,7 +1655,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1663,7 +1663,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1671,7 +1671,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1679,7 +1679,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1687,7 +1687,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1695,7 +1695,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1711,7 +1711,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1719,7 +1719,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1727,7 +1727,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1735,7 +1735,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1743,7 +1743,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1751,7 +1751,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1759,7 +1759,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1767,7 +1767,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1775,7 +1775,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1783,7 +1783,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1791,7 +1791,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1799,7 +1799,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1807,7 +1807,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1815,7 +1815,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1823,7 +1823,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1831,7 +1831,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1839,7 +1839,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1847,7 +1847,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1855,7 +1855,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1863,7 +1863,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1871,7 +1871,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -1879,7 +1879,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1887,7 +1887,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1895,7 +1895,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1903,7 +1903,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1911,7 +1911,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1919,7 +1919,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1927,7 +1927,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1935,7 +1935,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1943,7 +1943,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1951,7 +1951,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1959,7 +1959,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1967,7 +1967,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1975,7 +1975,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1983,7 +1983,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1991,7 +1991,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -1999,7 +1999,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2015,7 +2015,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2023,7 +2023,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2031,7 +2031,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2039,7 +2039,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2047,7 +2047,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2055,7 +2055,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2071,7 +2071,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "object",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2079,7 +2079,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -2087,7 +2087,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2095,7 +2095,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2103,7 +2103,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2111,7 +2111,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2119,7 +2119,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2127,7 +2127,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2135,7 +2135,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2143,7 +2143,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2151,7 +2151,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2159,7 +2159,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2175,7 +2175,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2183,7 +2183,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2191,7 +2191,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2199,7 +2199,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2207,7 +2207,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2215,7 +2215,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2223,7 +2223,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2231,7 +2231,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2239,7 +2239,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2247,7 +2247,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2255,7 +2255,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2263,7 +2263,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2271,7 +2271,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2279,7 +2279,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2287,7 +2287,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2295,7 +2295,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -2303,7 +2303,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2311,7 +2311,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2319,7 +2319,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2327,7 +2327,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2335,7 +2335,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2343,7 +2343,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2351,7 +2351,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2359,7 +2359,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2367,7 +2367,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2375,7 +2375,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2383,7 +2383,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2391,7 +2391,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2399,7 +2399,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2407,7 +2407,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -2423,7 +2423,7 @@
       "kind": "type",
       "module": "lua",
       "observedType": "absent",
-      "status": "contrat-type-a-definir",
+      "status": "type-contract-to-define",
       "header": "manual.html"
     },
     {
@@ -2431,7 +2431,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2439,7 +2439,7 @@
       "kind": "macro-function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2447,7 +2447,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2455,7 +2455,7 @@
       "kind": "function",
       "module": "lua",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lua.h"
     },
     {
@@ -2463,7 +2463,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2471,7 +2471,7 @@
       "kind": "constant-or-build-macro",
       "module": "lua",
       "observedType": "absent",
-      "status": "export-ou-adaptation-a-auditer",
+      "status": "export-or-adaptation-to-audit",
       "header": "lua.h"
     },
     {
@@ -2479,7 +2479,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2487,7 +2487,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2495,7 +2495,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2503,7 +2503,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2511,7 +2511,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2519,7 +2519,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2527,7 +2527,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2535,7 +2535,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2543,7 +2543,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2551,7 +2551,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2559,7 +2559,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2567,7 +2567,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2575,7 +2575,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2583,7 +2583,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2591,7 +2591,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2599,7 +2599,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2607,7 +2607,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2615,7 +2615,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "number",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2623,7 +2623,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2631,7 +2631,7 @@
       "kind": "constant-or-build-macro",
       "module": "lualib",
       "observedType": "string",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2639,7 +2639,7 @@
       "kind": "macro-function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2647,7 +2647,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2655,7 +2655,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2663,7 +2663,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2671,7 +2671,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2679,7 +2679,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2687,7 +2687,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2695,7 +2695,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2703,7 +2703,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2711,7 +2711,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2719,7 +2719,7 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     },
     {
@@ -2727,14 +2727,14 @@
       "kind": "function",
       "module": "lualib",
       "observedType": "function",
-      "status": "present-contrat-non-verifie",
+      "status": "present-contract-unverified",
       "header": "lualib.h"
     }
   ],
   "library": [
     {
       "symbol": "_G",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2748,7 +2748,7 @@
     },
     {
       "symbol": "_PROMPT",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2762,7 +2762,7 @@
     },
     {
       "symbol": "_PROMPT2",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2776,7 +2776,7 @@
     },
     {
       "symbol": "_VERSION",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2790,7 +2790,7 @@
     },
     {
       "symbol": "assert",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2804,7 +2804,7 @@
     },
     {
       "symbol": "collectgarbage",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2818,7 +2818,7 @@
     },
     {
       "symbol": "coroutine",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2832,7 +2832,7 @@
     },
     {
       "symbol": "coroutine.close",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2846,7 +2846,7 @@
     },
     {
       "symbol": "coroutine.create",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2860,7 +2860,7 @@
     },
     {
       "symbol": "coroutine.isyieldable",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2874,7 +2874,7 @@
     },
     {
       "symbol": "coroutine.resume",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2888,7 +2888,7 @@
     },
     {
       "symbol": "coroutine.running",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2902,7 +2902,7 @@
     },
     {
       "symbol": "coroutine.status",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2916,7 +2916,7 @@
     },
     {
       "symbol": "coroutine.wrap",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2930,7 +2930,7 @@
     },
     {
       "symbol": "coroutine.yield",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2944,7 +2944,7 @@
     },
     {
       "symbol": "debug",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2958,7 +2958,7 @@
     },
     {
       "symbol": "debug.debug",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2972,7 +2972,7 @@
     },
     {
       "symbol": "debug.gethook",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -2986,7 +2986,7 @@
     },
     {
       "symbol": "debug.getinfo",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3000,7 +3000,7 @@
     },
     {
       "symbol": "debug.getlocal",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3014,7 +3014,7 @@
     },
     {
       "symbol": "debug.getmetatable",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3028,7 +3028,7 @@
     },
     {
       "symbol": "debug.getregistry",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3042,7 +3042,7 @@
     },
     {
       "symbol": "debug.getupvalue",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3056,7 +3056,7 @@
     },
     {
       "symbol": "debug.getuservalue",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3070,7 +3070,7 @@
     },
     {
       "symbol": "debug.sethook",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3084,7 +3084,7 @@
     },
     {
       "symbol": "debug.setlocal",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3098,7 +3098,7 @@
     },
     {
       "symbol": "debug.setmetatable",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3112,7 +3112,7 @@
     },
     {
       "symbol": "debug.setupvalue",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3126,7 +3126,7 @@
     },
     {
       "symbol": "debug.setuservalue",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3140,7 +3140,7 @@
     },
     {
       "symbol": "debug.traceback",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3154,7 +3154,7 @@
     },
     {
       "symbol": "debug.upvalueid",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3168,7 +3168,7 @@
     },
     {
       "symbol": "debug.upvaluejoin",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3182,7 +3182,7 @@
     },
     {
       "symbol": "dofile",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3196,7 +3196,7 @@
     },
     {
       "symbol": "error",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3210,42 +3210,42 @@
     },
     {
       "symbol": "file:close",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:flush",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:lines",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:read",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:seek",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:setvbuf",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "file:write",
-      "status": "fixture-fichier-requise",
+      "status": "file-fixture-required",
       "observed": null
     },
     {
       "symbol": "getmetatable",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3259,7 +3259,7 @@
     },
     {
       "symbol": "io",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3273,7 +3273,7 @@
     },
     {
       "symbol": "io.close",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3287,7 +3287,7 @@
     },
     {
       "symbol": "io.flush",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3301,7 +3301,7 @@
     },
     {
       "symbol": "io.input",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3315,7 +3315,7 @@
     },
     {
       "symbol": "io.lines",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3329,7 +3329,7 @@
     },
     {
       "symbol": "io.open",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3343,7 +3343,7 @@
     },
     {
       "symbol": "io.output",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3357,7 +3357,7 @@
     },
     {
       "symbol": "io.popen",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3371,7 +3371,7 @@
     },
     {
       "symbol": "io.read",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3385,7 +3385,7 @@
     },
     {
       "symbol": "io.stderr",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3399,7 +3399,7 @@
     },
     {
       "symbol": "io.stdin",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3413,7 +3413,7 @@
     },
     {
       "symbol": "io.stdout",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3427,7 +3427,7 @@
     },
     {
       "symbol": "io.tmpfile",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3441,7 +3441,7 @@
     },
     {
       "symbol": "io.type",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3455,7 +3455,7 @@
     },
     {
       "symbol": "io.write",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3469,7 +3469,7 @@
     },
     {
       "symbol": "ipairs",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3483,7 +3483,7 @@
     },
     {
       "symbol": "load",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3497,7 +3497,7 @@
     },
     {
       "symbol": "loadfile",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3511,7 +3511,7 @@
     },
     {
       "symbol": "math",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3525,7 +3525,7 @@
     },
     {
       "symbol": "math.abs",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3539,7 +3539,7 @@
     },
     {
       "symbol": "math.acos",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3553,7 +3553,7 @@
     },
     {
       "symbol": "math.asin",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3567,7 +3567,7 @@
     },
     {
       "symbol": "math.atan",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3581,7 +3581,7 @@
     },
     {
       "symbol": "math.ceil",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3595,7 +3595,7 @@
     },
     {
       "symbol": "math.cos",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3609,7 +3609,7 @@
     },
     {
       "symbol": "math.deg",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3623,7 +3623,7 @@
     },
     {
       "symbol": "math.exp",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3637,7 +3637,7 @@
     },
     {
       "symbol": "math.floor",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3651,7 +3651,7 @@
     },
     {
       "symbol": "math.fmod",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3665,7 +3665,7 @@
     },
     {
       "symbol": "math.frexp",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3679,7 +3679,7 @@
     },
     {
       "symbol": "math.huge",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3693,7 +3693,7 @@
     },
     {
       "symbol": "math.ldexp",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3707,7 +3707,7 @@
     },
     {
       "symbol": "math.log",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3721,7 +3721,7 @@
     },
     {
       "symbol": "math.max",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3735,7 +3735,7 @@
     },
     {
       "symbol": "math.maxinteger",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3749,7 +3749,7 @@
     },
     {
       "symbol": "math.min",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3763,7 +3763,7 @@
     },
     {
       "symbol": "math.mininteger",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3777,7 +3777,7 @@
     },
     {
       "symbol": "math.modf",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3791,7 +3791,7 @@
     },
     {
       "symbol": "math.pi",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3805,7 +3805,7 @@
     },
     {
       "symbol": "math.rad",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3819,7 +3819,7 @@
     },
     {
       "symbol": "math.random",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3833,7 +3833,7 @@
     },
     {
       "symbol": "math.randomseed",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3847,7 +3847,7 @@
     },
     {
       "symbol": "math.sin",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3861,7 +3861,7 @@
     },
     {
       "symbol": "math.sqrt",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3875,7 +3875,7 @@
     },
     {
       "symbol": "math.tan",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3889,7 +3889,7 @@
     },
     {
       "symbol": "math.tointeger",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3903,7 +3903,7 @@
     },
     {
       "symbol": "math.type",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3917,7 +3917,7 @@
     },
     {
       "symbol": "math.ult",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3931,7 +3931,7 @@
     },
     {
       "symbol": "next",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3945,7 +3945,7 @@
     },
     {
       "symbol": "os",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3959,7 +3959,7 @@
     },
     {
       "symbol": "os.clock",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3973,7 +3973,7 @@
     },
     {
       "symbol": "os.date",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -3987,7 +3987,7 @@
     },
     {
       "symbol": "os.difftime",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4001,7 +4001,7 @@
     },
     {
       "symbol": "os.execute",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4015,7 +4015,7 @@
     },
     {
       "symbol": "os.exit",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4029,7 +4029,7 @@
     },
     {
       "symbol": "os.getenv",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4043,7 +4043,7 @@
     },
     {
       "symbol": "os.remove",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4057,7 +4057,7 @@
     },
     {
       "symbol": "os.rename",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4071,7 +4071,7 @@
     },
     {
       "symbol": "os.setlocale",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4085,7 +4085,7 @@
     },
     {
       "symbol": "os.time",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4099,7 +4099,7 @@
     },
     {
       "symbol": "os.tmpname",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4113,7 +4113,7 @@
     },
     {
       "symbol": "package",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4127,7 +4127,7 @@
     },
     {
       "symbol": "package.config",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4141,7 +4141,7 @@
     },
     {
       "symbol": "package.cpath",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4155,7 +4155,7 @@
     },
     {
       "symbol": "package.loaded",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4169,7 +4169,7 @@
     },
     {
       "symbol": "package.loadlib",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4183,7 +4183,7 @@
     },
     {
       "symbol": "package.path",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4197,7 +4197,7 @@
     },
     {
       "symbol": "package.preload",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4211,7 +4211,7 @@
     },
     {
       "symbol": "package.searchers",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4225,7 +4225,7 @@
     },
     {
       "symbol": "package.searchpath",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4239,7 +4239,7 @@
     },
     {
       "symbol": "pairs",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4253,7 +4253,7 @@
     },
     {
       "symbol": "pcall",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4267,7 +4267,7 @@
     },
     {
       "symbol": "print",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4281,7 +4281,7 @@
     },
     {
       "symbol": "rawequal",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4295,7 +4295,7 @@
     },
     {
       "symbol": "rawget",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4309,7 +4309,7 @@
     },
     {
       "symbol": "rawlen",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4323,7 +4323,7 @@
     },
     {
       "symbol": "rawset",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4337,7 +4337,7 @@
     },
     {
       "symbol": "require",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4351,7 +4351,7 @@
     },
     {
       "symbol": "select",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4365,7 +4365,7 @@
     },
     {
       "symbol": "setmetatable",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4379,7 +4379,7 @@
     },
     {
       "symbol": "string",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4393,7 +4393,7 @@
     },
     {
       "symbol": "string.byte",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4407,7 +4407,7 @@
     },
     {
       "symbol": "string.char",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4421,7 +4421,7 @@
     },
     {
       "symbol": "string.dump",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4435,7 +4435,7 @@
     },
     {
       "symbol": "string.find",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4449,7 +4449,7 @@
     },
     {
       "symbol": "string.format",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4463,7 +4463,7 @@
     },
     {
       "symbol": "string.gmatch",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4477,7 +4477,7 @@
     },
     {
       "symbol": "string.gsub",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4491,7 +4491,7 @@
     },
     {
       "symbol": "string.len",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4505,7 +4505,7 @@
     },
     {
       "symbol": "string.lower",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4519,7 +4519,7 @@
     },
     {
       "symbol": "string.match",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4533,7 +4533,7 @@
     },
     {
       "symbol": "string.pack",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4547,7 +4547,7 @@
     },
     {
       "symbol": "string.packsize",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4561,7 +4561,7 @@
     },
     {
       "symbol": "string.rep",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4575,7 +4575,7 @@
     },
     {
       "symbol": "string.reverse",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4589,7 +4589,7 @@
     },
     {
       "symbol": "string.sub",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4603,7 +4603,7 @@
     },
     {
       "symbol": "string.unpack",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4617,7 +4617,7 @@
     },
     {
       "symbol": "string.upper",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4631,7 +4631,7 @@
     },
     {
       "symbol": "table",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4645,7 +4645,7 @@
     },
     {
       "symbol": "table.concat",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4659,7 +4659,7 @@
     },
     {
       "symbol": "table.create",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4673,7 +4673,7 @@
     },
     {
       "symbol": "table.insert",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4687,7 +4687,7 @@
     },
     {
       "symbol": "table.move",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4701,7 +4701,7 @@
     },
     {
       "symbol": "table.pack",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4715,7 +4715,7 @@
     },
     {
       "symbol": "table.remove",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4729,7 +4729,7 @@
     },
     {
       "symbol": "table.sort",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4743,7 +4743,7 @@
     },
     {
       "symbol": "table.unpack",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4757,7 +4757,7 @@
     },
     {
       "symbol": "tonumber",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4771,7 +4771,7 @@
     },
     {
       "symbol": "tostring",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4785,7 +4785,7 @@
     },
     {
       "symbol": "type",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4799,7 +4799,7 @@
     },
     {
       "symbol": "utf8",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4813,7 +4813,7 @@
     },
     {
       "symbol": "utf8.char",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4827,7 +4827,7 @@
     },
     {
       "symbol": "utf8.charpattern",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4841,7 +4841,7 @@
     },
     {
       "symbol": "utf8.codepoint",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4855,7 +4855,7 @@
     },
     {
       "symbol": "utf8.codes",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4869,7 +4869,7 @@
     },
     {
       "symbol": "utf8.len",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4883,7 +4883,7 @@
     },
     {
       "symbol": "utf8.offset",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4897,7 +4897,7 @@
     },
     {
       "symbol": "warn",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4911,7 +4911,7 @@
     },
     {
       "symbol": "xpcall",
-      "status": "contrat-non-verifie",
+      "status": "contract-unverified",
       "observed": {
         "phase": "execution",
         "status": 0,
@@ -4927,363 +4927,363 @@
   "contextEntries": [
     {
       "symbol": "lua.h",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_USE_APICHECK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MINSTACK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TNONE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_REGISTRYINDEX",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_RIDX_MAINTHREAD",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_RIDX_GLOBALS",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_ERRRUN",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_ERRMEM",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_ERRERR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_ERRSYNTAX",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_YIELD",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_ERRFILE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPADD",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPSUB",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPMUL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPDIV",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPIDIV",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPMOD",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPPOW",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPUNM",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPBNOT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPBAND",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPBOR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPBXOR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPSHL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPSHR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MULTRET",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPEQ",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPLT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OPLE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCCOLLECT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCSTOP",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCRESTART",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCCOUNT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCCOUNTB",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCSTEP",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCISRUNNING",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCINC",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCGEN",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPARAM",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPMINORMUL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPMAJORMINOR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPMINORMAJOR",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPPAUSE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPSTEPMUL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GCPSTEPSIZE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MININTEGER",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MAXINTEGER",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_N2SBUFFSZ",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TNIL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TNUMBER",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TBOOLEAN",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TSTRING",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TTABLE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TFUNCTION",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TUSERDATA",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TTHREAD",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TLIGHTUSERDATA",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_HOOKCALL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_HOOKRET",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_HOOKTAILCALL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_HOOKLINE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_HOOKCOUNT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MASKCALL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MASKRET",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MASKLINE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MASKCOUNT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUAL_BUFFERSIZE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_REFNIL",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_NOREF",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_GLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_LOADLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_COLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_STRLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_UTF8LIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_TABLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_MATHLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_IOLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_OSLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_DBLIBK",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_CPATH_5_5",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_CPATH",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_LOADED_TABLE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_PATH_5_5",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_PATH",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_PRELOAD_TABLE",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_INIT_5_5",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     },
     {
       "symbol": "LUA_INIT",
-      "status": "configuration-environnement-ou-constante-a-auditer"
+      "status": "environment-or-configuration-constant-to-audit"
     }
   ]
 }
