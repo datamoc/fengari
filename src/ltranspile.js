@@ -787,7 +787,8 @@ class Gen {
     }
     comment(c) {
         if (c.long) return [`/*${c.text.replace(/\*\//g, '* /')}*/`];
-        return [`//${c.text}`];
+        /* \r, U+2028 and U+2029 end a JS line comment but not a Lua one: without this the rest of the comment would run as code */
+        return [`//${c.text.replace(/[\r\u2028\u2029]/g, ' ')}`];
     }
     indent(lines) {
         return lines.map(l => l ? `    ${l}` : l);

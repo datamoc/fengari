@@ -308,6 +308,18 @@ describe('output shape', () => {
         expect(code).toContain('`v${p.x}!`');
     });
 
+    test('comments cannot break out into code', () => {
+        for (const terminator of ['\r', '\n'.replace('\n', String.fromCharCode(0x2028)), String.fromCharCode(0x2029)]) {
+            const { code } = transpile(`-- harmless${terminator}globalThis.LUA2JS_INJECTED = 1;\nlocal x = 1`, { header: false });
+            delete globalThis.LUA2JS_INJECTED;
+            new Function(code)();
+            expect(globalThis.LUA2JS_INJECTED).toBeUndefined();
+        }
+        const { code } = transpile('--[[ a */ globalThis.LUA2JS_INJECTED = 1; /* ]]\nlocal x = 1', { header: false });
+        new Function(code)();
+        expect(globalThis.LUA2JS_INJECTED).toBeUndefined();
+    });
+
     test('keeps comments and exports for ES modules', () => {
         const { code, exports } = transpile('-- adds\nfunction add(a, b) return a + b end', { format: 'esm', header: false });
         expect(code).toContain('// adds');
