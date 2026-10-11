@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("../isnode.js");
+
 module.exports = function createLoadlib(dependencies) {
     const exports = {};
 
@@ -76,7 +78,7 @@ module.exports = function createLoadlib(dependencies) {
     const { fengari } = dependencies;
 
     const global_env = (function() {
-        if (typeof process !== "undefined") {
+        if (isnode) {
             /* node */
             return global;
         } else if (typeof window !== "undefined") {
@@ -123,7 +125,7 @@ module.exports = function createLoadlib(dependencies) {
     ** error string in the stack.
     */
     let lsys_load;
-    if (typeof process === "undefined") {
+    if (!isnode) {
         lsys_load = function(L, path, seeglb) {
             path = to_uristring(path);
             let xhr = new XMLHttpRequest();
@@ -198,7 +200,7 @@ module.exports = function createLoadlib(dependencies) {
     };
 
     let readable;
-    if (typeof process !== "undefined") { // Only with Node
+    if (isnode) { // Only with Node
         const fs = require('fs');
 
         readable = function(filename) {
@@ -273,7 +275,7 @@ module.exports = function createLoadlib(dependencies) {
     };
 
     const env = (function() {
-        if (typeof process !== "undefined") {
+        if (isnode) {
             /* node */
             return process.env;
         } else {

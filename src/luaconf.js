@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const { conf, LUAI_MAXSTACK } = require('./luaconf-base.js');
 const integer = require('./linteger.js');
 
@@ -37,7 +39,7 @@ module.exports.LUA_EXEC_DIR = LUA_EXEC_DIR;
 const LUA_VDIR = LUA_VERSION_MAJOR + "." + LUA_VERSION_MINOR;
 module.exports.LUA_VDIR = LUA_VDIR;
 
-if (typeof process === "undefined") {
+if (!isnode) {
     const LUA_DIRSEP = "/";
     module.exports.LUA_DIRSEP = LUA_DIRSEP;
 
@@ -58,7 +60,7 @@ if (typeof process === "undefined") {
         LUA_JSDIR + "?.js;" + LUA_JSDIR + "loadall.js;./?.js"
     );
     module.exports.LUA_JSPATH_DEFAULT = LUA_JSPATH_DEFAULT;
-} else if (require('os').platform() === 'win32') {
+} else if (process.platform === 'win32') {
     const LUA_DIRSEP = "\\";
     module.exports.LUA_DIRSEP = LUA_DIRSEP;
 

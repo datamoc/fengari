@@ -1,5 +1,12 @@
 # Changes in Fengari
 
+## Version 0.5.3
+
+### Fixes
+- **Browser bundles**: `luaconf.js` called `require('os').platform()` whenever `process` existed, so a bundler that defines a `process` shim (or that cannot resolve `os`) broke the bundle and forced consumers to write a local shim. Node detection now goes through one module, `src/isnode.js` (`process.versions.node`, which a shim does not have), instead of `typeof process` in 13 places, and `os.platform()` became `process.platform`. A shimmed `process` also used to crash `ldblib.js` at load (`readlineSync.setDefaultOptions is not a function`, since the `readline-sync` stub is empty).
+- **`package.json` `browser` field** maps `fs`, `os`, `path`, `tmp`, `child_process` and `readline-sync` to empty modules, so webpack, esbuild, Vite and Browserify bundle the package for the browser without shims or `resolve.fallback`. Verified with `esbuild --platform=browser`, with and without a `process` shim.
+- **Tests**: `test/browser-compat.test.js` fails if the library requires a Node-only module on the browser path.
+
 ## Version 0.5.2
 
 ### TypeScript

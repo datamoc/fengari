@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const core = require("./fengaricore.js");
 const luaconf = require("./luaconf.js");
 const lua = require("./lua.js");
@@ -36,7 +38,7 @@ lualib.luaopen_debug = loadedlibs[constants.LUA_DBLIBNAME];
 lualib.luaopen_package = loadlib.luaopen_package;
 lualib.luaopen_fengari = loadedlibs[constants.LUA_FENGARILIBNAME];
 
-if (typeof process !== "undefined") {
+if (isnode) {
     lualib.luaopen_io = require("./liolib.js").luaopen_io;
     loadedlibs[constants.LUA_IOLIBNAME] = lualib.luaopen_io;
 }

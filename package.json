@@ -1,9 +1,17 @@
 {
   "name": "@datamoc/fengari",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "A Lua 5.4.6 VM written in JS ES6, targeting the browser and Node.js",
   "main": "src/fengari.js",
   "types": "src/fengari.d.ts",
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false,
+    "tmp": false,
+    "child_process": false,
+    "readline-sync": false
+  },
   "bin": {
     "lua2js": "src/lua2js.js"
   },

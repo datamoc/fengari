@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const {
     LUA_MASKCALL,
     LUA_MASKCOUNT,
@@ -471,7 +473,7 @@ const dblib = {
 };
 
 let getinput;
-if (typeof process !== "undefined") { // Only with Node
+if (isnode) { // Only with Node
     const readlineSync = require('readline-sync');
     readlineSync.setDefaultOptions({
         prompt: 'lua_debug> '

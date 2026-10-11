@@ -18,9 +18,11 @@ const { FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdat
 
 module.exports = Object.assign(fengari, { FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine });
 
-}, {"./library-runtime.js":1,"./fengari-vm.js":48}],
+}, {"./library-runtime.js":1,"./fengari-vm.js":49}],
 1: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const core = require("./fengaricore.js");
 const luaconf = require("./luaconf.js");
@@ -58,7 +60,7 @@ lualib.luaopen_debug = loadedlibs[constants.LUA_DBLIBNAME];
 lualib.luaopen_package = loadlib.luaopen_package;
 lualib.luaopen_fengari = loadedlibs[constants.LUA_FENGARILIBNAME];
 
-if (typeof process !== "undefined") {
+if (isnode) {
     lualib.luaopen_io = require("./liolib.js").luaopen_io;
     loadedlibs[constants.LUA_IOLIBNAME] = lualib.luaopen_io;
 }
@@ -100,8 +102,19 @@ lualib.luaL_openlibs = function(L) {
 
 module.exports = { lualib, loadlib, fengari };
 
-}, {"./fengaricore.js":2,"./luaconf.js":5,"./lua.js":7,"./lauxlib.js":34,"./lualib-constants.js":35,"./runtime/loadlib.js":36,"./lbaselib.js":37,"./lcorolib.js":38,"./ltablib.js":39,"./loslib.js":40,"./lstrlib.js":41,"./lutf8lib.js":43,"./lmathlib.js":44,"./ldblib.js":45,"./fengarilib.js":46,"./liolib.js":47}],
+}, {"./isnode.js":2,"./fengaricore.js":3,"./luaconf.js":6,"./lua.js":8,"./lauxlib.js":35,"./lualib-constants.js":36,"./runtime/loadlib.js":37,"./lbaselib.js":38,"./lcorolib.js":39,"./ltablib.js":40,"./loslib.js":41,"./lstrlib.js":42,"./lutf8lib.js":44,"./lmathlib.js":45,"./ldblib.js":46,"./fengarilib.js":47,"./liolib.js":48}],
 2: [function(require, module, exports) {
+"use strict";
+
+/*
+** True only on a real Node.js (or a runtime that implements process.versions.node).
+** `typeof process` alone is not enough: browser bundlers often define a `process`
+** shim, and the Node-only modules (fs, readline-sync, ...) are empty stubs there.
+*/
+module.exports = typeof process !== "undefined" && process.versions != null && process.versions.node != null;
+
+}, {}],
+3: [function(require, module, exports) {
 /* Fengari specific functions
  *
  * This file includes fengari-specific data or and functionality for users to
@@ -139,8 +152,8 @@ module.exports.to_luastring            = defs.to_luastring;
 module.exports.to_uristring            = defs.to_uristring;
 module.exports.from_userstring         = defs.from_userstring;
 
-}, {"./defs.js":3}],
-3: [function(require, module, exports) {
+}, {"./defs.js":4}],
+4: [function(require, module, exports) {
 "use strict";
 
 /*
@@ -559,8 +572,8 @@ module.exports.lua_Debug               = lua_Debug;
 module.exports.lua_upvalueindex        = lua_upvalueindex;
 module.exports.thread_status           = thread_status;
 
-}, {"./luaconf-base.js":4}],
-4: [function(require, module, exports) {
+}, {"./luaconf-base.js":5}],
+5: [function(require, module, exports) {
 "use strict";
 
 /* Configuration shared by definitions and the platform configuration. */
@@ -572,8 +585,10 @@ module.exports.conf = conf;
 module.exports.LUAI_MAXSTACK = conf.LUAI_MAXSTACK || 1000000;
 
 }, {}],
-5: [function(require, module, exports) {
+6: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const { conf, LUAI_MAXSTACK } = require('./luaconf-base.js');
 const integer = require('./linteger.js');
@@ -612,7 +627,7 @@ module.exports.LUA_EXEC_DIR = LUA_EXEC_DIR;
 const LUA_VDIR = LUA_VERSION_MAJOR + "." + LUA_VERSION_MINOR;
 module.exports.LUA_VDIR = LUA_VDIR;
 
-if (typeof process === "undefined") {
+if (!isnode) {
     const LUA_DIRSEP = "/";
     module.exports.LUA_DIRSEP = LUA_DIRSEP;
 
@@ -633,7 +648,7 @@ if (typeof process === "undefined") {
         LUA_JSDIR + "?.js;" + LUA_JSDIR + "loadall.js;./?.js"
     );
     module.exports.LUA_JSPATH_DEFAULT = LUA_JSPATH_DEFAULT;
-} else if (require('os').platform() === 'win32') {
+} else if (process.platform === 'win32') {
     const LUA_DIRSEP = "\\";
     module.exports.LUA_DIRSEP = LUA_DIRSEP;
 
@@ -792,8 +807,8 @@ module.exports.lua_integer2str        = lua_integer2str;
 module.exports.lua_number2str         = lua_number2str;
 module.exports.lua_numbertointeger    = lua_numbertointeger;
 
-}, {"./luaconf-base.js":4,"./linteger.js":6,"./defs.js":3,"os":-1}],
-6: [function(require, module, exports) {
+}, {"./isnode.js":2,"./luaconf-base.js":5,"./linteger.js":7,"./defs.js":4}],
+7: [function(require, module, exports) {
 "use strict";
 
 const { conf } = require("./luaconf-base.js");
@@ -857,8 +872,8 @@ function shift(a, count) {
 module.exports = { BITS, SIZE: BITS / 8, MIN, MAX, canonical, isInteger, wrap, fromFloat,
     add, sub, mul, neg, band, bor, bxor, bnot, unsigned, div, mod, shift };
 
-}, {"./luaconf-base.js":4}],
-7: [function(require, module, exports) {
+}, {"./luaconf-base.js":5}],
+8: [function(require, module, exports) {
 "use strict";
 
 const defs   = require("./defs.js");
@@ -1118,14 +1133,14 @@ const lua_eval_multiple = function(L, str) {
 
 module.exports.lua_eval_multiple = lua_eval_multiple;
 
-}, {"./defs.js":3,"./lapi.js":8,"./ldebug.js":31,"./ldo.js":32,"./lstate.js":33}],
-8: [function(require, module, exports) {
+}, {"./defs.js":4,"./lapi.js":9,"./ldebug.js":32,"./ldo.js":33,"./lstate.js":34}],
+9: [function(require, module, exports) {
 "use strict";
 
 module.exports = require("./runtime.js").lapi;
 
-}, {"./runtime.js":9}],
-9: [function(require, module, exports) {
+}, {"./runtime.js":10}],
+10: [function(require, module, exports) {
 "use strict";
 
 /* Compose the VM once. Factories never import other VM components.
@@ -1177,8 +1192,8 @@ Object.assign(components.lapi, createLapi(components));
 
 module.exports = components;
 
-}, {"./runtime/lobject.js":10,"./runtime/lfunc.js":15,"./runtime/lstate.js":16,"./runtime/ltable.js":17,"./runtime/ltm.js":18,"./runtime/llex.js":19,"./runtime/lcode.js":21,"./runtime/lparser.js":23,"./runtime/lundump.js":24,"./runtime/lvm.js":26,"./runtime/ldebug.js":27,"./runtime/ldo.js":28,"./runtime/lapi.js":29}],
-10: [function(require, module, exports) {
+}, {"./runtime/lobject.js":11,"./runtime/lfunc.js":16,"./runtime/lstate.js":17,"./runtime/ltable.js":18,"./runtime/ltm.js":19,"./runtime/llex.js":20,"./runtime/lcode.js":22,"./runtime/lparser.js":24,"./runtime/lundump.js":25,"./runtime/lvm.js":27,"./runtime/ldebug.js":28,"./runtime/ldo.js":29,"./runtime/lapi.js":30}],
+11: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLobject(dependencies) {
@@ -2017,8 +2032,8 @@ module.exports = function createLobject(dependencies) {
     return exports;
 };
 
-}, {"../linteger.js":6,"../defs.js":3,"../ljstype.js":11,"../lstring.js":12,"../luaconf.js":5,"../llimits.js":13,"../lmem.js":14}],
-11: [function(require, module, exports) {
+}, {"../linteger.js":7,"../defs.js":4,"../ljstype.js":12,"../lstring.js":13,"../luaconf.js":6,"../llimits.js":14,"../lmem.js":15}],
+12: [function(require, module, exports) {
 "use strict";
 
 const { luastring_of } = require('./defs.js');
@@ -2096,8 +2111,8 @@ module.exports.lisprint   = lisprint;
 module.exports.lisspace   = lisspace;
 module.exports.lisxdigit  = lisxdigit;
 
-}, {"./defs.js":3}],
-12: [function(require, module, exports) {
+}, {"./defs.js":4}],
+13: [function(require, module, exports) {
 "use strict";
 
 const {
@@ -2174,8 +2189,8 @@ module.exports.luaS_new         = luaS_new;
 module.exports.luaS_newliteral  = luaS_newliteral;
 module.exports.TString          = TString;
 
-}, {"./defs.js":3,"./llimits.js":13}],
-13: [function(require, module, exports) {
+}, {"./defs.js":4,"./llimits.js":14}],
+14: [function(require, module, exports) {
 "use strict";
 
 const lua_assert = function(c) {
@@ -2210,7 +2225,7 @@ const MIN_INT = -2147483648;
 module.exports.MIN_INT = MIN_INT;
 
 }, {}],
-14: [function(require, module, exports) {
+15: [function(require, module, exports) {
 "use strict";
 
 /*
@@ -2262,8 +2277,8 @@ module.exports = {
     lua_alloc: lua_alloc
 };
 
-}, {"./defs.js":3}],
-15: [function(require, module, exports) {
+}, {"./defs.js":4}],
+16: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLfunc(dependencies) {
@@ -2403,8 +2418,8 @@ module.exports = function createLfunc(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3}],
-16: [function(require, module, exports) {
+}, {"../defs.js":4}],
+17: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLstate(dependencies) {
@@ -2662,8 +2677,8 @@ module.exports = function createLstate(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3}],
-17: [function(require, module, exports) {
+}, {"../defs.js":4}],
+18: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLtable(dependencies) {
@@ -2985,8 +3000,8 @@ module.exports = function createLtable(dependencies) {
     return exports;
 };
 
-}, {"../linteger.js":6,"../defs.js":3,"../luaconf.js":5,"../llimits.js":13,"../lstring.js":12}],
-18: [function(require, module, exports) {
+}, {"../linteger.js":7,"../defs.js":4,"../luaconf.js":6,"../llimits.js":14,"../lstring.js":13}],
+19: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLtm(dependencies) {
@@ -3210,8 +3225,8 @@ module.exports = function createLtm(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../lstring.js":12}],
-19: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../lstring.js":13}],
+20: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLlex(dependencies) {
@@ -3902,8 +3917,8 @@ module.exports = function createLlex(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../ljstype.js":11,"../lstring.js":12,"../lzio.js":20,"../lmem.js":14}],
-20: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../ljstype.js":12,"../lstring.js":13,"../lzio.js":21,"../lmem.js":15}],
+21: [function(require, module, exports) {
 "use strict";
 
 const { lua_assert } = require("./llimits.js");
@@ -4003,8 +4018,8 @@ module.exports.luaZ_resizebuffer = luaZ_resizebuffer;
 module.exports.MBuffer           = MBuffer;
 module.exports.ZIO               = ZIO;
 
-}, {"./llimits.js":13,"./lmem.js":14}],
-21: [function(require, module, exports) {
+}, {"./llimits.js":14,"./lmem.js":15}],
+22: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLcode(dependencies) {
@@ -5271,8 +5286,8 @@ module.exports = function createLcode(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../lopcodes.js":22}],
-22: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../lopcodes.js":23}],
+23: [function(require, module, exports) {
 "use strict";
 
 const OpCodes = [
@@ -5687,7 +5702,7 @@ module.exports.testAMode           = testAMode;
 module.exports.testTMode           = testTMode;
 
 }, {}],
-23: [function(require, module, exports) {
+24: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLparser(dependencies) {
@@ -7450,8 +7465,8 @@ module.exports = function createLparser(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../lopcodes.js":22,"../lstring.js":12}],
-24: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../lopcodes.js":23,"../lstring.js":13}],
+25: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLundump(dependencies) {
@@ -7756,15 +7771,15 @@ module.exports = function createLundump(dependencies) {
     return exports;
 };
 
-}, {"../linteger.js":6,"../lbytecode.js":25,"../defs.js":3,"../lopcodes.js":22,"../llimits.js":13,"../lstring.js":12,"../lzio.js":20,"../lmem.js":14}],
-25: [function(require, module, exports) {
+}, {"../linteger.js":7,"../lbytecode.js":26,"../defs.js":4,"../lopcodes.js":23,"../llimits.js":14,"../lstring.js":13,"../lzio.js":21,"../lmem.js":15}],
+26: [function(require, module, exports) {
 "use strict";
 
 /* The instruction and chunk layout implemented by this VM is Lua 5.3. */
 module.exports.LUAC_VERSION = 0x53;
 
 }, {}],
-26: [function(require, module, exports) {
+27: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLvm(dependencies) {
@@ -8927,8 +8942,8 @@ module.exports = function createLvm(dependencies) {
     return exports;
 };
 
-}, {"../linteger.js":6,"../defs.js":3,"../lopcodes.js":22,"../luaconf.js":5,"../llimits.js":13,"../lstring.js":12,"../lmem.js":14}],
-27: [function(require, module, exports) {
+}, {"../linteger.js":7,"../defs.js":4,"../lopcodes.js":23,"../luaconf.js":6,"../llimits.js":14,"../lstring.js":13,"../lmem.js":15}],
+28: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLdebug(dependencies) {
@@ -9622,8 +9637,8 @@ module.exports = function createLdebug(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../luaconf.js":5,"../lopcodes.js":22,"../lstring.js":12}],
-28: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../luaconf.js":6,"../lopcodes.js":23,"../lstring.js":13}],
+29: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLdo(dependencies) {
@@ -10429,8 +10444,8 @@ module.exports = function createLdo(dependencies) {
     return exports;
 };
 
-}, {"../defs.js":3,"../llimits.js":13,"../lopcodes.js":22,"../lstring.js":12,"../luaconf.js":5,"../lzio.js":20}],
-29: [function(require, module, exports) {
+}, {"../defs.js":4,"../llimits.js":14,"../lopcodes.js":23,"../lstring.js":13,"../luaconf.js":6,"../lzio.js":21}],
+30: [function(require, module, exports) {
 "use strict";
 
 module.exports = function createLapi(dependencies) {
@@ -11802,8 +11817,8 @@ module.exports = function createLapi(dependencies) {
     return exports;
 };
 
-}, {"../linteger.js":6,"../defs.js":3,"../llimits.js":13,"../ldump.js":30,"../lstring.js":12,"../luaconf.js":5,"../lzio.js":20}],
-30: [function(require, module, exports) {
+}, {"../linteger.js":7,"../defs.js":4,"../llimits.js":14,"../ldump.js":31,"../lstring.js":13,"../luaconf.js":6,"../lzio.js":21}],
+31: [function(require, module, exports) {
 "use strict";
 const integer = require('./linteger.js');
 
@@ -12003,27 +12018,29 @@ const luaU_dump = function(L, f, w, data, strip) {
 
 module.exports.luaU_dump = luaU_dump;
 
-}, {"./linteger.js":6,"./defs.js":3,"./lbytecode.js":25}],
-31: [function(require, module, exports) {
+}, {"./linteger.js":7,"./defs.js":4,"./lbytecode.js":26}],
+32: [function(require, module, exports) {
 "use strict";
 
 module.exports = require("./runtime.js").ldebug;
 
-}, {"./runtime.js":9}],
-32: [function(require, module, exports) {
+}, {"./runtime.js":10}],
+33: [function(require, module, exports) {
 "use strict";
 
 module.exports = require("./runtime.js").ldo;
 
-}, {"./runtime.js":9}],
-33: [function(require, module, exports) {
+}, {"./runtime.js":10}],
+34: [function(require, module, exports) {
 "use strict";
 
 module.exports = require("./runtime.js").lstate;
 
-}, {"./runtime.js":9}],
-34: [function(require, module, exports) {
+}, {"./runtime.js":10}],
+35: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const {
     LUAL_BUFFERSIZE
@@ -12847,7 +12864,7 @@ const skipcomment = function(lf) {
 
 let luaL_loadfilex;
 
-if (typeof process === "undefined") {
+if (!isnode) {
     class LoadF {
         constructor() {
             this.n = NaN;  /* number of pre-read characters */
@@ -13017,7 +13034,7 @@ const luaL_dofile = function(L, filename) {
 const lua_writestringerror = function() {
     for (let i=0; i<arguments.length; i++) {
         let a = arguments[i];
-        if (typeof process === "undefined") {
+        if (!isnode) {
             /* split along new lines for separate console.error invocations */
             do {
                 /* regexp uses [\d\D] to work around matching new lines
@@ -13249,9 +13266,11 @@ module.exports.luaL_optint = luaL_optint;
 module.exports.luaL_optlong = luaL_optlong;
 module.exports.luaL_optunsigned = luaL_optunsigned;
 
-}, {"./luaconf.js":5,"./lua.js":7,"./lmem.js":14,"./fengaricore.js":2,"fs":-1}],
-35: [function(require, module, exports) {
+}, {"./isnode.js":2,"./luaconf.js":6,"./lua.js":8,"./lmem.js":15,"./fengaricore.js":3,"fs":-1}],
+36: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const {
     LUA_VERSION_MAJOR,
@@ -13282,7 +13301,7 @@ module.exports.LUA_COLIBNAME = LUA_COLIBNAME;
 const LUA_TABLIBNAME = "table";
 module.exports.LUA_TABLIBNAME = LUA_TABLIBNAME;
 
-if (typeof process !== "undefined") {
+if (isnode) {
     const LUA_IOLIBNAME = "io";
     module.exports.LUA_IOLIBNAME = LUA_IOLIBNAME;
 }
@@ -13313,9 +13332,11 @@ const LUA_FENGARILIBNAME = "fengari";
 module.exports.LUA_FENGARILIBNAME = LUA_FENGARILIBNAME;
 
 
-}, {"./defs.js":3}],
-36: [function(require, module, exports) {
+}, {"./isnode.js":2,"./defs.js":4}],
+37: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("../isnode.js");
 
 module.exports = function createLoadlib(dependencies) {
     const exports = {};
@@ -13393,7 +13414,7 @@ module.exports = function createLoadlib(dependencies) {
     const { fengari } = dependencies;
 
     const global_env = (function() {
-        if (typeof process !== "undefined") {
+        if (isnode) {
             /* node */
             return global;
         } else if (typeof window !== "undefined") {
@@ -13440,7 +13461,7 @@ module.exports = function createLoadlib(dependencies) {
     ** error string in the stack.
     */
     let lsys_load;
-    if (typeof process === "undefined") {
+    if (!isnode) {
         lsys_load = function(L, path, seeglb) {
             path = to_uristring(path);
             let xhr = new XMLHttpRequest();
@@ -13515,7 +13536,7 @@ module.exports = function createLoadlib(dependencies) {
     };
 
     let readable;
-    if (typeof process !== "undefined") { // Only with Node
+    if (isnode) { // Only with Node
         const fs = require('fs');
 
         readable = function(filename) {
@@ -13590,7 +13611,7 @@ module.exports = function createLoadlib(dependencies) {
     };
 
     const env = (function() {
-        if (typeof process !== "undefined") {
+        if (isnode) {
             /* node */
             return process.env;
         } else {
@@ -13904,9 +13925,11 @@ module.exports = function createLoadlib(dependencies) {
     return exports;
 };
 
-}, {"../luaconf.js":5,"../lua.js":7,"../lauxlib.js":34,"../lualib-constants.js":35,"../fengaricore.js":2,"path":-1,"fs":-1}],
-37: [function(require, module, exports) {
+}, {"../isnode.js":2,"../luaconf.js":6,"../lua.js":8,"../lauxlib.js":35,"../lualib-constants.js":36,"../fengaricore.js":3,"path":-1,"fs":-1}],
+38: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 const integer = require('./linteger.js');
 
 const {
@@ -13987,7 +14010,7 @@ const {
 
 let lua_writestring;
 let lua_writeline;
-if (typeof process === "undefined") {
+if (!isnode) {
     if (typeof TextDecoder === "function") { /* Older browsers don't have TextDecoder */
         let buff = "";
         let decoder = new TextDecoder("utf-8");
@@ -14414,8 +14437,8 @@ const luaopen_base = function(L) {
 
 module.exports.luaopen_base = luaopen_base;
 
-}, {"./linteger.js":6,"./lua.js":7,"./lauxlib.js":34,"./fengaricore.js":2}],
-38: [function(require, module, exports) {
+}, {"./isnode.js":2,"./linteger.js":7,"./lua.js":8,"./lauxlib.js":35,"./fengaricore.js":3}],
+39: [function(require, module, exports) {
 "use strict";
 
 const {
@@ -14609,8 +14632,8 @@ const luaopen_coroutine = function(L) {
 
 module.exports.luaopen_coroutine = luaopen_coroutine;
 
-}, {"./lua.js":7,"./lauxlib.js":34}],
-39: [function(require, module, exports) {
+}, {"./lua.js":8,"./lauxlib.js":35}],
+40: [function(require, module, exports) {
 "use strict";
 const integer = require('./linteger.js');
 
@@ -15001,9 +15024,11 @@ const luaopen_table = function(L) {
 
 module.exports.luaopen_table = luaopen_table;
 
-}, {"./linteger.js":6,"./luaconf.js":5,"./lua.js":7,"./lauxlib.js":34,"./lualib-constants.js":35,"./fengaricore.js":2}],
-40: [function(require, module, exports) {
+}, {"./linteger.js":7,"./luaconf.js":6,"./lua.js":8,"./lauxlib.js":35,"./lualib-constants.js":36,"./fengaricore.js":3}],
+41: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const {
     LUA_TNIL,
@@ -15484,7 +15509,7 @@ const syslib = {
     "time": os_time
 };
 
-if (typeof process === "undefined") {
+if (!isnode) {
     syslib.clock = function(L) {
         lua_pushnumber(L, performance.now()/1000);
         return 1;
@@ -15598,8 +15623,8 @@ const luaopen_os = function(L) {
 
 module.exports.luaopen_os = luaopen_os;
 
-}, {"./lua.js":7,"./lmem.js":14,"./lauxlib.js":34,"./fengaricore.js":2,"fs":-1,"tmp":-1,"child_process":-1}],
-41: [function(require, module, exports) {
+}, {"./isnode.js":2,"./lua.js":8,"./lmem.js":15,"./lauxlib.js":35,"./fengaricore.js":3,"fs":-1,"tmp":-1,"child_process":-1}],
+42: [function(require, module, exports) {
 "use strict";
 
 const { sprintf } = require('sprintf-js');
@@ -17146,8 +17171,8 @@ const luaopen_string = function(L) {
 
 module.exports.luaopen_string = luaopen_string;
 
-}, {"sprintf-js":42,"./linteger.js":6,"./luaconf.js":5,"./lua.js":7,"./lmem.js":14,"./lauxlib.js":34,"./lualib-constants.js":35,"./fengaricore.js":2}],
-42: [function(require, module, exports) {
+}, {"sprintf-js":43,"./linteger.js":7,"./luaconf.js":6,"./lua.js":8,"./lmem.js":15,"./lauxlib.js":35,"./lualib-constants.js":36,"./fengaricore.js":3}],
+43: [function(require, module, exports) {
 /* global window, exports, define */
 
 !function() {
@@ -17381,7 +17406,7 @@ module.exports.luaopen_string = luaopen_string;
 }(); // eslint-disable-line
 
 }, {}],
-43: [function(require, module, exports) {
+44: [function(require, module, exports) {
 "use strict";
 
 const {
@@ -17654,8 +17679,8 @@ const luaopen_utf8 = function(L) {
 
 module.exports.luaopen_utf8 = luaopen_utf8;
 
-}, {"./lua.js":7,"./lauxlib.js":34,"./fengaricore.js":2}],
-44: [function(require, module, exports) {
+}, {"./lua.js":8,"./lauxlib.js":35,"./fengaricore.js":3}],
+45: [function(require, module, exports) {
 "use strict";
 const integer = require('./linteger.js');
 
@@ -18047,9 +18072,11 @@ const luaopen_math = function(L) {
 
 module.exports.luaopen_math = luaopen_math;
 
-}, {"./linteger.js":6,"./lua.js":7,"./lauxlib.js":34,"./luaconf.js":5,"./fengaricore.js":2}],
-45: [function(require, module, exports) {
+}, {"./linteger.js":7,"./lua.js":8,"./lauxlib.js":35,"./luaconf.js":6,"./fengaricore.js":3}],
+46: [function(require, module, exports) {
 "use strict";
+
+const isnode = require("./isnode.js");
 
 const {
     LUA_MASKCALL,
@@ -18522,7 +18549,7 @@ const dblib = {
 };
 
 let getinput;
-if (typeof process !== "undefined") { // Only with Node
+if (isnode) { // Only with Node
     const readlineSync = require('readline-sync');
     readlineSync.setDefaultOptions({
         prompt: 'lua_debug> '
@@ -18567,8 +18594,8 @@ const luaopen_debug = function(L) {
 
 module.exports.luaopen_debug = luaopen_debug;
 
-}, {"./lua.js":7,"./lmem.js":14,"./lauxlib.js":34,"./lualib-constants.js":35,"./fengaricore.js":2,"readline-sync":-1}],
-46: [function(require, module, exports) {
+}, {"./isnode.js":2,"./lua.js":8,"./lmem.js":15,"./lauxlib.js":35,"./lualib-constants.js":36,"./fengaricore.js":3,"readline-sync":-1}],
+47: [function(require, module, exports) {
 const {
     lua_pushinteger,
     lua_pushliteral,
@@ -18612,8 +18639,8 @@ const luaopen_fengari = function(L) {
 
 module.exports.luaopen_fengari = luaopen_fengari;
 
-}, {"./lua.js":7,"./lauxlib.js":34,"./fengaricore.js":2}],
-47: [function(require, module, exports) {
+}, {"./lua.js":8,"./lauxlib.js":35,"./fengaricore.js":3}],
+48: [function(require, module, exports) {
 "use strict";
 
 const fs      = require('fs');
@@ -18845,8 +18872,8 @@ const luaopen_io = function(L) {
 
 module.exports.luaopen_io = luaopen_io;
 
-}, {"fs":-1,"./lua.js":7,"./lauxlib.js":34,"./lualib-constants.js":35,"./fengaricore.js":2}],
-48: [function(require, module, exports) {
+}, {"fs":-1,"./lua.js":8,"./lauxlib.js":35,"./lualib-constants.js":36,"./fengaricore.js":3}],
+49: [function(require, module, exports) {
 "use strict";
 
 const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').fengari;
@@ -19049,12 +19076,11 @@ class Coroutine {
         const vm = this.vm;
         if (this.active) throw new LuaError('cannot close a running coroutine', 'cannot close a running coroutine');
         const status = vm.lua.lua_closethread(this.thread, vm.state);
-        if (status !== vm.lua.LUA_OK) {
-            const message = vm.errorMessage(this.thread, -1);
+        try {
+            if (status !== vm.lua.LUA_OK) vm.throwLuaError(this.thread);
+        } finally {
             vm.lua.lua_settop(this.thread, 0);
-            throw new LuaError(message, message);
         }
-        vm.lua.lua_settop(this.thread, 0);
     }
 }
 
@@ -19255,6 +19281,54 @@ class FengariVm {
    */
     luaError(message, traceback) {
         return this.limitHit === null ? new LuaError(message, traceback) : new LimitError(this.limitHit, message, traceback);
+    }
+
+    /**
+   * Throws the Lua error value at `index` of stack `L` as a LuaError (a LimitError if a limit
+   * was exceeded), with the message as traceback. The stack is left untouched.
+   * @returns {never}
+   */
+    throwLuaError(L, index = -1) {
+        const message = this.errorMessage(L, index);
+        throw this.luaError(message, message);
+    }
+
+    /**
+   * Runs the host callback `fn(L)` inside a Lua protected call, so that Lua errors raised
+   * while it uses the C API (an `__index` metamethod that fails, `luaL_error`, a limit
+   * overrun...) are reported as a LuaError (a LimitError after an overrun) instead of
+   * unwinding through the host code with the Lua stack in an undefined state. Returns what
+   * `fn` returns; the stack is restored in every case. A JavaScript error thrown by `fn`
+   * itself is rethrown unchanged. Like the other entry points, it gets a fresh limits budget
+   * when it is not called from Lua.
+   * @template T
+   * @param {function(*): T} fn - Receives the Lua state (or coroutine) it runs on.
+   * @returns {T}
+   */
+    protect(fn) {
+        const L = this.thread ?? this.state;
+        const base = this.lua.lua_gettop(L);
+        let result;
+        let hostError = null;
+        this.lua.lua_pushcfunction(L, (state) => {
+            try {
+                result = fn(state);
+            } catch (error) {
+                if (error === state.errorJmp) throw error; /* a Lua error: let the protected call catch it */
+                hostError = { error };
+                this.lua.lua_pushstring(state, this.to_luastring('host error'));
+                return this.lua.lua_error(state);
+            }
+            return 0;
+        });
+        const status = this.guarded(() => this.lua.lua_pcall(L, 0, 0, 0));
+        try {
+            if (hostError !== null) throw hostError.error;
+            if (status !== this.lua.LUA_OK) this.throwLuaError(L);
+            return result;
+        } finally {
+            this.lua.lua_settop(L, base);
+        }
     }
 
     /**
@@ -19774,8 +19848,8 @@ class FengariVm {
 
 module.exports = { FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine };
 
-}, {"./library-runtime.js":1,"./ltranspile.js":49,"./lnumeric.js":50}],
-49: [function(require, module, exports) {
+}, {"./library-runtime.js":1,"./ltranspile.js":50,"./lnumeric.js":51}],
+50: [function(require, module, exports) {
 "use strict";
 
 /*
@@ -20565,7 +20639,8 @@ class Gen {
     }
     comment(c) {
         if (c.long) return [`/*${c.text.replace(/\*\//g, '* /')}*/`];
-        return [`//${c.text}`];
+        /* \r, U+2028 and U+2029 end a JS line comment but not a Lua one: without this the rest of the comment would run as code */
+        return [`//${c.text.replace(/[\r\u2028\u2029]/g, ' ')}`];
     }
     indent(lines) {
         return lines.map(l => l ? `    ${l}` : l);
@@ -20888,7 +20963,7 @@ class Gen {
         const visit = node => {
             if (node.type === 'Function') return node === func;
             if (node.type === 'Return') {
-                if (node.exprs.length > 1 || (node.exprs.length === 1 && this.isMulti(node.exprs[0], func))) multi = true;
+                if (node.exprs.length > 1 || (node.exprs.length === 1 && this.isMulti(node.exprs[0]))) multi = true;
             }
             return !multi;
         };
@@ -20938,7 +21013,7 @@ class Gen {
     }
 
     /* ---- multiple values ---- */
-    isMulti(e, selfFunc) {
+    isMulti(e) {
         if (e.type === 'Vararg') return true;
         if (e.type === 'Call') {
             const lib = this.libPath(e.fn);
@@ -21394,7 +21469,7 @@ function transpile(source, options = {}) {
 module.exports = { transpile, parse, tokenize, LuaSyntaxError };
 
 }, {}],
-50: [function(require, module, exports) {
+51: [function(require, module, exports) {
 "use strict";
 
 const { OpCodes, ISK, INDEXK } = require('./lopcodes.js');
@@ -21506,7 +21581,7 @@ function generate(proto) {
 
 module.exports = { compileNumeric, FALLBACK, MIN_SAFE, MAX_SAFE };
 
-}, {"./lopcodes.js":22,"./linteger.js":6}]
+}, {"./lopcodes.js":23,"./linteger.js":7}]
 };
 var cache = {};
 function load(id) {

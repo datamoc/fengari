@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const {
     LUA_TNIL,
     LUA_TTABLE,
@@ -479,7 +481,7 @@ const syslib = {
     "time": os_time
 };
 
-if (typeof process === "undefined") {
+if (!isnode) {
     syslib.clock = function(L) {
         lua_pushnumber(L, performance.now()/1000);
         return 1;

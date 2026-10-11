@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const {
     LUA_VERSION_MAJOR,
     LUA_VERSION_MINOR
@@ -29,7 +31,7 @@ module.exports.LUA_COLIBNAME = LUA_COLIBNAME;
 const LUA_TABLIBNAME = "table";
 module.exports.LUA_TABLIBNAME = LUA_TABLIBNAME;
 
-if (typeof process !== "undefined") {
+if (isnode) {
     const LUA_IOLIBNAME = "io";
     module.exports.LUA_IOLIBNAME = LUA_IOLIBNAME;
 }

@@ -1,5 +1,7 @@
 "use strict";
 
+const isnode = require("./isnode.js");
+
 const {
     LUAL_BUFFERSIZE
 } = require('./luaconf.js');
@@ -822,7 +824,7 @@ const skipcomment = function(lf) {
 
 let luaL_loadfilex;
 
-if (typeof process === "undefined") {
+if (!isnode) {
     class LoadF {
         constructor() {
             this.n = NaN;  /* number of pre-read characters */
@@ -992,7 +994,7 @@ const luaL_dofile = function(L, filename) {
 const lua_writestringerror = function() {
     for (let i=0; i<arguments.length; i++) {
         let a = arguments[i];
-        if (typeof process === "undefined") {
+        if (!isnode) {
             /* split along new lines for separate console.error invocations */
             do {
                 /* regexp uses [\d\D] to work around matching new lines

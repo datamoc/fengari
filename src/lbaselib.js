@@ -1,4 +1,6 @@
 "use strict";
+
+const isnode = require("./isnode.js");
 const integer = require('./linteger.js');
 
 const {
@@ -79,7 +81,7 @@ const {
 
 let lua_writestring;
 let lua_writeline;
-if (typeof process === "undefined") {
+if (!isnode) {
     if (typeof TextDecoder === "function") { /* Older browsers don't have TextDecoder */
         let buff = "";
         let decoder = new TextDecoder("utf-8");
