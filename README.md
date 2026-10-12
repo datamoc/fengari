@@ -142,6 +142,45 @@ lua.lua_close(L);
 
 The package ships its declarations (`src/pyroeis.d.ts`): `import { PyroeisVm, LuaToJsOptions } from '@datamoc/pyroeis'` is typed without `@ts-expect-error`. The C-API namespaces (`lua`, `lauxlib`, `lualib`) are typed as `any`.
 
+### Why Pyroeis has its own JavaScript ↔ Lua exchange API
+
+Pyroeis uses Lua for application rules, game strategies and scripts whose host
+controls the available operations. `PyroeisVm` therefore converts ordinary
+JavaScript objects, arrays and maps into Lua tables, reads Lua tables back as
+JavaScript data, and exposes host operations through `defineFunction`. A copied
+table does not provide a live handle to the original JavaScript object.
+
+[`fengari-interop`](https://github.com/fengari-lua/fengari-interop) serves a
+different integration model: JavaScript objects remain accessible through
+userdata, Lua values can be wrapped for use from JavaScript, and its `js`
+library includes access to the JavaScript global environment. That model is
+useful for trusted Lua code that needs to work directly with JavaScript APIs.
+Our default interface keeps scripts working with Lua data and a host-selected
+set of functions instead of granting that general bridge.
+
+This choice also keeps calls, Lua references, coroutines, error handling and
+execution budgets within the same VM API. `BigInt`, binary strings,
+`LuaFloat`, `Multi` and `Yield` have explicit conversions. Functions, threads
+and full userdata use VM-owned `LuaRef` handles; ordinary tables are snapshots.
+The MWG demo takes this approach further: it sends target descriptions into a
+worker and accepts a validated target index, while the host retains the map,
+pathfinder and rendering objects.
+
+The tradeoff is conversion work and the absence of automatic shared-object
+identity, prototypes or metatable behavior for copied data. JavaScript cycles
+cannot currently be pushed as tables; Lua table cycles are preserved when read.
+Callbacks remain trusted host code: execution budgets cannot preempt arbitrary
+JavaScript or cover all its allocations. This API is not a complete isolation
+mechanism, and `fengari-interop` is not inherently unsafe merely because it
+offers broader access.
+
+The upstream bridge imports `fengari` and declares it as a peer dependency;
+it is not a supported drop-in bridge for `@datamoc/pyroeis`. Using or porting
+it would require validating the VM and C-API compatibility as well as the
+authority exposed to scripts. See the [detailed design and examples](https://datamoc.github.io/pyroeis/interop/)
+and the upstream [implementation](https://github.com/fengari-lua/fengari-interop/blob/e1eec1af192898cd6786bcd108e22feb40b097e3/src/js.js)
+and [package manifest](https://github.com/fengari-lua/fengari-interop/blob/e1eec1af192898cd6786bcd108e22feb40b097e3/package.json).
+
 ### Extended Auxiliary Library (`lauxlib`)
 
 ```javascript

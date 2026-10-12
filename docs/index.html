@@ -12,7 +12,7 @@
 <body>
   <header class="site-header">
     <a class="brand" href="./" aria-current="page"><img src="assets/pyroeis.svg" alt="">Pyroeis</a>
-    <nav class="site-nav" aria-label="Navigation principale"><a href="security/">Sécurité</a><a href="benchmark/">Benchmarks</a><a href="lua2js/">Lua → JS</a><a href="mwg/">Démo MWG</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav>
+    <nav class="site-nav" aria-label="Navigation principale"><a href="security/">Sécurité</a><a href="benchmark/">Benchmarks</a><a href="lua2js/">Lua → JS</a><a href="mwg/">Démo MWG</a><a href="interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav>
   </header>
   <main class="site-main">
     <section class="hero">
@@ -27,6 +27,7 @@
       <article class="destination"><a href="lua2js/">Passer de Lua à JavaScript</a><p>Collez une source Lua, inspectez la traduction et comparez les deux versions. Les constructions non traduites fidèlement sont signalées.</p></article>
     </div>
     <h2>Un projet indépendant issu de Fengari</h2>
+    <p><a href="interop/">Pourquoi notre interface d’échange JavaScript ↔ Lua ?</a> Le contrat des données, les fonctions exposées à Lua et les différences avec fengari-interop.</p>
     <p>Pyroeis poursuit son propre développement à partir du travail de Benoit Giannangeli, Daurnimator et des contributeurs de <a href="https://github.com/fengari-lua/fengari">Fengari</a>. Les crédits et la licence MIT sont conservés.</p>
     <p>Le langage actuellement implémenté est Lua 5.4.6. Le passage à Lua 5.5.1 est <a href="https://github.com/datamoc/pyroeis/tree/master/docs/lua-5.5.1">en cours</a>. Les limites d’exécution complètent le préréglage de sandbox ; les callbacks JavaScript que vous fournissez restent sous votre responsabilité.</p>
     <pre><code>const { PyroeisVm } = require('@datamoc/pyroeis');

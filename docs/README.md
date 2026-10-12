@@ -20,6 +20,11 @@ section of the [main README](../README.md).
 
 ## GitHub Pages
 
+The [JavaScript ↔ Lua exchange guide](https://datamoc.github.io/pyroeis/interop/)
+explains why Pyroeis uses data conversion and host-selected functions instead
+of `fengari-interop`, with examples, compatibility considerations and the
+limits of the model. Its source is [interop/index.html](interop/index.html).
+
 `index.html` is the site entry point. `security/` compares pinned upstream Fengari 0.1.5 with Pyroeis under resource limits; `benchmark/` compares upstream, interpreted Pyroeis, compiled Lua and JavaScript; `lua2js/` translates Lua; `mwg/` runs a Lua-controlled robot using MWG 0.35.1.
 
 Build with `npm run pages:build`, then serve this directory over HTTP. Generated bundles, dependency licenses and the integrity manifest live in `assets/` and are excluded from Git. `.github/workflows/deploy-pages.yml` rebuilds these assets and deploys this directory. Scripts run locally in the browser; the security examples and editable game scripts run in terminable workers.

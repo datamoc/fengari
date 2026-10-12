@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-  <header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Navigation principale"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="./" aria-current="page">Démo MWG</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
+  <header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Navigation principale"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="./" aria-current="page">Démo MWG</a><a href="../interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
   <main class="site-main">
     <h1>Le robot martien</h1>
     <p class="lead">Six échantillons à récolter. Une stratégie Lua à écrire.</p>
@@ -30,6 +30,7 @@
       </section>
     </div>
     <h2>Qui fait quoi ?</h2>
+    <p><a href="../interop/">Pourquoi cet échange de données plutôt que fengari-interop ?</a> Le choix est documenté avec ses avantages, ses coûts et ses limites.</p>
     <p>La scène hérite de <code>MWG.Scene</code> et vit dans <code>SceneStack</code>. La carte est un <code>MWG.Roguelike.Level</code> ; <code>Pathfinder</code> calcule les itinéraires à quatre directions. Le rendu utilise le canvas 2D du navigateur. Le moteur Lua est le bundle Pyroeis de ce dépôt, sans dépendre de l’ancien hôte Fengari de MWG.</p>
     <p>La boucle infinie proposée dans le sélecteur est un exemple de récupération : le robot s’arrête, la page reste interactive et vous pouvez appliquer une autre stratégie. Les déplacements et l’indice renvoyé sont validés par le jeu avant de modifier la carte. Un watchdog extérieur arrête aussi le worker s’il ne répond plus.</p>
     <details><summary>Voir les sources et les versions</summary><p><a href="game.js">Scène, carte, chemins et commandes</a> · <a href="lua-worker.js">Worker Lua</a> · <a href="../assets/vendor-manifest.json">MWG 0.35.1 et empreinte de l’archive npm</a> · <a href="https://github.com/datamoc/mwg/tree/v0.35.1/src">Sources MWG</a> · <a href="../assets/mwg-LICENSE.txt">Licence MPL-2.0 de MWG</a>.</p></details>
