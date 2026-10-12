@@ -154,9 +154,17 @@ test.each(["defs", "luaconf"])("custom stack configuration is consistent when %s
         assert.strictEqual(defs.LUA_REGISTRYINDEX, -9192);
     `;
     execFileSync(process.execPath, ["-e", script], {
-        env: { ...process.env, FENGARICONF: JSON.stringify({ LUAI_MAXSTACK: 8192 }) },
+        env: { ...process.env, PYROEISCONF: JSON.stringify({ LUAI_MAXSTACK: 8192 }) },
         stdio: "pipe"
     });
+});
+
+test("only PYROEISCONF configures the VM: the former FENGARICONF name is ignored", () => {
+    const maxstack = env => Number(execFileSync(process.execPath, ["-p", `require(${JSON.stringify(path.join(sourceDirectory, "luaconf-base.js"))}).LUAI_MAXSTACK`], {
+        env: { ...process.env, PYROEISCONF: "", FENGARICONF: "", ...env }, encoding: "utf8"
+    }));
+    expect(maxstack({ FENGARICONF: JSON.stringify({ LUAI_MAXSTACK: 4096 }) })).toBe(1000000);
+    expect(maxstack({ PYROEISCONF: JSON.stringify({ LUAI_MAXSTACK: 2048 }) })).toBe(2048);
 });
 
 test.each([

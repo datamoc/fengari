@@ -1,6 +1,6 @@
 "use strict";
 
-const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').fengari;
+const { lauxlib, lua, lualib, to_jsstring, to_luastring } = require('./library-runtime.js').pyroeis;
 const { transpile } = require('./ltranspile.js');
 const { compileNumeric, FALLBACK, MIN_SAFE: NUMERIC_MIN, MAX_SAFE: NUMERIC_MAX } = require('./lnumeric.js');
 
@@ -221,7 +221,7 @@ function _G.load(chunk, chunkname, mode, ...) return load(chunk, chunkname, 't',
 /* Libraries selectable via the `libs` option (name → global table name). */
 const LIBRARIES = {
     base: '_G', coroutine: 'coroutine', table: 'table', string: 'string', utf8: 'utf8',
-    math: 'math', os: 'os', debug: 'debug', package: 'package', io: 'io', fengari: 'fengari'
+    math: 'math', os: 'os', debug: 'debug', package: 'package', io: 'io', pyroeis: 'pyroeis'
 };
 
 /**
@@ -235,7 +235,7 @@ class PyroeisVm {
    * @param {number} seed - A seed for the random generator (optional).
    * @param {Object} options - Options (optional).
    * @param {string[]} [options.libs] - Libraries to open among base, coroutine, table, string,
-   *   utf8, math, os, debug, package, io, fengari. Default: all (luaL_openlibs).
+   *   utf8, math, os, debug, package, io, pyroeis. Default: all (luaL_openlibs).
    * @param {string[]} [options.remove] - Dotted paths of globals to remove after
    *   opening (e.g. ['load', 'dofile', 'os.execute']).
    * @param {boolean} [options.sandbox] - Preset for untrusted Lua code: only base,

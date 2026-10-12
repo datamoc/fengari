@@ -3,7 +3,7 @@
 const { PyroeisVm } = require('../src/pyroeis-vm.js');
 const { transpile, LuaSyntaxError } = require('../src/ltranspile.js');
 
-/* Runs `main()` in Fengari and in the translated JavaScript. */
+/* Runs `main()` in the VM and in the translated JavaScript. */
 function both(lua, ...args) {
     const vm = new PyroeisVm();
     vm.run(lua);

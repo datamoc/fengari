@@ -1,7 +1,7 @@
 "use strict";
 
 const assert = require('assert');
-const fengari = require('../src/pyroeis.js');
+const pyroeis = require('../src/pyroeis.js');
 const lauxlib = require('../src/lauxlib');
 const lua = require('../src/lua');
 const lualib = require('../src/lualib');
@@ -26,7 +26,7 @@ describe('Extended lauxlib Tests', function() {
             lauxlib.luaL_addgsub(B, to_luastring("hello world"), to_luastring("world"), to_luastring("Lua"));
             lauxlib.luaL_pushresult(B);
             const result = lua.lua_tostring(L, -1);
-            assert.strictEqual(fengari.to_jsstring(result), "hello Lua");
+            assert.strictEqual(pyroeis.to_jsstring(result), "hello Lua");
         });
     });
     
@@ -87,7 +87,7 @@ describe('Extended lauxlib Tests', function() {
             lauxlib.luaL_buffsub(B, to_luastring("test"));
             lauxlib.luaL_pushresult(B);
             const result = lua.lua_tostring(L, -1);
-            assert.strictEqual(fengari.to_jsstring(result), "test");
+            assert.strictEqual(pyroeis.to_jsstring(result), "test");
         });
     });
     

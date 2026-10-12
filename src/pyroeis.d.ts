@@ -115,7 +115,7 @@ export interface VmLimits {
 }
 
 export interface PyroeisVmOptions {
-    /** Libraries to open among base, coroutine, table, string, utf8, math, os, debug, package, io, fengari. Default: all. */
+    /** Libraries to open among base, coroutine, table, string, utf8, math, os, debug, package, io, pyroeis. Default: all. */
     libs?: string[];
     /** Dotted paths of globals to remove after opening (e.g. `['load', 'os.execute']`). */
     remove?: string[];
@@ -279,11 +279,11 @@ export const luastring_eq: (a: any, b: any) => boolean;
 export const luastring_from: (value: any) => any;
 export const luastring_indexOf: (value: any, search: any, from?: number) => number;
 export const luastring_of: (...values: number[]) => any;
-export const FENGARI_AUTHORS: string;
-export const FENGARI_COPYRIGHT: string;
-export const FENGARI_RELEASE: string;
-export const FENGARI_VERSION: string;
-export const FENGARI_VERSION_MAJOR: string;
-export const FENGARI_VERSION_MINOR: string;
-export const FENGARI_VERSION_NUM: number;
-export const FENGARI_VERSION_RELEASE: string;
+export const PYROEIS_AUTHORS: string;
+export const PYROEIS_COPYRIGHT: string;
+export const PYROEIS_RELEASE: string;
+export const PYROEIS_VERSION: string;
+export const PYROEIS_VERSION_MAJOR: string;
+export const PYROEIS_VERSION_MINOR: string;
+export const PYROEIS_VERSION_NUM: number;
+export const PYROEIS_VERSION_RELEASE: string;

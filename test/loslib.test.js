@@ -150,18 +150,18 @@ test('os.getenv', () => {
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = `
-        return os.getenv('FENGARI_TEST_ENV')
+        return os.getenv('PYROEIS_TEST_ENV')
     `;
-    const previous = process.env.FENGARI_TEST_ENV;
-    process.env.FENGARI_TEST_ENV = "fengari getenv test";
+    const previous = process.env.PYROEIS_TEST_ENV;
+    process.env.PYROEIS_TEST_ENV = "pyroeis getenv test";
     try {
         lualib.luaL_openlibs(L);
         expect(lauxlib.luaL_loadstring(L, to_luastring(luaCode))).toBe(lua.LUA_OK);
         lua.lua_call(L, 0, -1);
-        expect(lua.lua_tojsstring(L, -1)).toBe("fengari getenv test");
+        expect(lua.lua_tojsstring(L, -1)).toBe("pyroeis getenv test");
     } finally {
-        if (previous === undefined) delete process.env.FENGARI_TEST_ENV;
-        else process.env.FENGARI_TEST_ENV = previous;
+        if (previous === undefined) delete process.env.PYROEIS_TEST_ENV;
+        else process.env.PYROEIS_TEST_ENV = previous;
     }
 
     expect(lua.lua_isstring(L, -1)).toBe(true);

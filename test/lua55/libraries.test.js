@@ -66,7 +66,7 @@ test("selected library masks match Lua 5.5.1 and keep the caller stack intact", 
         expect(lua.lua_gettop(L)).toBe(1);
         expect(lua.lua_tointeger(L, 1)).toBe(42);
         const source = to_luastring(`
-            assert(math==nil and utf8==nil and fengari==nil)
+            assert(math==nil and utf8==nil and pyroeis==nil)
             assert(type(table.create)=='function')
             assert(package.preload.table==nil and type(package.preload.utf8)=='function')
             local u=require('utf8'); assert(utf8==nil and package.loaded.utf8==u)

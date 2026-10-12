@@ -11,8 +11,8 @@ const createLoadlib = require("./runtime/loadlib.js");
 
 const lualib = { ...constants };
 /* Browser JS libraries receive the same API as the public entry point. */
-const fengari = { ...core, luaconf, lua, lauxlib, lualib };
-const loadlib = createLoadlib({ fengari, pyroeis: fengari });
+const pyroeis = { ...core, luaconf, lua, lauxlib, lualib };
+const loadlib = createLoadlib({ pyroeis });
 
 const loadedlibs = {
     _G: require("./lbaselib.js").luaopen_base,
@@ -24,7 +24,7 @@ const loadedlibs = {
     [constants.LUA_MATHLIBNAME]: require("./lmathlib.js").luaopen_math,
     [constants.LUA_DBLIBNAME]: require("./ldblib.js").luaopen_debug,
     [constants.LUA_LOADLIBNAME]: loadlib.luaopen_package,
-    [constants.LUA_FENGARILIBNAME]: require("./pyroeislib.js").luaopen_fengari
+    [constants.LUA_PYROEISLIBNAME]: require("./pyroeislib.js").luaopen_pyroeis
 };
 
 lualib.luaopen_base = loadedlibs._G;
@@ -36,7 +36,7 @@ lualib.luaopen_utf8 = loadedlibs[constants.LUA_UTF8LIBNAME];
 lualib.luaopen_math = loadedlibs[constants.LUA_MATHLIBNAME];
 lualib.luaopen_debug = loadedlibs[constants.LUA_DBLIBNAME];
 lualib.luaopen_package = loadlib.luaopen_package;
-lualib.luaopen_fengari = loadedlibs[constants.LUA_FENGARILIBNAME];
+lualib.luaopen_pyroeis = loadedlibs[constants.LUA_PYROEISLIBNAME];
 
 if (isnode) {
     lualib.luaopen_io = require("./liolib.js").luaopen_io;
@@ -74,8 +74,8 @@ lualib.luaL_openselectedlibs = function(L, load, preload) {
 
 lualib.luaL_openlibs = function(L) {
     lualib.luaL_openselectedlibs(L, ~0, 0);
-    lauxlib.luaL_requiref(L, core.to_luastring(constants.LUA_FENGARILIBNAME), lualib.luaopen_fengari, 1);
+    lauxlib.luaL_requiref(L, core.to_luastring(constants.LUA_PYROEISLIBNAME), lualib.luaopen_pyroeis, 1);
     lua.lua_pop(L, 1);
 };
 
-module.exports = { lualib, loadlib, fengari };
+module.exports = { lualib, loadlib, pyroeis };

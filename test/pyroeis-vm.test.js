@@ -212,11 +212,11 @@ describe("PyroeisVm numbers and exports", () => {
         expect(new PyroeisVm().run("return 5.0")).toBe(5);
     });
 
-    test("fengari entry point exposes the VM", () => {
-        const fengari = require("../src/pyroeis.js");
-        expect(fengari.PyroeisVm).toBe(PyroeisVm);
-        expect(fengari.Coroutine).toBeDefined();
-        expect(fengari.lua).toBeDefined();
+    test("pyroeis entry point exposes the VM", () => {
+        const pyroeis = require("../src/pyroeis.js");
+        expect(pyroeis.PyroeisVm).toBe(PyroeisVm);
+        expect(pyroeis.Coroutine).toBeDefined();
+        expect(pyroeis.lua).toBeDefined();
     });
 });
 

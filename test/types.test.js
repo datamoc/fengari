@@ -2,9 +2,9 @@
 
 const fs = require('fs');
 const path = require('path');
-const fengari = require('../src/pyroeis.js');
+const pyroeis = require('../src/pyroeis.js');
 
-const { PyroeisVm, LuaError, LimitError } = fengari;
+const { PyroeisVm, LuaError, LimitError } = pyroeis;
 const declarations = fs.readFileSync(path.join(__dirname, '..', 'src', 'pyroeis.d.ts'), 'utf8').replace(/\r\n/g, '\n');
 
 describe('TypeScript declarations', () => {
@@ -17,13 +17,13 @@ describe('TypeScript declarations', () => {
 
     test('every runtime export is declared', () => {
         const declared = new Set([...declarations.matchAll(/^export (?:declare )?(?:class|const|function|interface|type) (\w+)/gm)].map(m => m[1]));
-        const missing = Object.keys(fengari).filter(name => !declared.has(name));
+        const missing = Object.keys(pyroeis).filter(name => !declared.has(name));
         expect(missing).toEqual([]);
     });
 
     test('every declared class and constant exists at runtime', () => {
         const values = [...declarations.matchAll(/^export (?:class|const) (\w+)/gm)].map(m => m[1]);
-        expect(values.filter(name => !(name in fengari))).toEqual([]);
+        expect(values.filter(name => !(name in pyroeis))).toEqual([]);
     });
 
     test('every public PyroeisVm method that is declared exists', () => {

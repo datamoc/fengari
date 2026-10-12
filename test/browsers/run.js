@@ -67,7 +67,7 @@ async function runIn(name, type, options, bundle) {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pyroeis-browsers-"));
     try {
         const out = path.join(dir, "pyroeis.bundle.js");
-        buildBrowser(entry, out, "Pyroeis", "pyroeis browser test bundle", ["Fengari"]);
+        buildBrowser(entry, out, "Pyroeis", "pyroeis browser test bundle", []);
         const bundle = fs.readFileSync(out, "utf8");
         const chromeOptions = process.env.PYROEIS_CHROME_PATH ? { executablePath: process.env.PYROEIS_CHROME_PATH } : {};
         const ran = [

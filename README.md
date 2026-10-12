@@ -254,7 +254,7 @@ MIT © [Benoit Giannangeli](https://github.com/fengari-lua/fengari), [Daurnimato
 
 ## Migration from @datamoc/fengari
 
-Install `@datamoc/pyroeis` and update your imports. Use `PyroeisVm` for the high-level VM API. The legacy `src/fengari*` entry points and the `FengariVm` alias were removed; use `src/pyroeis.js` / `src/pyroeis-vm.js` and `PyroeisVm`. The browser bundle exposes `Pyroeis` and retains `Fengari` as an alias. Existing Lua extension names and `FENGARICONF` remain supported.
+Install `@datamoc/pyroeis` and update your imports. Use `PyroeisVm` for the high-level VM API. The legacy `src/fengari*` entry points and the `FengariVm` alias were removed; use `src/pyroeis.js` / `src/pyroeis-vm.js` and `PyroeisVm`. The browser bundle exposes `Pyroeis` only. Version 0.6.0 removes the remaining Fengari names: the Lua library `fengari` is now `pyroeis`, the constants `FENGARI_*` are `PYROEIS_*` (and describe Pyroeis, not Fengari), `luaopen_fengari` is `luaopen_pyroeis`, `LUA_FENGARILIBNAME` is `LUA_PYROEISLIBNAME`, the `libs` option takes `'pyroeis'`, and the configuration is read from the `PYROEISCONF` environment variable (a JSON object such as `{"LUAI_MAXSTACK":100000}`) instead of `FENGARICONF`.
 
 ## Interactive demos
 

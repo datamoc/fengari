@@ -52,10 +52,10 @@ jobs:
       - run: yarn lint
       - run: yarn test --maxWorkers=$(nproc)
         env:
-          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+          PYROEISCONF: '{"LUAI_MAXSTACK":100000}'
       - run: yarn test:extended
         env:
-          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+          PYROEISCONF: '{"LUAI_MAXSTACK":100000}'
 
       # staged, not direct: this uploads the tarball but leaves it pending. Configure
       # the npmjs.org trusted publisher for this package to allow only
@@ -69,4 +69,4 @@ jobs:
           if [[ "${{ github.ref_name }}" == *-* ]]; then TAG="--tag alpha"; else TAG=""; fi
           npm stage publish --access public $TAG
         env:
-          FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+          PYROEISCONF: '{"LUAI_MAXSTACK":100000}'

@@ -8,23 +8,24 @@
 
 const defs = require("./defs.js");
 
-const FENGARI_VERSION_MAJOR   = "0";
-const FENGARI_VERSION_MINOR   = "1";
-const FENGARI_VERSION_NUM     = 1;
-const FENGARI_VERSION_RELEASE = "5";
-const FENGARI_VERSION         = "Fengari " + FENGARI_VERSION_MAJOR + "." + FENGARI_VERSION_MINOR;
-const FENGARI_RELEASE         = FENGARI_VERSION + "." + FENGARI_VERSION_RELEASE;
-const FENGARI_AUTHORS         = "B. Giannangeli, Daurnimator";
-const FENGARI_COPYRIGHT       = FENGARI_RELEASE + "  Copyright (C) 2017-2019 " + FENGARI_AUTHORS + "\nBased on: " + defs.LUA_COPYRIGHT;
+/* Keep in step with "version" in package.json (test/pyroeis-version.test.js checks it). */
+const PYROEIS_VERSION_MAJOR   = "0";
+const PYROEIS_VERSION_MINOR   = "6";
+const PYROEIS_VERSION_NUM     = 6;
+const PYROEIS_VERSION_RELEASE = "0";
+const PYROEIS_VERSION         = "Pyroeis " + PYROEIS_VERSION_MAJOR + "." + PYROEIS_VERSION_MINOR;
+const PYROEIS_RELEASE         = PYROEIS_VERSION + "." + PYROEIS_VERSION_RELEASE;
+const PYROEIS_AUTHORS         = "datamoc, B. Giannangeli, Daurnimator";
+const PYROEIS_COPYRIGHT       = PYROEIS_RELEASE + "  Copyright (C) 2026 datamoc\nBased on Fengari, Copyright (C) 2017-2019 B. Giannangeli, Daurnimator\nBased on: " + defs.LUA_COPYRIGHT;
 
-module.exports.FENGARI_AUTHORS         = FENGARI_AUTHORS;
-module.exports.FENGARI_COPYRIGHT       = FENGARI_COPYRIGHT;
-module.exports.FENGARI_RELEASE         = FENGARI_RELEASE;
-module.exports.FENGARI_VERSION         = FENGARI_VERSION;
-module.exports.FENGARI_VERSION_MAJOR   = FENGARI_VERSION_MAJOR;
-module.exports.FENGARI_VERSION_MINOR   = FENGARI_VERSION_MINOR;
-module.exports.FENGARI_VERSION_NUM     = FENGARI_VERSION_NUM;
-module.exports.FENGARI_VERSION_RELEASE = FENGARI_VERSION_RELEASE;
+module.exports.PYROEIS_AUTHORS         = PYROEIS_AUTHORS;
+module.exports.PYROEIS_COPYRIGHT       = PYROEIS_COPYRIGHT;
+module.exports.PYROEIS_RELEASE         = PYROEIS_RELEASE;
+module.exports.PYROEIS_VERSION         = PYROEIS_VERSION;
+module.exports.PYROEIS_VERSION_MAJOR   = PYROEIS_VERSION_MAJOR;
+module.exports.PYROEIS_VERSION_MINOR   = PYROEIS_VERSION_MINOR;
+module.exports.PYROEIS_VERSION_NUM     = PYROEIS_VERSION_NUM;
+module.exports.PYROEIS_VERSION_RELEASE = PYROEIS_VERSION_RELEASE;
 module.exports.is_luastring            = defs.is_luastring;
 module.exports.luastring_eq            = defs.luastring_eq;
 module.exports.luastring_from          = defs.luastring_from;
