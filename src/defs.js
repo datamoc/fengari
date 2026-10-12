@@ -4,41 +4,11 @@
  * Pyroeis specific string conversion functions
  */
 
-let luastring_from;
-if (typeof Uint8Array.from === "function") {
-    luastring_from = Uint8Array.from.bind(Uint8Array);
-} else {
-    luastring_from = function(a) {
-        let i = 0;
-        let len = a.length;
-        let r = new Uint8Array(len);
-        while (len > i) r[i] = a[i++];
-        return r;
-    };
-}
+const luastring_from = Uint8Array.from.bind(Uint8Array);
 
-let luastring_indexOf;
-if (typeof (new Uint8Array().indexOf) === "function") {
-    luastring_indexOf = function(s, v, i) {
-        return s.indexOf(v, i);
-    };
-} else {
-    /* Browsers that don't support Uint8Array.indexOf seem to allow using Array.indexOf on Uint8Array objects e.g. IE11 */
-    let array_indexOf = [].indexOf;
-    if (array_indexOf.call(new Uint8Array(1), 0) !== 0) throw Error("missing .indexOf");
-    luastring_indexOf = function(s, v, i) {
-        return array_indexOf.call(s, v, i);
-    };
-}
+const luastring_indexOf = (s, v, i) => s.indexOf(v, i);
 
-let luastring_of;
-if (typeof Uint8Array.of === "function") {
-    luastring_of = Uint8Array.of.bind(Uint8Array);
-} else {
-    luastring_of = function() {
-        return luastring_from(arguments);
-    };
-}
+const luastring_of = Uint8Array.of.bind(Uint8Array);
 
 const is_luastring = function(s) {
     return s instanceof Uint8Array;
@@ -56,6 +26,17 @@ const luastring_eq = function(a, b) {
     return true;
 };
 
+/* Native UTF-8 codecs beat the byte loops below only on longer strings (measured: decoding from
+   about 16 bytes, encoding from about 150 characters), so shorter strings keep the loops.
+   The decoder is strict: it refuses what the loops below accept (encoded surrogates, overlong
+   forms) or replace, and then the loop decides. The encoder is only used on well-formed strings
+   (String.prototype.isWellFormed, ES2024) because a lone surrogate would become U+FFFD instead of
+   the three-byte form the loop writes. */
+const NATIVE_DECODE_MIN = 16;
+const NATIVE_ENCODE_MIN = 150;
+const utf8_decoder = typeof TextDecoder === "function" ? new TextDecoder("utf-8", { fatal: true, ignoreBOM: true }) : null;
+const utf8_encoder = typeof TextEncoder === "function" && typeof "".isWellFormed === "function" ? new TextEncoder() : null;
+
 const unicode_error_message = "cannot convert invalid utf8 to javascript string";
 const to_jsstring = function(value, from, to, replacement_char) {
     if (!is_luastring(value)) throw new TypeError("to_jsstring expects a Uint8Array");
@@ -66,8 +47,15 @@ const to_jsstring = function(value, from, to, replacement_char) {
         to = Math.min(value.length, to);
     }
 
+    const start = from !== void 0 ? from : 0;
+    if (utf8_decoder !== null && to - start >= NATIVE_DECODE_MIN) {
+        try {
+            return utf8_decoder.decode(start === 0 && to === value.length ? value : value.subarray(start, to));
+        } catch (e) { /* not strict UTF-8: decode it below */ }
+    }
+
     let str = "";
-    for (let i = (from!==void 0?from:0); i < to;) {
+    for (let i = start; i < to;) {
         let u0 = value[i++];
         if (u0 < 0x80) {
             /* single byte sequence */
@@ -185,6 +173,11 @@ const to_luastring = function(str, cache) {
     }
 
     let len = str.length;
+    if (utf8_encoder !== null && len >= NATIVE_ENCODE_MIN && str.isWellFormed()) {
+        const encoded = utf8_encoder.encode(str);
+        if (cache) to_luastring_cache[str] = encoded;
+        return encoded;
+    }
     let outU8Array = Array(len); /* array is at *least* going to be length of string */
     let outIdx = 0;
     for (let i = 0; i < len; ++i) {

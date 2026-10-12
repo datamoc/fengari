@@ -179,7 +179,7 @@ module.exports = function createLdebug(dependencies) {
         if (local) {
             name = local.name;
             lobject.setobjs2s(L, local.pos, L.top - 1);
-            delete L.stack[--L.top];  /* pop value */
+            L.stack[--L.top] = undefined;  /* pop value */
         } else {
             name = null;
         }

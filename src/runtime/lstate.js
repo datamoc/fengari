@@ -48,6 +48,8 @@ module.exports = function createLstate(dependencies) {
 
             this.nresults = NaN;
             this.callstatus = NaN;
+
+            this.integerloops = null;  /* numeric 'for' state by register, created by OP_FORPREP */
         }
 
     }

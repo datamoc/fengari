@@ -507,7 +507,7 @@ if (!isnode) {
     syslib.getenv = function(L) {
         let key = luaL_checkstring(L, 1);
         key = to_jsstring(key); /* https://github.com/nodejs/node/issues/16961 */
-        if (Object.prototype.hasOwnProperty.call(process.env, key)) {
+        if (Object.hasOwn(process.env, key)) {
             lua_pushliteral(L, process.env[key]);
         } else {
             lua_pushnil(L);

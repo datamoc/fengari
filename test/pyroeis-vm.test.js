@@ -417,3 +417,57 @@ describe("PyroeisVm sandbox preset", () => {
         expect(vm.run("return type(load) .. type(dofile)")).toBe("nilnil");
     });
 });
+
+describe("string keys", () => {
+    test("strings whose bytes differ never share a table slot", () => {
+        const vm = new PyroeisVm();
+        /* "\1#" and "\18\3" used to hash to the same key because hex digits were not padded */
+        expect(vm.run('local t = {}; t["\\1#"] = 1; t["\\18\\3"] = 2; return t["\\1#"] * 10 + t["\\18\\3"]')).toBe(12);
+    });
+
+    test("strings compare by byte value", () => {
+        const vm = new PyroeisVm();
+        /* the hex-based key ordered "\10" (0x0a) after "\16" (0x10) */
+        expect(vm.run('return tostring("\\10" < "\\16") .. tostring("\\255" > "\\1") .. tostring("ab" < "abc")')).toBe("truetruetrue");
+    });
+
+    test("long string keys beyond the hashing chunk size stay distinct", () => {
+        const vm = new PyroeisVm();
+        expect(vm.run('local a, b = ("x"):rep(20000) .. "a", ("x"):rep(20000) .. "b"; local t = {[a] = 1, [b] = 2}; return t[a] * 10 + t[b]')).toBe(12);
+    });
+});
+
+describe("numeric for loop", () => {
+    /* Expected values come from the BigInt-only loop that Number state replaced. */
+    const collect = (header) => {
+        const vm = new PyroeisVm();
+        return vm.run(`local t = {} for i = ${header} do t[#t + 1] = tostring(i) if #t >= 12 then break end end return #t .. "|" .. table.concat(t, ",")`);
+    };
+
+    test.each([
+        ["1, 5", "5|1,2,3,4,5"],
+        ["5, 1, -2", "3|5,3,1"],
+        ["1, 0", "0|"],
+        ["math.maxinteger - 2, math.maxinteger", "3|9223372036854775805,9223372036854775806,9223372036854775807"],
+        ["math.maxinteger - 1, math.maxinteger, 3", "1|9223372036854775806"],
+        ["math.mininteger, math.mininteger + 2", "3|-9223372036854775808,-9223372036854775807,-9223372036854775806"],
+        ["math.maxinteger, math.maxinteger - 3, -1", "4|9223372036854775807,9223372036854775806,9223372036854775805,9223372036854775804"],
+        ["9007199254740990, 9007199254740996", "7|9007199254740990,9007199254740991,9007199254740992,9007199254740993,9007199254740994,9007199254740995,9007199254740996"],
+        ["9007199254740995, 9007199254740989, -2", "4|9007199254740995,9007199254740993,9007199254740991,9007199254740989"],
+        ["0, math.maxinteger, math.maxinteger // 4", "5|0,2305843009213693951,4611686018427387902,6917529027641081853,9223372036854775804"],
+        ["1, 3.5", "3|1,2,3"],
+        ["3, 1, -0.5", "5|3.0,2.5,2.0,1.5,1.0"],
+        ["1, math.huge, 7", "12|1,8,15,22,29,36,43,50,57,64,71,78"]
+    ])("for i = %s", (header, expected) => {
+        expect(collect(header)).toBe(expected);
+    });
+
+    test("a zero step is an error", () => {
+        expect(() => new PyroeisVm().run("for i = 1, 3, 0 do end")).toThrow("'for' step is zero");
+    });
+
+    test("assigning to the control variable does not change the iteration", () => {
+        const vm = new PyroeisVm();
+        expect(vm.run('local s = {} for i = 1, 4 do local j = i; i = i * 10; s[#s + 1] = j .. ":" .. i end return table.concat(s, ",")')).toBe("1:10,2:20,3:30,4:40");
+    });
+});

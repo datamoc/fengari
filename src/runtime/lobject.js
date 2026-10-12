@@ -196,6 +196,17 @@ module.exports = function createLobject(dependencies) {
             this.value = integer.wrap(x);
         }
 
+        /* for a value that is already canonical (a result of the integer module): no wrap */
+        setivalueRaw(x) {
+            this.type = LUA_TNUMINT;
+            this.value = x;
+        }
+
+        chgivalueRaw(x) {
+            lua_assert(this.type == LUA_TNUMINT);
+            this.value = x;
+        }
+
         setnilvalue() {
             this.type = LUA_TNIL;
             this.value = null;
@@ -520,7 +531,7 @@ module.exports = function createLobject(dependencies) {
         let pmode = 0;
         for (let i=0; i<l; i++) {
             let v = s[i];
-            if (SIGILS.indexOf(v) !== -1) {
+            if (SIGILS.includes(v)) {
                 pmode = v;
                 break;
             }
@@ -760,7 +771,7 @@ module.exports = function createLobject(dependencies) {
             case LUA_OPSUB:  return v1 - v2;
             case LUA_OPMUL:  return v1 * v2;
             case LUA_OPDIV:  return v1 / v2;
-            case LUA_OPPOW:  return Math.pow(v1, v2);
+            case LUA_OPPOW:  return v1 ** v2;
             case LUA_OPIDIV: return Math.floor(v1 / v2);
             case LUA_OPUNM:  return -v1;
             case LUA_OPMOD:  return luai_nummod(L, v1, v2);
