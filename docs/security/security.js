@@ -121,4 +121,15 @@ runButton.addEventListener("click", () => compare(SECURITY_CASES.filter(item => 
 allButton.addEventListener("click", () => compare(SECURITY_CASES));
 stopButton.addEventListener("click", () => { cancelled = true; for (const cancel of [...pending]) cancel(); });
 select.addEventListener("change", showSource);
+/* A link such as `#allocation` selects its case, so the test matrix can point at a runnable
+   comparison; any other fragment is left to the browser's own anchor scrolling. */
+function selectFromHash() {
+    const id = location.hash.slice(1);
+    if (SECURITY_CASES.some(item => item.id === id)) {
+        select.value = id;
+        showSource();
+    }
+}
+window.addEventListener("hashchange", selectFromHash);
+selectFromHash();
 showSource();
