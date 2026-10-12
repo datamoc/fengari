@@ -11,7 +11,7 @@
 })(typeof self !== "undefined" ? self : this, function() {
     "use strict";
 
-    return [
+    const benches = [
         {
             id: "expression",
             title: "Simple numeric expression",
@@ -288,4 +288,21 @@ end`,
             }
         }
     ];
+    const FR = {
+        expression: ["Expression numérique simple", "paramètres et arithmétique flottante"],
+        sum: ["Somme entière", "une boucle numérique complète"],
+        nested: ["Boucles numériques imbriquées", "compteurs entiers et accumulation flottante"],
+        fib: ["Fibonacci récursif", "appels de fonctions et arithmétique entière"],
+        sieve: ["Crible d'Ératosthène", "lectures et écritures de tableaux en boucles serrées"],
+        mandelbrot: ["Ensemble de Mandelbrot", "arithmétique flottante"],
+        matmul: ["Multiplication de matrices", "tables et tableaux imbriqués"],
+        sort: ["Tri d'entiers pseudo-aléatoires", "tri de la bibliothèque standard avec fonction de comparaison"],
+        strings: ["Construction et recherche de chaînes", "bibliothèque string : concaténation, gsub et découpage"],
+        collatz: ["Plus longue chaîne de Collatz", "boucles entières avec branchements"]
+    };
+    for (const bench of benches) {
+        const french = FR[bench.id];
+        if (french) { bench.titleFr = french[0]; bench.whatFr = french[1]; }
+    }
+    return benches;
 });

@@ -1,5 +1,8 @@
 "use strict";
 
+const I = window.PyroeisI18n || { t: (en) => en, onLang: () => {}, currentLang: () => "en" };
+const T = (en, fr) => I.t(en, fr);
+
 const canvas = document.getElementById("map");
 const context = canvas.getContext("2d");
 const statusLine = document.getElementById("status");
@@ -22,7 +25,8 @@ const MAP = [
 ];
 const SAMPLES = [{ x: 13, y: 1 }, { x: 2, y: 4 }, { x: 10, y: 4 }, { x: 7, y: 6 }, { x: 13, y: 9 }, { x: 2, y: 9 }];
 const PRESETS = {
-    nearest: `-- Choisir la cible la plus proche à chaque tour.
+    nearest: {
+        en: `-- Pick the nearest target each turn.
 function choose(targets)
   local best = 1
   for i, target in ipairs(targets) do
@@ -32,7 +36,19 @@ function choose(targets)
   end
   return best
 end`,
-    farthest: `-- Visiter d’abord les cibles les plus éloignées.
+        fr: `-- Choisir la cible la plus proche à chaque tour.
+function choose(targets)
+  local best = 1
+  for i, target in ipairs(targets) do
+    if target.distance < targets[best].distance then
+      best = i
+    end
+  end
+  return best
+end`
+    },
+    farthest: {
+        en: `-- Visit the farthest targets first.
 function choose(targets)
   local best = 1
   for i, target in ipairs(targets) do
@@ -42,15 +58,41 @@ function choose(targets)
   end
   return best
 end`,
-    order: `-- La carte garde un ordre stable pour les cibles.
+        fr: `-- Visiter d’abord les cibles les plus éloignées.
+function choose(targets)
+  local best = 1
+  for i, target in ipairs(targets) do
+    if target.distance > targets[best].distance then
+      best = i
+    end
+  end
+  return best
+end`
+    },
+    order: {
+        en: `-- The map keeps a stable order of targets.
 function choose(targets)
   return 1
 end`,
-    loop: `-- Pyroeis doit interrompre cette décision.
+        fr: `-- La carte garde un ordre stable pour les cibles.
+function choose(targets)
+  return 1
+end`
+    },
+    loop: {
+        en: `-- Pyroeis must interrupt this decision.
+function choose(targets)
+  while true do end
+end`,
+        fr: `-- Pyroeis doit interrompre cette décision.
 function choose(targets)
   while true do end
 end`
+    }
 };
+function presetSource(key) {
+    return T(PRESETS[key].en, PRESETS[key].fr);
+}
 
 let worker = null;
 let ready = null;
@@ -64,7 +106,7 @@ const requests = new Map();
 function stop() {
     running = false;
     clearTimeout(autoTimer);
-    playButton.textContent = "Lancer le robot";
+    playButton.textContent = T("Start the robot", "Lancer le robot");
 }
 function failWorker(message) {
     worker?.terminate();
@@ -75,7 +117,7 @@ function failWorker(message) {
 function createWorker() {
     worker = new Worker("lua-worker.js");
     ready = new Promise((resolve, reject) => {
-        const loading = setTimeout(() => { failWorker("Chargement Lua trop long."); reject(new Error("Chargement Lua trop long.")); }, 15000);
+        const loading = setTimeout(() => { failWorker(T("Lua loading took too long.", "Chargement Lua trop long.")); reject(new Error(T("Lua loading took too long.", "Chargement Lua trop long."))); }, 15000);
         worker.onmessage = ({ data }) => {
             if (data.kind === "ready") { clearTimeout(loading); resolve(); return; }
             const pending = requests.get(data.id);
@@ -87,7 +129,7 @@ function createWorker() {
         };
         worker.onerror = event => {
             clearTimeout(loading);
-            const message = event.message || "Impossible de charger le worker Lua.";
+            const message = event.message || T("Cannot load the Lua worker.", "Impossible de charger le worker Lua.");
             reject(new Error(message));
             failWorker(message);
         };
@@ -98,7 +140,7 @@ async function request(action, payload) {
     await ready;
     return new Promise((resolve, reject) => {
         const id = ++serial;
-        const timer = setTimeout(() => failWorker("Le watchdog a arrêté le worker après 2 secondes. Appliquez une nouvelle stratégie."), 2000);
+        const timer = setTimeout(() => failWorker(T("The watchdog stopped the worker after 2 seconds. Apply a new strategy.", "Le watchdog a arrêté le worker après 2 secondes. Appliquez une nouvelle stratégie.")), 2000);
         requests.set(id, { resolve, reject, timer });
         worker.postMessage({ id, action, ...payload });
     });
@@ -138,10 +180,10 @@ class MarsScene extends mw_games.Scene {
         this.redraw();
         if (!this.samples.length) {
             stop();
-            statusLine.textContent = `Mission terminée : 6 échantillons en ${this.turns} tours.`;
+            statusLine.textContent = T(`Mission complete: 6 samples in ${this.turns} turns.`, `Mission terminée : 6 échantillons en ${this.turns} tours.`);
         } else if (this.turns >= 120) {
             stop();
-            statusLine.textContent = "120 tours écoulés. Essayez une stratégie qui évite de changer de cible sans cesse.";
+            statusLine.textContent = T("120 turns elapsed. Try a strategy that avoids switching targets constantly.", "120 tours écoulés. Essayez une stratégie qui évite de changer de cible sans cesse.");
         }
     }
     redraw() {
@@ -180,9 +222,10 @@ class MarsScene extends mw_games.Scene {
         context.beginPath(); context.roundRect(x - 10, y - 13, 20, 25, 5); context.fill();
         context.fillStyle = "#fff0dc"; context.fillRect(x - 6, y - 8, 12, 6);
         context.strokeStyle = "#ffb391"; context.lineWidth = 2; context.beginPath(); context.moveTo(x + 5, y - 13); context.lineTo(x + 8, y - 20); context.stroke();
-        document.getElementById("collected").textContent = `${6 - this.samples.length} / 6 échantillons`;
-        document.getElementById("turns").textContent = "Tour " + this.turns;
-        canvas.setAttribute("aria-label", `Carte martienne : robot en ${this.robot.x}, ${this.robot.y} ; ${this.samples.length} échantillons restants ; tour ${this.turns}.`);
+        document.getElementById("collected").textContent = T(`${6 - this.samples.length} / 6 samples`, `${6 - this.samples.length} / 6 échantillons`);
+        document.getElementById("turns").textContent = T("Turn ", "Tour ") + this.turns;
+        canvas.setAttribute("aria-label", T(`Mars map: robot at ${this.robot.x}, ${this.robot.y}; ${this.samples.length} samples left; turn ${this.turns}.`,
+            `Carte martienne : robot en ${this.robot.x}, ${this.robot.y} ; ${this.samples.length} échantillons restants ; tour ${this.turns}.`));
     }
 }
 const stack = new mw_games.SceneStack();
@@ -194,8 +237,8 @@ async function apply() {
     setBusy(true);
     try {
         await request("apply", { source: editor.value });
-        statusLine.textContent = "Stratégie appliquée. Avancez d’un tour ou lancez le robot.";
-    } catch (error) { statusLine.textContent = "Script refusé : " + error.message; }
+        statusLine.textContent = T("Strategy applied. Step one turn or start the robot.", "Stratégie appliquée. Avancez d’un tour ou lancez le robot.");
+    } catch (error) { statusLine.textContent = T("Script rejected: ", "Script refusé : ") + error.message; }
     finally { setBusy(false); }
 }
 async function step() {
@@ -206,36 +249,37 @@ async function step() {
     setBusy(true);
     try {
         const targets = scene.candidates();
-        if (!targets.length) throw new Error("Aucune cible accessible.");
+        if (!targets.length) throw new Error(T("No reachable target.", "Aucune cible accessible."));
         const choice = await request("choose", { targets: targets.map(({ route, ...sample }) => sample) });
         if (currentGeneration !== generation) return;
         const target = targets[choice.index - 1];
         scene.route = target.route;
-        document.getElementById("log").textContent = `Tour ${scene.turns + 1} : Lua choisit l’échantillon ${target.id}.\nMWG trouve un chemin de ${target.distance} pas.\nProchain déplacement : (${target.route[0].x}, ${target.route[0].y}).`;
+        document.getElementById("log").textContent = T(`Turn ${scene.turns + 1}: Lua picks sample ${target.id}.\nMWG finds a ${target.distance}-step path.\nNext move: (${target.route[0].x}, ${target.route[0].y}).`,
+            `Tour ${scene.turns + 1} : Lua choisit l’échantillon ${target.id}.\nMWG trouve un chemin de ${target.distance} pas.\nProchain déplacement : (${target.route[0].x}, ${target.route[0].y}).`);
         scene.move(target.route[0]);
-        if (scene.samples.length && scene.turns < 120) statusLine.textContent = `Cible ${target.id} choisie par Lua ; ${target.distance - 1} pas avant cette cible.`;
+        if (scene.samples.length && scene.turns < 120) statusLine.textContent = T(`Target ${target.id} chosen by Lua; ${target.distance - 1} steps to that target.`, `Cible ${target.id} choisie par Lua ; ${target.distance - 1} pas avant cette cible.`);
     } catch (error) {
         stop();
-        statusLine.textContent = "Robot arrêté : " + error.message;
+        statusLine.textContent = T("Robot stopped: ", "Robot arrêté : ") + error.message;
     } finally {
         setBusy(false);
         if (running) autoTimer = setTimeout(step, Number(document.getElementById("speed").value));
     }
 }
-editor.value = PRESETS.nearest;
-document.getElementById("preset").addEventListener("change", event => { stop(); editor.value = PRESETS[event.target.value]; statusLine.textContent = "Appliquez le nouvel exemple pour l’utiliser."; });
-editor.addEventListener("input", () => { stop(); statusLine.textContent = "Script modifié. Cliquez sur Appliquer le script pour l’utiliser."; });
+editor.value = presetSource("nearest");
+document.getElementById("preset").addEventListener("change", event => { stop(); editor.value = presetSource(event.target.value); statusLine.textContent = T("Apply the new example to use it.", "Appliquez le nouvel exemple pour l’utiliser."); });
+editor.addEventListener("input", () => { stop(); statusLine.textContent = T("Script edited. Click Apply the script to use it.", "Script modifié. Cliquez sur Appliquer le script pour l’utiliser."); });
 applyButton.addEventListener("click", apply);
 stepButton.addEventListener("click", step);
 playButton.addEventListener("click", () => {
-    if (running) { stop(); statusLine.textContent = "Robot en pause."; }
-    else { running = true; playButton.textContent = "Mettre en pause"; step(); }
+    if (running) { stop(); statusLine.textContent = T("Robot paused.", "Robot en pause."); }
+    else { running = true; playButton.textContent = T("Pause", "Mettre en pause"); step(); }
 });
 document.getElementById("reset").addEventListener("click", () => {
     stop(); generation++;
     stack.replace(new MarsScene());
-    document.getElementById("log").textContent = "Le chemin affiché est calculé par MWG.";
-    statusLine.textContent = "Carte réinitialisée. La stratégie appliquée est conservée.";
+    document.getElementById("log").textContent = T("The displayed path is computed by MWG.", "Le chemin affiché est calculé par MWG.");
+    statusLine.textContent = T("Map reset. The applied strategy is kept.", "Carte réinitialisée. La stratégie appliquée est conservée.");
 });
 document.addEventListener("keydown", event => {
     if (event.target.matches("textarea, input, select, button") || busy) return;
@@ -246,5 +290,16 @@ document.addEventListener("keydown", event => {
     if (!scene.samples.length || scene.turns >= 120) return;
     scene.route = [];
     scene.move({ x: scene.robot.x + direction[0], y: scene.robot.y + direction[1] });
+});
+I.onLang(() => {
+    /* Refresh the editor only when it still holds an untouched preset. */
+    for (const key of Object.keys(PRESETS)) {
+        if (editor.value === PRESETS[key].en || editor.value === PRESETS[key].fr) {
+            editor.value = presetSource(key);
+            break;
+        }
+    }
+    document.getElementById("log").textContent = T("The displayed path is computed by MWG.", "Le chemin affiché est calculé par MWG.");
+    stack.current.redraw();
 });
 apply();

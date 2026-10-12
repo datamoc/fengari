@@ -18,6 +18,13 @@ header.site-header { max-width: 1200px; margin: auto; padding: 1rem 1.5rem; disp
 .site-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-left: auto; font-size: .9rem; }
 .site-nav a { text-decoration: none; }
 .site-nav a[aria-current="page"] { text-decoration: underline; font-weight: 700; }
+.lang-switch { display: inline-flex; gap: .25rem; align-items: center; }
+.lang-switch button { padding: .3rem .55rem; font-size: .8rem; }
+.lang-switch button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); font-weight: 700; }
+/* Bilingual pages: French blocks hidden unless the page language is French. */
+[data-l="fr"] { display: none; }
+html[lang="fr"] [data-l="en"] { display: none; }
+html[lang="fr"] [data-l="fr"] { display: revert; }
 main.site-main { max-width: 1200px; margin: auto; padding: 2.5rem 1.5rem 4rem; }
 h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.1; letter-spacing: -.035em; margin: 0 0 1.2rem; }
 h2 { font-size: 1.45rem; line-height: 1.3; margin: 2.5rem 0 .75rem; }

@@ -6,8 +6,37 @@ self.onmessage = ({ data }) => {
     const trace = [];
     const refs = new Set();
     let vm;
+    const STR = {
+        en: {
+            depth: "[display depth limited]",
+            seen: "[already displayed reference]",
+            scaleArgs: "host.scale expects two finite numbers.",
+            scaleResult: "Non-finite result rejected.",
+            traceLimit: "The demo limits the log to 100 exchanges.",
+            callbackReturn: "callback return",
+            callMulti: "vm.callMulti('exchange', data)",
+            exchangeReturns: "exchange returns",
+            refCall: "ref.call(7)",
+            refReturn: "return of the referenced function",
+            expectedFunction: "This example expects a Lua function as its first return."
+        },
+        fr: {
+            depth: "[profondeur d’affichage limitée]",
+            seen: "[référence déjà affichée]",
+            scaleArgs: "host.scale attend deux nombres finis.",
+            scaleResult: "Résultat non fini refusé.",
+            traceLimit: "La démonstration limite le journal à 100 échanges.",
+            callbackReturn: "retour du callback",
+            callMulti: "vm.callMulti('exchange', data)",
+            exchangeReturns: "retours de exchange",
+            refCall: "ref.call(7)",
+            refReturn: "retour de la fonction référencée",
+            expectedFunction: "Cet exemple attend une fonction Lua comme premier retour."
+        }
+    };
+    const S = STR[data.lang] === undefined ? STR.en : STR[data.lang];
     function inspect(value, seen = new WeakSet(), depth = 0) {
-        if (depth > 20) return "[profondeur d’affichage limitée]";
+        if (depth > 20) return S.depth;
         if (value instanceof Pyroeis.LuaRef) {
             refs.add(value);
             return { type: "LuaRef", luaType: value.type };
@@ -18,7 +47,7 @@ self.onmessage = ({ data }) => {
         if (value instanceof Pyroeis.LuaFloat) return { type: "LuaFloat", value: value.value };
         if (typeof value === "number" && !Number.isFinite(value)) return { type: "Number", value: String(value) };
         if (value === null || typeof value !== "object") return value;
-        if (seen.has(value)) return "[référence déjà affichée]";
+        if (seen.has(value)) return S.seen;
         seen.add(value);
         if (Array.isArray(value)) return value.map(entry => inspect(entry, seen, depth + 1));
         if (value instanceof Map) return { type: "Map", entries: Array.from(value, ([key, entry]) => [inspect(key, seen, depth + 1), inspect(entry, seen, depth + 1)]) };
@@ -33,29 +62,29 @@ self.onmessage = ({ data }) => {
         });
         vm.defineFunction("host.scale", (value, factor) => {
             if (typeof value !== "number" || typeof factor !== "number" || !Number.isFinite(value) || !Number.isFinite(factor)) {
-                throw new Error("host.scale attend deux nombres finis.");
+                throw new Error(S.scaleArgs);
             }
             const result = value * factor;
-            if (!Number.isFinite(result)) throw new Error("Résultat non fini refusé.");
-            if (trace.length >= 100) throw new Error("La démonstration limite le journal à 100 échanges.");
+            if (!Number.isFinite(result)) throw new Error(S.scaleResult);
+            if (trace.length >= 100) throw new Error(S.traceLimit);
             trace.push({ direction: "Lua → JavaScript", operation: "host.scale(value, factor)", arguments: [value, factor] });
-            trace.push({ direction: "JavaScript → Lua", operation: "retour du callback", value: result });
+            trace.push({ direction: "JavaScript → Lua", operation: S.callbackReturn, value: result });
             return result;
         });
         vm.run(data.source, "=exchange-demo");
-        trace.push({ direction: "JavaScript → Lua", operation: "vm.callMulti('exchange', data)", value: inspect(data.payload) });
+        trace.push({ direction: "JavaScript → Lua", operation: S.callMulti, value: inspect(data.payload) });
         const values = vm.callMulti("exchange", data.payload);
         const returned = values.map(value => inspect(value));
-        trace.push({ direction: "Lua → JavaScript", operation: "retours de exchange", value: returned });
+        trace.push({ direction: "Lua → JavaScript", operation: S.exchangeReturns, value: returned });
         if (data.mode === "reference") {
             const ref = values[0];
             if (!(ref instanceof Pyroeis.LuaRef) || ref.type !== "function") {
-                throw new Error("Cet exemple attend une fonction Lua comme premier retour.");
+                throw new Error(S.expectedFunction);
             }
             refs.add(ref);
-            trace.push({ direction: "JavaScript → Lua", operation: "ref.call(7)", value: 7 });
+            trace.push({ direction: "JavaScript → Lua", operation: S.refCall, value: 7 });
             const result = ref.call(7);
-            trace.push({ direction: "Lua → JavaScript", operation: "retour de la fonction référencée", value: inspect(result) });
+            trace.push({ direction: "Lua → JavaScript", operation: S.refReturn, value: inspect(result) });
         }
         self.postMessage({ kind: "result", returned, inputAfter: data.payload, trace, output: vm.output });
     } catch (error) {

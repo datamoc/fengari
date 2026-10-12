@@ -27,4 +27,15 @@ limits of the model. Its source is [interop/index.html](interop/index.html).
 
 `index.html` is the site entry point. `security/` compares pinned upstream Fengari 0.1.5 with Pyroeis under resource limits; `benchmark/` compares upstream, interpreted Pyroeis, compiled Lua and JavaScript; `lua2js/` translates Lua; `mwg/` runs a Lua-controlled robot using MWG 0.35.1.
 
+Every page is bilingual English/French. Static text uses paired
+`<span data-l="en">…</span><span data-l="fr">…</span>` blocks (toggled by
+`assets/site.css` from `<html lang>`), while `title`, `meta`, `aria-label`
+and `<option>` strings use `data-en`/`data-fr` attributes swapped by
+`assets/i18n.js`. Keep both versions in sync when editing copy.
+`assets/i18n.js` defaults to English and switches to French only when the
+browser lists French before English (`navigator.languages`); visitors can
+override with the EN/FR switcher (`?lang=` works too). Dynamic demo strings
+live in each page's scripts (and the `lua2js` workers, which take `lang` in
+their first message) via `PyroeisI18n.t(en, fr)`.
+
 Build with `npm run pages:build`, then serve this directory over HTTP. Generated bundles, dependency licenses and the integrity manifest live in `assets/` and are excluded from Git. `.github/workflows/deploy-pages.yml` rebuilds these assets and deploys this directory. Scripts run locally in the browser; the security examples and editable game scripts run in terminable workers.

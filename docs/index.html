@@ -1,35 +1,36 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pyroeis — Lua dans le navigateur</title>
-  <meta name="description" content="Pyroeis, une VM Lua en JavaScript : limites d’exécution, benchmarks et jeu MWG piloté par Lua.">
+  <title data-en="Pyroeis — Lua in the browser" data-fr="Pyroeis — Lua dans le navigateur">Pyroeis — Lua in the browser</title>
+  <meta name="description" data-attr="content" data-en="Pyroeis, a Lua VM in JavaScript: execution limits, benchmarks and an MWG game driven by Lua." data-fr="Pyroeis, une VM Lua en JavaScript : limites d’exécution, benchmarks et jeu MWG piloté par Lua." content="Pyroeis, a Lua VM in JavaScript: execution limits, benchmarks and an MWG game driven by Lua.">
   <link rel="icon" href="assets/pyroeis.svg" type="image/svg+xml">
   <link rel="alternate icon" href="assets/pyroeis.png" type="image/png">
   <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/i18n.js"></script>
 </head>
 <body>
   <header class="site-header">
     <a class="brand" href="./" aria-current="page"><img src="assets/pyroeis.svg" alt="">Pyroeis</a>
-    <nav class="site-nav" aria-label="Navigation principale"><a href="security/">Sécurité</a><a href="benchmark/">Benchmarks</a><a href="lua2js/">Lua ↔ JavaScript</a><a href="mwg/">Démo MWG</a><a href="interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav>
+    <nav class="site-nav" data-attr="aria-label" data-en="Main navigation" data-fr="Navigation principale" aria-label="Main navigation"><a href="security/"><span data-l="en">Security</span><span data-l="fr">Sécurité</span></a><a href="benchmark/"><span data-l="en">Benchmarks</span><span data-l="fr">Benchmarks</span></a><a href="lua2js/"><span data-l="en">Lua ↔ JavaScript</span><span data-l="fr">Lua ↔ JavaScript</span></a><a href="mwg/"><span data-l="en">MWG demo</span><span data-l="fr">Démo MWG</span></a><a href="interop/"><span data-l="en">JS ↔ Lua</span><span data-l="fr">JS ↔ Lua</span></a><a href="https://github.com/datamoc/pyroeis">GitHub</a><span class="lang-switch" role="group" aria-label="Language / Langue"><button type="button" data-set-lang="en">EN</button><button type="button" data-set-lang="fr">FR</button></span></nav>
   </header>
   <main class="site-main">
     <section class="hero">
-      <div><h1>Pyroeis</h1><p class="lead">Du Lua dans vos applications JavaScript, avec un budget d’exécution décidé par le code hôte.</p><p>Une VM Lua 5.4.6 pour le navigateur et Node.js, un compilateur numérique optionnel et un outil pour traduire vos sources Lua en JavaScript.</p><code class="install">npm install @datamoc/pyroeis</code></div>
-      <img src="assets/pyroeis.svg" alt="Logo Pyroeis : Mars rouge dans un ciel nocturne" width="250" height="250">
+      <div><h1>Pyroeis</h1><p class="lead" data-en="Lua in your JavaScript applications, with an execution budget decided by the host code." data-fr="Du Lua dans vos applications JavaScript, avec un budget d’exécution décidé par le code hôte.">Lua in your JavaScript applications, with an execution budget decided by the host code.</p><p><span data-l="en">A Lua 5.4.6 VM for browsers and Node.js, an optional numeric compiler and a tool to translate your Lua sources to JavaScript.</span><span data-l="fr">Une VM Lua 5.4.6 pour le navigateur et Node.js, un compilateur numérique optionnel et un outil pour traduire vos sources Lua en JavaScript.</span></p><code class="install">npm install @datamoc/pyroeis</code></div>
+      <img src="assets/pyroeis.svg" data-attr="alt" data-en="Pyroeis logo: a red Mars in a night sky" data-fr="Logo Pyroeis : Mars rouge dans un ciel nocturne" alt="Pyroeis logo: a red Mars in a night sky" width="250" height="250">
     </section>
-    <h2>Essayez le moteur</h2>
+    <h2><span data-l="en">Try the engine</span><span data-l="fr">Essayez le moteur</span></h2>
     <div class="destinations">
-      <article class="destination"><a href="security/">Les limites à l’épreuve</a><p>Exécutez les mêmes scripts sur Fengari 0.1.5 et Pyroeis. Observez les recherches de motifs coûteuses, les erreurs attrapées et les plafonds d’allocation.</p></article>
-      <article class="destination"><a href="benchmark/">Mesurer les performances</a><p>Fengari amont, Pyroeis interprété, Lua compilé et JavaScript natif : mêmes algorithmes, mêmes entrées, résultats vérifiés dans votre navigateur.</p></article>
-      <article class="destination"><a href="mwg/">Un robot, MWG et votre Lua</a><p>Changez la stratégie du robot, appliquez le script et regardez-le récolter des échantillons sur Mars. La carte et les chemins viennent du framework MWG.</p></article>
-      <article class="destination"><a href="lua2js/">Lua ↔ JavaScript</a><p>Envoyez des données à Lua, appelez JavaScript depuis Lua et recevez des tables, plusieurs retours ou une fonction Lua. Suspendez aussi Lua pendant un dialogue utilisateur et reprenez avec sa réponse. Le traducteur de sources reste disponible sur la même page.</p></article>
+      <article class="destination"><a href="security/"><span data-l="en">Limits put to the test</span><span data-l="fr">Les limites à l’épreuve</span></a><p><span data-l="en">Run the same scripts on Fengari 0.1.5 and Pyroeis. Watch costly pattern searches, caught errors and allocation ceilings.</span><span data-l="fr">Exécutez les mêmes scripts sur Fengari 0.1.5 et Pyroeis. Observez les recherches de motifs coûteuses, les erreurs attrapées et les plafonds d’allocation.</span></p></article>
+      <article class="destination"><a href="benchmark/"><span data-l="en">Measure performance</span><span data-l="fr">Mesurer les performances</span></a><p><span data-l="en">Upstream Fengari, interpreted Pyroeis, compiled Lua and native JavaScript: same algorithms, same inputs, results verified in your browser.</span><span data-l="fr">Fengari amont, Pyroeis interprété, Lua compilé et JavaScript natif : mêmes algorithmes, mêmes entrées, résultats vérifiés dans votre navigateur.</span></p></article>
+      <article class="destination"><a href="mwg/"><span data-l="en">A robot, MWG and your Lua</span><span data-l="fr">Un robot, MWG et votre Lua</span></a><p><span data-l="en">Change the robot strategy, apply the script and watch it collect samples on Mars. The map and paths come from the MWG framework.</span><span data-l="fr">Changez la stratégie du robot, appliquez le script et regardez-le récolter des échantillons sur Mars. La carte et les chemins viennent du framework MWG.</span></p></article>
+      <article class="destination"><a href="lua2js/"><span data-l="en">Lua ↔ JavaScript</span><span data-l="fr">Lua ↔ JavaScript</span></a><p><span data-l="en">Send data to Lua, call JavaScript from Lua and receive tables, multiple returns or a Lua function. Also suspend Lua during a user dialogue and resume with its answer. The source translator is on the same page.</span><span data-l="fr">Envoyez des données à Lua, appelez JavaScript depuis Lua et recevez des tables, plusieurs retours ou une fonction Lua. Suspendez aussi Lua pendant un dialogue utilisateur et reprenez avec sa réponse. Le traducteur de sources reste disponible sur la même page.</span></p></article>
     </div>
-    <h2>Un projet indépendant issu de Fengari</h2>
-    <p><a href="interop/">Pourquoi notre interface d’échange JavaScript ↔ Lua ?</a> Le contrat des données, les fonctions exposées à Lua et les différences avec fengari-interop.</p>
-    <p>Pyroeis poursuit son propre développement à partir du travail de Benoit Giannangeli, Daurnimator et des contributeurs de <a href="https://github.com/fengari-lua/fengari">Fengari</a>. Les crédits et la licence MIT sont conservés.</p>
-    <p>Le langage actuellement implémenté est Lua 5.4.6. Le passage à Lua 5.5.1 est <a href="https://github.com/datamoc/pyroeis/tree/master/docs/lua-5.5.1">en cours</a>. Les limites d’exécution complètent le préréglage de sandbox ; les callbacks JavaScript que vous fournissez restent sous votre responsabilité.</p>
+    <h2><span data-l="en">An independent project grown from Fengari</span><span data-l="fr">Un projet indépendant issu de Fengari</span></h2>
+    <p><a href="interop/"><span data-l="en">Why our JavaScript ↔ Lua exchange interface?</span><span data-l="fr">Pourquoi notre interface d’échange JavaScript ↔ Lua ?</span></a> <span data-l="en">The data contract, the functions exposed to Lua and the differences with fengari-interop.</span><span data-l="fr">Le contrat des données, les fonctions exposées à Lua et les différences avec fengari-interop.</span></p>
+    <p><span data-l="en">Pyroeis continues its own development from the work of Benoit Giannangeli, Daurnimator and the contributors of <a href="https://github.com/fengari-lua/fengari">Fengari</a>. Credits and the MIT licence are preserved.</span><span data-l="fr">Pyroeis poursuit son propre développement à partir du travail de Benoit Giannangeli, Daurnimator et des contributeurs de <a href="https://github.com/fengari-lua/fengari">Fengari</a>. Les crédits et la licence MIT sont conservés.</span></p>
+    <p><span data-l="en">The currently implemented language is Lua 5.4.6. The move to Lua 5.5.1 is <a href="https://github.com/datamoc/pyroeis/tree/master/docs/lua-5.5.1">in progress</a>. Execution limits complement the sandbox preset; the JavaScript callbacks you provide stay your responsibility.</span><span data-l="fr">Le langage actuellement implémenté est Lua 5.4.6. Le passage à Lua 5.5.1 est <a href="https://github.com/datamoc/pyroeis/tree/master/docs/lua-5.5.1">en cours</a>. Les limites d’exécution complètent le préréglage de sandbox ; les callbacks JavaScript que vous fournissez restent sous votre responsabilité.</span></p>
     <pre><code>const { PyroeisVm } = require('@datamoc/pyroeis');
 const vm = new PyroeisVm(undefined, undefined, {
   sandbox: true,
@@ -37,6 +38,7 @@ const vm = new PyroeisVm(undefined, undefined, {
 });
 console.log(vm.run('return 6 * 7')); // 42</code></pre>
   </main>
-  <footer class="site-footer">Pyroeis · <a href="https://github.com/datamoc/pyroeis">Sources et documentation</a> · MIT · <a href="assets/vendor-manifest.json">Versions des dépendances des démos</a></footer>
+  <footer class="site-footer"><span data-l="en">Pyroeis · <a href="https://github.com/datamoc/pyroeis">Sources and documentation</a> · MIT · <a href="assets/vendor-manifest.json">Demo dependency versions</a></span><span data-l="fr">Pyroeis · <a href="https://github.com/datamoc/pyroeis">Sources et documentation</a> · MIT · <a href="assets/vendor-manifest.json">Versions des dépendances des démos</a></span></footer>
+  <noscript><p><span data-l="en">These demos need JavaScript.</span><span data-l="fr">Ces démos nécessitent JavaScript.</span></p></noscript>
 </body>
 </html>
