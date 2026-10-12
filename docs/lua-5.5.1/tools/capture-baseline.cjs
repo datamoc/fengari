@@ -8,8 +8,8 @@ const { execFileSync } = require("child_process");
 const repository = path.resolve(__dirname, "../../..");
 const directory = path.resolve(__dirname, "..");
 const reference = path.join(directory, "reference/lua-5.5.1");
-const fengari = require(path.join(repository, "src/fengari.js"));
-const { lua, lauxlib, lualib, to_luastring, to_jsstring } = fengari;
+const pyroeis = require(path.join(repository, "src/pyroeis.js"));
+const { lua, lauxlib, lualib, to_luastring, to_jsstring } = pyroeis;
 
 function filesUnder(folder) {
     return fs.readdirSync(folder, { withFileTypes: true }).flatMap(entry => {

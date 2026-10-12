@@ -35,7 +35,7 @@ and `<option>` strings use `data-en`/`data-fr` attributes swapped by
 `assets/i18n.js` defaults to English and switches to French only when the
 browser lists French before English (`navigator.languages`); visitors can
 override with the EN/FR switcher (`?lang=` works too). Dynamic demo strings
-live in each page's scripts (and the `lua2js` workers, which take `lang` in
+live in each page’s scripts (and the `lua2js` workers, which take `lang` in
 their first message) via `PyroeisI18n.t(en, fr)`.
 
 Build with `npm run pages:build`, then serve this directory over HTTP. Generated bundles, dependency licenses and the integrity manifest live in `assets/` and are excluded from Git. `.github/workflows/deploy-pages.yml` rebuilds these assets and deploys this directory. Scripts run locally in the browser; the security examples and editable game scripts run in terminable workers.

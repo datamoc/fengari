@@ -33,7 +33,7 @@ is not the attribute syntax of the target manual.
 - `src/library-runtime.js` composes the libraries and the public API; library
   names live in `src/lualib-constants.js`.
 - `src/luaconf-base.js` shares the configuration without a cycle with `defs.js`.
-- `src/fengari-vm.js` provides a JS integration extension. Its methods are not
+- `src/pyroeis-vm.js` provides a JS integration extension. Its methods are not
   part of the Lua specification and must have their own regressions.
 
 ## Currently unknown coverage

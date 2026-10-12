@@ -44,7 +44,7 @@ The files below are under `lua-5.5.1/src/` in the official archive.
 | Standalone interpreter and compiler | `lua.c`, `luac.c`, `Makefile`, `luaconf.h` |
 
 The port must start from these **5.5.1** files, not from the 5.3 or 5.4 source
-pages nor from an unfrozen Git branch. The repository's historical tests remain
+pages nor from an unfrozen Git branch. The repository’s historical tests remain
 regression tests; they do not replace the 5.5.1 suite.
 
 ## License and integrity

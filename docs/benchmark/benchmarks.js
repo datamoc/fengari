@@ -293,10 +293,10 @@ end`,
         sum: ["Somme entière", "une boucle numérique complète"],
         nested: ["Boucles numériques imbriquées", "compteurs entiers et accumulation flottante"],
         fib: ["Fibonacci récursif", "appels de fonctions et arithmétique entière"],
-        sieve: ["Crible d'Ératosthène", "lectures et écritures de tableaux en boucles serrées"],
+        sieve: ["Crible d’Ératosthène", "lectures et écritures de tableaux en boucles serrées"],
         mandelbrot: ["Ensemble de Mandelbrot", "arithmétique flottante"],
         matmul: ["Multiplication de matrices", "tables et tableaux imbriqués"],
-        sort: ["Tri d'entiers pseudo-aléatoires", "tri de la bibliothèque standard avec fonction de comparaison"],
+        sort: ["Tri d’entiers pseudo-aléatoires", "tri de la bibliothèque standard avec fonction de comparaison"],
         strings: ["Construction et recherche de chaînes", "bibliothèque string : concaténation, gsub et découpage"],
         collatz: ["Plus longue chaîne de Collatz", "boucles entières avec branchements"]
     };

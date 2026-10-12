@@ -1,4 +1,4 @@
-# Changes in Fengari
+# Changes in Pyroeis
 
 ## Version 0.5.4
 
@@ -12,7 +12,7 @@
 
 ### `FengariVm` options and types
 - **`sandbox` leaked `__random`**: the host helper was a readable global (`type(__random) == 'function'`). Like `__fs_read` / `__fs_list`, it is no longer defined with `sandbox: true`. Nothing in Fengari calls it (`math.random` has its own generator); `vm.nextRandom()` remains available to the host.
-- **`print` option** (`'buffer'` default, `'native'`, `false`): `'native'` keeps the base library's `print` and `false` removes it, so a host that wants Lua's own `print` no longer has to build the VM with `libs: []` and re-open libraries (which restored `string.dump` after the sandbox removed it).
+- **`print` option** (`'buffer'` default, `'native'`, `false`): `'native'` keeps the base library’s `print` and `false` removes it, so a host that wants Lua's own `print` no longer has to build the VM with `libs: []` and re-open libraries (which restored `string.dump` after the sandbox removed it).
 - **Types**: `LuaRef.type` is `'function' | 'thread' | 'userdata'` (new `LuaRefType`; a table is never a reference), `FengariVmOptions.print`.
 
 ### Fixes (`lua2js`)
@@ -77,7 +77,7 @@ Security fixes for the execution limits and the `sandbox` preset of 0.4.0 (no lo
 - **Execution limits**: `limits: { instructions, timeMs }` option and `setLimits()`, per top-level call (`run`, `call`, `callMulti`, `callRef`, `Coroutine#resume`), via a counting hook. An overrun raises a `LimitError` (subclass of `LuaError`, `limit` = `'instructions'` or `'time'`) that the script cannot catch (`pcall` and coroutines included). Without `sandbox`, `debug.sethook` allows removing the hook.
 - **Calls**: `runMulti` and `callMulti` return all return values; `callRef` and `LuaRef#call` call a Lua function obtained through `read`.
 - **Conversions**: functions, threads and userdata are read as `LuaRef`; `new Userdata(value)` pushes an opaque host value (light userdata); `new LuaFloat(5)` pushes a float and the `preserveFloats` option reads `5.0` as `LuaFloat`; integers outside ±2^53 are `BigInt` (and a `BigInt` is pushed as a 64-bit integer); a string that is not valid UTF-8 is read as `Uint8Array` (and a `Uint8Array` is pushed as a byte string); a table whose keys are not all strings or integers (booleans, floats, tables, functions, binary strings, `"1"`/`1` collision) is read as `Map`, and a `Map` is pushed with its exact keys. Circular references are preserved.
-- **Benchmark page**: `docs/benchmark/index.html` compares Lua in Fengari and JavaScript in the visitor's browser; `npm run bench:build` regenerates `docs/benchmark/fengari.bundle.js`.
+- **Benchmark page**: `docs/benchmark/index.html` compares Lua in Fengari and JavaScript in the visitor’s browser; `npm run bench:build` regenerates `docs/benchmark/fengari.bundle.js`.
 
 ### Behavior changes
 - A Lua table whose keys are 1..n is read as a **JavaScript array** (no longer as a `{"1": …}` object).
@@ -94,7 +94,7 @@ Security fixes for the execution limits and the `sandbox` preset of 0.4.0 (no lo
 ## Version 0.3.0
 
 ### New features
-- **`<const>` and `<close>` (Lua 5.4)**: the `local x <const> = v` / `local x <close> = v` grammar is actually parsed (version 0.2.0 advertised this support without any of these programs compiling). The prefix form `local <const> x, y = 1, 2` of the fork's 5.5 specification is also accepted. `const` and `close` remain ordinary names.
+- **`<const>` and `<close>` (Lua 5.4)**: the `local x <const> = v` / `local x <close> = v` grammar is actually parsed (version 0.2.0 advertised this support without any of these programs compiling). The prefix form `local <const> x, y = 1, 2` of the fork’s 5.5 specification is also accepted. `const` and `close` remain ordinary names.
   - **`<const>`**: an assignment to the variable, including from a nested function (`attempt to assign to const variable 'x'`), is refused at compilation. A `<close>` variable is read-only in the same way.
   - **`<close>`**: new `OP_TBC` opcode (appended at the end of the table, existing opcodes do not move). The value must be nil, `false` or have a `__close` metamethod (`variable 'x' got a non-closable value`). Closings run in reverse order, with `(value, error or nil)`, at the end of the block, on `break`, `goto`, `return` (return values intact) and on error. A `return f()` in the scope of a to-be-closed variable is no longer a tail call. An error in a `__close` replaces the ongoing error and the remaining closings still run.
   - **`for ... in a, b, c, d`**: the fourth value is the loop closing value, closed at the end, on `break`, `return` or error (the register layout of `OP_TFORCALL`/`OP_TFORLOOP` now follows Lua 5.4).

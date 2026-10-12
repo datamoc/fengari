@@ -43,7 +43,7 @@ these transformations.
 | Public API | `src/lua.js`, `src/lauxlib.js`, `src/lapi-ext.js` | New signatures, constants, aliases and JS adapters |
 | Libraries | `src/l*lib.js`, `src/loadlib.js`, `src/runtime/loadlib.js` | Audit of every symbol, not only the new functions |
 | Composition | `src/runtime.js`, `src/library-runtime.js`, `src/lualib-constants.js` | New components without cycles, masks and selective loading |
-| JS integration | `src/fengari-vm.js`, `src/fengaricore.js`, `src/fengari.js` | Safe conversions, references, resources and errors |
+| JS integration | `src/pyroeis-vm.js`, `src/pyroeiscore.js`, `src/pyroeis.js` | Safe conversions, references, resources and errors |
 
 Paths to future files are proposals, not existing files.
 

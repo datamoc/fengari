@@ -1,5 +1,9 @@
 # Pyroeis
 
+🔴 Pyroeis (Ancient Greek: Πυρόεις) in Greek mythology is the god of the wandering star Areios, identified with the planet Mars.
+
+🔴 Pyroeis (en grec ancien Πυρόεις) est, dans la mythologie grecque, le dieu de l’étoile errante Areios, la planète Mars.
+
 <img src="logo.svg" alt="Pyroeis logo" width="240">
 
 Pyroeis is an independent project derived from [Fengari](https://github.com/fengari-lua/fengari), maintained by datamoc. Install it as `@datamoc/pyroeis`.
@@ -13,7 +17,7 @@ A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **bro
 - **Extensible**: Easy to integrate with existing JavaScript projects.
 - **Comprehensive Testing**: Includes tests for all core and extended functionality.
 - **Lua 5.5.1 alignment in progress**: the migration plan, differential oracle and conformance tracking live in [docs/lua-5.5.1](docs/lua-5.5.1).
-- **Memory accounting hook**: `lua_setallocf` lets an embedder observe, bound or refuse the VM's internal string and buffer allocations; a refusal behaves like a failing C allocator (`LUA_ERRMEM`).
+- **Memory accounting hook**: `lua_setallocf` lets an embedder observe, bound or refuse the VM’s internal string and buffer allocations; a refusal behaves like a failing C allocator (`LUA_ERRMEM`).
 
 ## Performance
 
@@ -110,7 +114,7 @@ An online version lives in `docs/lua2js/index.html`: paste Lua, read the JavaScr
 Things to know before trusting the output:
 - Every construct that cannot be translated faithfully gets a `// TODO(lua2js): ...` comment and an entry in `warnings`. This covers metatables, coroutines, Lua patterns that have no `RegExp` equivalent (`%b`, `%f`, position captures) or are not string literals, `goto` other than `continue`, bitwise operators (JavaScript uses 32 bits) and iterators that do not return arrays. `freeGlobals` lists the globals the host must provide.
 - Lua arrays are 1-based and JavaScript arrays are 0-based: indexes are shifted (`t[i]` becomes `t[i - 1]`) when the table or the index is known to be numeric; otherwise the index is left alone and flagged.
-- `nil` is `undefined`. `if x` becomes `truthy(x)` (Lua treats `0` and `""` as true) unless `x` is known to be a boolean. `a or b` keeps Lua's meaning (`truthy(a) ? a : b`, or `a ?? b` when `a` is known never to be `false`); the `nullishOr` option (`--nullish-or`) always emits the shorter `a ?? b`, which differs from Lua only when `a` is `false`.
+- `nil` is `undefined`. `if x` becomes `truthy(x)` (Lua treats `0` and `""` as true) unless `x` is known to be a boolean. `a or b` keeps Lua’s meaning (`truthy(a) ? a : b`, or `a ?? b` when `a` is known never to be `false`); the `nullishOr` option (`--nullish-or`) always emits the shorter `a ?? b`, which differs from Lua only when `a` is `false`.
 - Integers and floats are both JavaScript numbers: `2^53` and beyond, `1.0` printing as `1`, and string-to-number coercion (`"10" + 1`) are not preserved.
 - Small helpers (`truthy`, `mod`, `format`, ...) are emitted at the top of the output only when used.
 
@@ -218,7 +222,7 @@ lauxlib.luaL_dostring(L, lua.to_luastring('return ("x"):rep(10)'));
 console.log(lua.lua_tojsstring(L, -1)); // xxxxxxxxxx
 ```
 
-This is the JavaScript shape of C Lua's `lua_Alloc` extension point: it is
+This is the JavaScript shape of C Lua’s `lua_Alloc` extension point: it is
 accounting, not ownership (the JavaScript engine owns the memory, and there are
 no free notifications). Not charged: the stateless `to_luastring` conversions
 an embedder drives itself, zero-size allocations, and the few internal
@@ -250,7 +254,7 @@ MIT © [Benoit Giannangeli](https://github.com/fengari-lua/fengari), [Daurnimato
 
 ## Migration from @datamoc/fengari
 
-Install `@datamoc/pyroeis` and update your imports. Use `PyroeisVm` for the high-level VM API. `FengariVm` and the legacy `src/fengari*` entry points remain compatibility aliases. The browser bundle exposes `Pyroeis` and retains `Fengari` as an alias. Existing Lua extension names and `FENGARICONF` remain supported.
+Install `@datamoc/pyroeis` and update your imports. Use `PyroeisVm` for the high-level VM API. The legacy `src/fengari*` entry points and the `FengariVm` alias were removed; use `src/pyroeis.js` / `src/pyroeis-vm.js` and `PyroeisVm`. The browser bundle exposes `Pyroeis` and retains `Fengari` as an alias. Existing Lua extension names and `FENGARICONF` remain supported.
 
 ## Interactive demos
 
