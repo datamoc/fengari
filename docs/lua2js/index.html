@@ -33,6 +33,9 @@ button { cursor: pointer; }
 button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 button:disabled { opacity: .55; cursor: progress; }
 .panes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.panes > * { min-width: 0; }
+.controls label { flex-wrap: wrap; max-width: 100%; }
+.controls select { max-width: 100%; }
 .pane h2 { margin-top: 0; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 textarea, pre#output { width: 100%; height: 30rem; margin: 0; padding: .7rem .9rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--fg); font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow: auto; tab-size: 4; resize: vertical; }
 pre#output { white-space: pre; }
