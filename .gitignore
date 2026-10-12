@@ -68,3 +68,6 @@ docs/assets/mwg-LICENSE.txt
 docs/assets/vendor-manifest.json
 docs/assets/pyroeis.svg
 docs/assets/pyroeis.png
+
+# Personal research material kept out of the repository
+references/
