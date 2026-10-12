@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" href="../assets/pyroeis.svg" type="image/svg+xml">
+<link rel="alternate icon" href="../assets/pyroeis.png" type="image/png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fengari vs JavaScript benchmark</title>
+<title>Pyroeis vs JavaScript benchmark</title>
 <meta name="description" content="Compare interpreted Lua, compiled numeric Lua and native JavaScript, measured in your own browser.">
 <style>
 :root {
@@ -43,11 +45,13 @@ th.num { text-align: right; }
 .bars { min-width: 11rem; }
 .bar { height: .6rem; border-radius: 3px; margin: .3rem 0; min-width: 2px; }
 .bar.js { background: var(--js); }
+.bar.upstream { background: #cd6c44; }
 .bar.lua { background: var(--lua); }
 .bar.compiled { background: var(--compiled); }
 .legend { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: .85rem; color: var(--muted); margin-top: .5rem; }
 .legend span::before { content: ""; display: inline-block; width: .8rem; height: .8rem; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
 .legend .js::before { background: var(--js); }
+.legend .upstream::before { background: #cd6c44; }
 .legend .lua::before { background: var(--lua); }
 .legend .compiled::before { background: var(--compiled); }
 .compiler-note { font-size: .8rem; color: var(--muted); }
@@ -63,13 +67,15 @@ pre { margin: 0; overflow-x: auto; font: 13px/1.45 ui-monospace, SFMono-Regular,
 #env { font-size: .85rem; }
 noscript { color: var(--bad); }
 </style>
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<main>
-  <h1>Fengari vs JavaScript</h1>
-  <p class="muted">Interpreted Lua, compiled numeric Lua and native JavaScript running the same algorithms. Everything runs in <em>your</em> browser, right now.</p>
+<header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Main navigation"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="../mwg/">Démo MWG</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
+<main class="site-main">
+  <h1>Pyroeis vs JavaScript</h1>
+  <p class="muted">Fengari 0.1.5, Pyroeis interpreted, compiled numeric Lua and native JavaScript running the same algorithms. Everything runs in <em>your</em> browser, right now.</p>
 
-  <p><a href="https://github.com/datamoc/fengari">Fengari</a> normally interprets Lua bytecode in JavaScript. Its optional numeric compiler converts supported functions and complete numeric loops into JavaScript that your browser can optimize. This page measures both execution modes against hand-written JavaScript. To move a Lua program to JavaScript for good, try the <a href="../lua2js/">Lua to JavaScript translator</a>. Algorithms outside the supported subset are marked <em>Interpreter fallback</em>.</p>
+  <p><a href="https://github.com/datamoc/pyroeis">Pyroeis</a> normally interprets Lua bytecode in JavaScript. Its optional numeric compiler converts supported functions and complete numeric loops into JavaScript that your browser can optimize. This page measures both execution modes against hand-written JavaScript. To move a Lua program to JavaScript for good, try the <a href="../lua2js/">Lua to JavaScript translator</a>. Algorithms outside the supported subset are marked <em>Interpreter fallback</em>.</p>
 
   <noscript><p>This page needs JavaScript.</p></noscript>
 
@@ -94,7 +100,8 @@ noscript { color: var(--bad); }
       <tr>
         <th>Benchmark</th>
         <th class="num">JavaScript</th>
-        <th class="num">Interpreted Lua</th>
+        <th class="num">Fengari 0.1.5</th>
+        <th class="num">Pyroeis interpreted</th>
         <th class="num">Compiled Lua</th>
         <th class="num">Interpreter / JS</th>
         <th class="num">Compiler speedup</th>
@@ -105,19 +112,22 @@ noscript { color: var(--bad); }
     <tbody></tbody>
   </table>
   </div>
-  <div class="legend"><span class="js">JavaScript</span><span class="lua">Interpreted Lua</span><span class="compiled">Compiled Lua</span></div>
+  <div class="legend"><span class="js">JavaScript</span><span class="upstream">Fengari 0.1.5</span><span class="lua">Pyroeis interpreted</span><span class="compiled">Compiled Lua</span></div>
 
   <h2>Method</h2>
-  <p>Each benchmark uses the same input size and returns a checksum; the last column checks all measured modes. Every mode gets an untimed warm-up. Each timed sample repeats the function for at least 80&nbsp;ms, then divides by the number of calls; the median sample is reported. This keeps short expressions measurable despite browser clock rounding. Interpreter times include <code>vm.call</code> overhead; compiled times include the guards in the callable returned by <code>vm.compile</code>.</p>
-  <p>Lua loading and compilation happen outside the timed samples. Numeric compilation supports arithmetic, locals and integer numeric <code>for</code> loops; calls, tables and branches use the interpreter. Fallback rows show no compiled timing or speedup, and are excluded from the compiler summary. A browser policy that blocks dynamic JavaScript compilation also causes fallback. Only the <code>base</code>, <code>string</code>, <code>table</code> and <code>math</code> libraries are opened.</p>
+  <p>Upstream Fengari uses 32-bit integers while Pyroeis supports a wider integer range. These inputs keep integer intermediates within the shared signed 32-bit range; the pseudo-random generator explicitly uses floats for its larger products. No checksum differences are hidden or excluded.</p>
+  <p>Each benchmark uses the same input size and returns a checksum; the last column checks all four measured modes. The upstream adapter calls the Fengari 0.1.5 C API and includes its host call overhead, just as Pyroeis timings include vm.call; this is a comparison of these integrations, not an isolated measurement of interpreter internals. Every mode gets an untimed warm-up. Each timed sample repeats the function for at least 80&nbsp;ms, then divides by the number of calls; the median sample is reported. This keeps short expressions measurable despite browser clock rounding. Interpreter times include <code>vm.call</code> overhead; compiled times include the guards in the callable returned by <code>vm.compile</code>.</p>
+  <p>Lua loading and compilation happen outside the timed samples. Numeric compilation supports arithmetic, locals and integer numeric <code>for</code> loops; calls, tables and branches use the interpreter. Fallback rows show no compiled timing or speedup, and are excluded from the compiler summary. A browser policy that blocks dynamic JavaScript compilation also causes fallback. Pyroeis opens only base, string, table and math. The upstream adapter opens the standard libraries and removes debug, io, os, package and file loaders. No execution budgets are enabled during timings; numeric compilation is intentionally disabled under limits.</p>
   <p class="muted" id="env"></p>
 
   <h2>The algorithms</h2>
   <div id="sources"></div>
 </main>
 
-<script src="fengari.bundle.js"></script>
-<script src="benchmarks.js"></script>
+<script src="pyroeis.bundle.js"></script>
+<script src="../assets/fengari-0.1.5.bundle.js"></script>
+<script src="../assets/upstream-vm.js"></script>
+<script src="benchmarks.js?v=pyroeis-0.5.4"></script>
 <script>
 "use strict";
 
@@ -149,7 +159,7 @@ function median(values) {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
-/* Use the same sampling method for all three modes, including short expressions. */
+/* Use the same sampling method for all four modes, including short expressions. */
 function timeFunction(fn, size, runs) {
   let result = fn(size); /* warm-up */
   const samples = [];
@@ -169,9 +179,9 @@ function makeRow(bench) {
   const row = document.createElement("tr");
   row.innerHTML = `
     <td><div class="bench-name"></div><div class="bench-what"></div></td>
-    <td class="num js-time">…</td><td class="num lua-time">…</td><td class="num compiled-time">…</td>
+    <td class="num js-time">…</td><td class="num upstream-time">…</td><td class="num lua-time">…</td><td class="num compiled-time">…</td>
     <td class="num ratio">…</td><td class="num speedup">…</td>
-    <td class="bars"><div class="bar js" style="width:0"></div><div class="bar lua" style="width:0"></div><div class="bar compiled" style="width:0" hidden></div></td>
+    <td class="bars"><div class="bar js" style="width:0"></div><div class="bar upstream" style="width:0"></div><div class="bar lua" style="width:0"></div><div class="bar compiled" style="width:0" hidden></div></td>
     <td class="check"></td>`;
   row.querySelector(".bench-name").textContent = bench.title;
   row.querySelector(".bench-what").textContent = `${bench.what} (n = ${bench.size.toLocaleString("en-US")})`;
@@ -180,12 +190,13 @@ function makeRow(bench) {
 }
 
 function drawBars(results) {
-  const times = results.flatMap((r) => [r.js.ms, r.lua.ms, ...(r.compiled ? [r.compiled.ms] : [])]);
+  const times = results.flatMap((r) => [r.js.ms, r.upstream.ms, r.lua.ms, ...(r.compiled ? [r.compiled.ms] : [])]);
   const low = Math.log10(Math.max(Math.min(...times) / 2, 0.001));
   const high = Math.log10(Math.max(...times));
   const scale = (ms) => (high === low ? 100 : 4 + 96 * (Math.log10(Math.max(ms, 0.001)) - low) / (high - low));
   for (const r of results) {
     r.row.querySelector(".bar.js").style.width = scale(r.js.ms) + "%";
+    r.row.querySelector(".bar.upstream").style.width = scale(r.upstream.ms) + "%";
     r.row.querySelector(".bar.lua").style.width = scale(r.lua.ms) + "%";
     if (r.compiled) {
       const bar = r.row.querySelector(".bar.compiled");
@@ -218,9 +229,9 @@ function showSummary(results) {
 
 function toMarkdown(results, runs) {
   const lines = [
-    "| Benchmark | JavaScript | Interpreted Lua | Compiled Lua | Interpreter / JS | Compiler speedup | Same result |",
-    "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
-    ...results.map((r) => `| ${r.bench.title} (n=${r.bench.size}) | ${format(r.js.ms)} | ${format(r.lua.ms)} | ${r.compiled ? format(r.compiled.ms) : 'Interpreter fallback'} | ${(r.lua.ms / r.js.ms).toFixed(1)}× | ${r.compiled ? (r.lua.ms / r.compiled.ms).toFixed(1) + '×' : '—'} | ${r.match ? 'Yes' : 'No'} |`),
+    "| Benchmark | JavaScript | Fengari 0.1.5 | Pyroeis interpreted | Compiled Lua | Interpreter / JS | Compiler speedup | Same result |",
+    "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+    ...results.map((r) => `| ${r.bench.title} (n=${r.bench.size}) | ${format(r.js.ms)} | ${format(r.upstream.ms)} | ${format(r.lua.ms)} | ${r.compiled ? format(r.compiled.ms) : 'Interpreter fallback'} | ${(r.lua.ms / r.js.ms).toFixed(1)}× | ${r.compiled ? (r.lua.ms / r.compiled.ms).toFixed(1) + '×' : '—'} | ${r.match ? 'Yes' : 'No'} |`),
     "",
     `Interpreted Lua / JavaScript geometric mean: ${geometricMean(results.map((r) => r.lua.ms / r.js.ms)).toFixed(1)}×.`
   ];
@@ -228,7 +239,7 @@ function toMarkdown(results, runs) {
   if (eligible.length) {
     lines.push(`Compiler speedup on ${eligible.length} compiled benchmarks only: ${geometricMean(eligible.map((r) => r.lua.ms / r.compiled.ms)).toFixed(1)}× (geometric mean).`);
   }
-  lines.push(`${runs} timed sample(s), median; at least ${MIN_SAMPLE_MS} ms per sample; one warm-up per mode; loading and compilation excluded. ${Fengari.lua.LUA_RELEASE}. ${navigator.userAgent}`);
+  lines.push(`${runs} timed sample(s), median; at least ${MIN_SAMPLE_MS} ms per sample; one warm-up per mode; loading and compilation excluded. ${Pyroeis.lua.LUA_RELEASE}; upstream ${FengariUpstream.lua.LUA_RELEASE} / Fengari 0.1.5. ${navigator.userAgent}`);
   return lines.join("\n");
 }
 
@@ -238,7 +249,8 @@ async function runAll() {
   copyButton.disabled = true;
   summary.style.display = "none";
   tbody.textContent = "";
-  const vm = new Fengari.FengariVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
+  const vm = new Pyroeis.PyroeisVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
+  const upstreamVm = new UpstreamVm();
   const results = [];
   let compiledFunction = null;
 
@@ -250,13 +262,19 @@ async function runAll() {
       const js = timeFunction(bench.js, bench.size, runs);
       row.querySelector(".js-time").textContent = format(js.ms);
 
-      statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running Lua in Fengari…`;
+      statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running Lua in Pyroeis…`;
       await pause();
       vm.run(bench.lua, "=" + bench.id);
       compiledFunction = vm.compile("run");
       const lua = timeFunction((size) => vm.call("run", size), bench.size, runs);
       row.querySelector(".lua-time").textContent = format(lua.ms);
       row.querySelector(".ratio").textContent = (lua.ms / js.ms).toFixed(1) + "×";
+
+      statusLine.textContent = `(${index + 1}/${BENCHMARKS.length}) ${bench.title}: running upstream Fengari 0.1.5…`;
+      await pause();
+      upstreamVm.run(bench.lua);
+      const upstream = timeFunction((size) => upstreamVm.call("run", size), bench.size, runs);
+      row.querySelector(".upstream-time").textContent = format(upstream.ms);
 
       let compiled = null;
       const compiledCell = row.querySelector(".compiled-time");
@@ -273,11 +291,11 @@ async function runAll() {
         row.querySelector(".speedup").textContent = "—";
       }
 
-      const match = js.value === lua.value && (!compiled || js.value === compiled.value);
+      const match = js.value === upstream.value && js.value === lua.value && (!compiled || js.value === compiled.value);
       const check = row.querySelector(".check");
-      check.textContent = match ? "✓" : `✗ (JS: ${js.value}; Lua: ${lua.value}${compiled ? '; compiled: ' + compiled.value : ''})`;
+      check.textContent = match ? "✓" : `✗ (JS: ${js.value}; Fengari: ${upstream.value}; Pyroeis: ${lua.value}${compiled ? '; compiled: ' + compiled.value : ''})`;
       check.className = "check " + (match ? "ok" : "bad");
-      results.push({ bench, row, js, lua, compiled, match });
+      results.push({ bench, row, js, upstream, lua, compiled, match });
       drawBars(results);
       compiledFunction.release();
       compiledFunction = null;
@@ -291,13 +309,15 @@ async function runAll() {
     console.error(error);
   } finally {
     if (compiledFunction) compiledFunction.release();
+    upstreamVm.close();
+    Pyroeis.lua.lua_close(vm.state);
     runButton.disabled = false;
   }
 }
 
 function describeEnvironment() {
   const cores = navigator.hardwareConcurrency ? `, ${navigator.hardwareConcurrency} logical cores` : "";
-  document.getElementById("env").textContent = `${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}${cores}.`;
+  document.getElementById("env").textContent = `${Pyroeis.lua.LUA_RELEASE} in Pyroeis; ${FengariUpstream.lua.LUA_RELEASE} in upstream Fengari 0.1.5. ${navigator.userAgent}${cores}.`;
 }
 
 function listSources() {

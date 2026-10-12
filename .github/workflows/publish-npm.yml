@@ -17,7 +17,7 @@ jobs:
       # short-lived publish token itself, once npmjs.org's package settings list this
       # repo/workflow as a trusted publisher - no NPM_TOKEN secret (and no 2FA/OTP
       # prompt a CI run can't answer) needed at all. Configure it on npmjs.org exactly
-      # the way @datamoc/mw_games already is: repository datamoc/fengari, workflow
+      # the way @datamoc/mw_games already is: repository datamoc/pyroeis, workflow
       # filename .github/workflows/publish-npm.yml, default branch master.
       id-token: write
     steps:
@@ -42,10 +42,10 @@ jobs:
       # dependencies come from yarn.lock (this is a yarn project); publishing itself
       # still runs through the npm CLI
       - run: yarn install --frozen-lockfile
-      # trusted publishing needs npm 11.5.1+ for the OIDC exchange; pin high enough
+      # trusted publishing needs npm 11.15.0+ for the OIDC exchange; pin high enough
       # that a future Node LTS bundling an older npm doesn't silently fall back to
       # failing for a missing token
-      - run: npm install -g npm@^11.5.1
+      - run: npm install -g npm@^11.15.0
 
       # the same gates CI already runs on every push; a release alone proves nothing
       # about whether the code at that tag still passes

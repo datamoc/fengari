@@ -1,5 +1,5 @@
 /**
- * Type declarations for @datamoc/fengari.
+ * Type declarations for @datamoc/pyroeis.
  *
  * The high-level API (FengariVm and its helpers) is fully typed. The C-API
  * namespaces (`lua`, `lauxlib`, `lualib`, `luaconf`) and the string helpers are
@@ -282,3 +282,7 @@ export const FENGARI_VERSION_MAJOR: string;
 export const FENGARI_VERSION_MINOR: string;
 export const FENGARI_VERSION_NUM: number;
 export const FENGARI_VERSION_RELEASE: string;
+
+/** Preferred Pyroeis name; shares the constructor and instance type with FengariVm. */
+export const PyroeisVm: typeof FengariVm;
+export type PyroeisVm = FengariVm;

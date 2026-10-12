@@ -1,9 +1,9 @@
 /*
 ** Benchmark definitions: each algorithm exists twice, as a Lua chunk (run by
-** Fengari) and as a plain JavaScript function. Both take one size parameter
+** Pyroeis or upstream Fengari) and as a plain JavaScript function. Both take one size parameter
 ** and return a numeric checksum so the page can verify they computed the
-** same thing. All arithmetic is exact in both languages (integers < 2^53,
-** IEEE doubles for the float benchmark).
+** same thing. Integer intermediates stay within the shared signed 32-bit
+** range; larger products in the PRNG explicitly use IEEE doubles.
 */
 (function(root, factory) {
     if (typeof module === "object" && module.exports) module.exports = factory();
@@ -26,7 +26,7 @@
             id: "sum",
             title: "Integer sum",
             what: "a complete numeric loop",
-            size: 100000,
+            size: 40000,
             lua: `
 function run(n)
   local sum = 0
@@ -84,7 +84,7 @@ function run(n) return fib(n) end`,
             id: "sieve",
             title: "Sieve of Eratosthenes",
             what: "array reads and writes in tight loops",
-            size: 150000,
+            size: 30000,
             lua: `
 function run(n)
   local composite = {}
@@ -213,7 +213,7 @@ end`,
             size: 15000,
             lua: `
 function run(n)
-  local values, x = {}, 12345
+  local values, x = {}, 12345.0
   for i = 1, n do
     x = (x * 48271) % 2147483647
     values[i] = x

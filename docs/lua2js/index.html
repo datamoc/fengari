@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" href="../assets/pyroeis.svg" type="image/svg+xml">
+<link rel="alternate icon" href="../assets/pyroeis.png" type="image/png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lua to JavaScript translator</title>
-<meta name="description" content="Paste Lua, get readable JavaScript, and benchmark the result against Fengari in your own browser.">
+<meta name="description" content="Paste Lua, get readable JavaScript, and benchmark the result against Pyroeis in your own browser.">
 <style>
 :root {
   --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --panel: #f6f8fa;
@@ -54,12 +56,14 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 @media (max-width: 52rem) { .panes { grid-template-columns: 1fr; } }
 noscript { color: var(--bad); }
 </style>
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<main>
+<header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Main navigation"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="../mwg/">Démo MWG</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
+<main class="site-main">
   <h1>Lua to JavaScript</h1>
   <p class="muted">Paste Lua, get readable JavaScript you can keep. Translation runs in your browser; nothing is uploaded.</p>
-  <p>This is the offline translator behind <code>lua2js</code> and <code>FengariVm.toJs()</code> from <a href="https://github.com/datamoc/fengari">Fengari</a>. It prints idiomatic JavaScript from the Lua source and marks with <code>TODO(lua2js)</code> whatever it cannot translate faithfully. The benchmark below runs the same function as Lua in Fengari's interpreter and as the translated JavaScript. See also the <a href="../benchmark/">Fengari vs JavaScript benchmark</a>.</p>
+  <p>This is the offline translator behind <code>lua2js</code> and <code>PyroeisVm.toJs()</code> from <a href="https://github.com/datamoc/pyroeis">Pyroeis</a>. It prints idiomatic JavaScript from the Lua source and marks with <code>TODO(lua2js)</code> whatever it cannot translate faithfully. The benchmark below runs the same function as Lua in Pyroeis's interpreter and as the translated JavaScript. See also the <a href="../benchmark/">Pyroeis vs JavaScript benchmark</a>.</p>
 
   <noscript><p>This page needs JavaScript.</p></noscript>
 
@@ -88,7 +92,7 @@ noscript { color: var(--bad); }
   <p id="globals"></p>
 
   <h2>Benchmark</h2>
-  <p>Calls <code>entry(n)</code> in Lua (Fengari interpreter, <code>vm.call</code>) and in the translated JavaScript. For a built-in example, the original hand-written JavaScript is timed too. Results must match.</p>
+  <p>Calls <code>entry(n)</code> in Lua (Pyroeis interpreter, <code>vm.call</code>) and in the translated JavaScript. For a built-in example, the original hand-written JavaScript is timed too. Results must match.</p>
   <div class="controls">
     <label>Function <input id="entry" type="text" value="run" spellcheck="false"></label>
     <label>n <input id="size" type="number" min="1" value="150000"></label>
@@ -115,8 +119,8 @@ noscript { color: var(--bad); }
   <p class="muted" id="env"></p>
 </main>
 
-<script src="../benchmark/fengari.bundle.js"></script>
-<script src="../benchmark/benchmarks.js"></script>
+<script src="../benchmark/pyroeis.bundle.js"></script>
+<script src="../benchmark/benchmarks.js?v=pyroeis-0.5.4"></script>
 <script>
 "use strict";
 
@@ -162,7 +166,7 @@ function translate() {
   const warnings = $("warnings");
   warnings.textContent = "";
   try {
-    const shown = Fengari.FengariVm.toJs(luaBox.value, { format: formatSelect.value });
+    const shown = Pyroeis.PyroeisVm.toJs(luaBox.value, { format: formatSelect.value });
     output.textContent = shown.code;
     for (const w of shown.warnings) {
       const item = document.createElement("li");
@@ -171,7 +175,7 @@ function translate() {
     }
     $("globals").textContent = shown.freeGlobals.length ? `Globals the host must provide: ${shown.freeGlobals.join(", ")}` : "";
     /* Execution always uses CommonJS so that the exported functions can be called. */
-    current = Fengari.FengariVm.toJs(luaBox.value, { format: "cjs", header: false });
+    current = Pyroeis.PyroeisVm.toJs(luaBox.value, { format: "cjs", header: false });
   } catch (error) {
     current = null;
     output.textContent = "";
@@ -213,13 +217,13 @@ async function runBenchmark() {
     new Function("module", current.code)(mod);
     const translated = mod.exports[entry];
     if (typeof translated !== "function") throw new Error(`The translated code does not export a function named '${entry}'.`);
-    const vm = new Fengari.FengariVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
+    const vm = new Pyroeis.PyroeisVm(undefined, undefined, { libs: ["base", "string", "table", "math"] });
     vm.run(luaBox.value, "=lua");
 
     const rows = [];
-    statusLine.textContent = "Running Lua in Fengari…";
+    statusLine.textContent = "Running Lua in Pyroeis…";
     await pause();
-    rows.push({ label: "Lua (Fengari interpreter)", cls: "lua", ...timeFunction((n) => vm.call(entry, n), size, runs) });
+    rows.push({ label: "Lua (Pyroeis interpreter)", cls: "lua", ...timeFunction((n) => vm.call(entry, n), size, runs) });
     statusLine.textContent = "Running translated JavaScript…";
     await pause();
     rows.push({ label: "Translated JavaScript", cls: "js", ...timeFunction(translated, size, runs) });
@@ -285,7 +289,7 @@ $("copy").addEventListener("click", async () => {
     statusLine.textContent = "Could not access the clipboard; select the output manually.";
   }
 });
-$("env").textContent = `${Fengari.lua.LUA_RELEASE} in Fengari. ${navigator.userAgent}.`;
+$("env").textContent = `${Pyroeis.lua.LUA_RELEASE} in Pyroeis. ${navigator.userAgent}.`;
 loadExample();
 </script>
 </body>

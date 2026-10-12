@@ -13,7 +13,13 @@ documents separate observations, requirements and decisions still open.
 
 ## Lua to JavaScript translation
 
-`lua2js` (`src/lua2js.js`, `FengariVm.toJs`) translates Lua source to readable
+`lua2js` (`src/lua2js.js`, `PyroeisVm.toJs`) translates Lua source to readable
 JavaScript for projects leaving Lua. Usage, the mapping choices and the known
 differences are described in the "Offline Lua to JavaScript translation"
 section of the [main README](../README.md).
+
+## GitHub Pages
+
+`index.html` is the site entry point. `security/` compares pinned upstream Fengari 0.1.5 with Pyroeis under resource limits; `benchmark/` compares upstream, interpreted Pyroeis, compiled Lua and JavaScript; `lua2js/` translates Lua; `mwg/` runs a Lua-controlled robot using MWG 0.35.1.
+
+Build with `npm run pages:build`, then serve this directory over HTTP. Generated bundles, dependency licenses and the integrity manifest live in `assets/` and are excluded from Git. `.github/workflows/deploy-pages.yml` rebuilds these assets and deploys this directory. Scripts run locally in the browser; the security examples and editable game scripts run in terminable workers.

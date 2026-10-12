@@ -58,3 +58,13 @@ dist
 # Agent tooling state
 .opencode/
 .coord-session
+
+# Rebuilt by npm run pages:build from pinned, integrity-checked packages.
+docs/benchmark/pyroeis.bundle.js
+docs/assets/fengari-0.1.5.bundle.js
+docs/assets/fengari-LICENSE.txt
+docs/assets/mw_games-0.35.1.global.js
+docs/assets/mwg-LICENSE.txt
+docs/assets/vendor-manifest.json
+docs/assets/pyroeis.svg
+docs/assets/pyroeis.png

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pyroeis × MWG — le robot martien</title>
+  <meta name="description" content="Programmez un robot en Lua : MWG gère la carte et les chemins, Pyroeis exécute votre stratégie.">
+  <link rel="icon" href="../assets/pyroeis.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="../assets/pyroeis.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Navigation principale"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="./" aria-current="page">Démo MWG</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
+  <main class="site-main">
+    <h1>Le robot martien</h1>
+    <p class="lead">Six échantillons à récolter. Une stratégie Lua à écrire.</p>
+    <p><a href="https://github.com/datamoc/mwg">MWG</a> calcule les chemins et gère la scène. Votre fonction Lua choisit quel échantillon poursuivre à chaque tour. Pyroeis exécute cette décision dans un worker avec un budget de 30 000 instructions et 50 ms par appel.</p>
+    <div class="controls"><button id="step" type="button">Avancer d’un tour</button><button id="play" class="primary" type="button">Lancer le robot</button><button id="reset" type="button">Recommencer</button><label for="speed">Rythme</label><select id="speed"><option value="650">Tranquille</option><option value="220" selected>Normal</option><option value="80">Rapide</option></select></div>
+    <div class="game-layout">
+      <section aria-label="Carte et progression">
+        <div class="game-display"><canvas id="map" width="640" height="440" tabindex="0" role="img" aria-label="Carte martienne : robot orange, obstacles rocheux et six échantillons lumineux"></canvas><div class="game-readout"><span id="collected">0 / 6 échantillons</span><span id="turns">Tour 0</span><span>Carte puis flèches : pilotage manuel</span></div></div>
+        <p id="status" class="status" role="status" aria-live="polite">Chargement des moteurs…</p>
+        <pre id="log" class="game-log" aria-label="Journal des décisions">Le chemin affiché est calculé par MWG.</pre>
+      </section>
+      <section aria-label="Éditeur de stratégie">
+        <div class="editor-title"><label for="lua">Stratégie Lua</label><select id="preset" aria-label="Exemple de stratégie"><option value="nearest">Le plus proche</option><option value="farthest">Le plus éloigné</option><option value="order">L’ordre de la liste</option><option value="loop">Tester une boucle infinie</option></select></div>
+        <textarea id="lua" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="contract"></textarea>
+        <div class="controls"><button id="apply" class="primary" type="button">Appliquer le script</button></div>
+        <p id="contract" class="muted"><code>choose(targets)</code> reçoit une liste Lua (indices à partir de 1). Chaque cible contient <code>id</code>, <code>x</code>, <code>y</code> et <code>distance</code>. Renvoyez l’indice de la cible à poursuivre. Une distance est le nombre de pas du chemin MWG.</p>
+      </section>
+    </div>
+    <h2>Qui fait quoi ?</h2>
+    <p>La scène hérite de <code>MWG.Scene</code> et vit dans <code>SceneStack</code>. La carte est un <code>MWG.Roguelike.Level</code> ; <code>Pathfinder</code> calcule les itinéraires à quatre directions. Le rendu utilise le canvas 2D du navigateur. Le moteur Lua est le bundle Pyroeis de ce dépôt, sans dépendre de l’ancien hôte Fengari de MWG.</p>
+    <p>La boucle infinie proposée dans le sélecteur est un exemple de récupération : le robot s’arrête, la page reste interactive et vous pouvez appliquer une autre stratégie. Les déplacements et l’indice renvoyé sont validés par le jeu avant de modifier la carte. Un watchdog extérieur arrête aussi le worker s’il ne répond plus.</p>
+    <details><summary>Voir les sources et les versions</summary><p><a href="game.js">Scène, carte, chemins et commandes</a> · <a href="lua-worker.js">Worker Lua</a> · <a href="../assets/vendor-manifest.json">MWG 0.35.1 et empreinte de l’archive npm</a> · <a href="https://github.com/datamoc/mwg/tree/v0.35.1/src">Sources MWG</a> · <a href="../assets/mwg-LICENSE.txt">Licence MPL-2.0 de MWG</a>.</p></details>
+    <noscript>JavaScript est nécessaire pour jouer.</noscript>
+  </main>
+  <footer class="site-footer">Démo Pyroeis × MWG · Pyroeis : MIT · MWG : MPL-2.0 · Tout s’exécute dans votre navigateur.</footer>
+  <script src="../assets/mw_games-0.35.1.global.js"></script><script src="game.js?v=pyroeis-0.5.4"></script>
+</body>
+</html>

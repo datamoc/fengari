@@ -10,7 +10,7 @@ const declarations = fs.readFileSync(path.join(__dirname, '..', 'src', 'fengari.
 describe('TypeScript declarations', () => {
     test('package.json points to the declarations, which are published', () => {
         const pkg = require('../package.json');
-        expect(pkg.types).toBe('src/fengari.d.ts');
+        expect(pkg.types).toBe('src/pyroeis.d.ts');
         expect(pkg.files).toContain('src/');
         expect(fs.existsSync(path.join(__dirname, '..', pkg.types))).toBe(true);
     });

@@ -1,9 +1,9 @@
 {
-  "name": "@datamoc/fengari",
+  "name": "@datamoc/pyroeis",
   "version": "0.5.4",
-  "description": "A Lua 5.4.6 VM written in JS ES6, targeting the browser and Node.js",
-  "main": "src/fengari.js",
-  "types": "src/fengari.d.ts",
+  "description": "Pyroeis: a Lua 5.4.6 VM and Lua-to-JavaScript translator for browsers and Node.js",
+  "main": "src/pyroeis.js",
+  "types": "src/pyroeis.d.ts",
   "browser": {
     "fs": false,
     "os": false,
@@ -16,7 +16,9 @@
     "lua2js": "src/lua2js.js"
   },
   "files": [
-    "src/"
+    "src/",
+    "logo.svg",
+    "logo.png"
   ],
   "directories": {
     "lib": "src",
@@ -29,7 +31,8 @@
     "test:extended": "jest test/lauxlib-extended.test.js",
     "bench:build": "node tools/build-benchmark.js",
     "build": "echo 'Build step for ESM and TypeScript definitions'",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "pages:build": "node tools/build-pages.js"
   },
   "keywords": [
     "lua",
@@ -50,12 +53,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/datamoc/fengari.git"
+    "url": "git+https://github.com/datamoc/pyroeis.git"
   },
   "bugs": {
-    "url": "https://github.com/datamoc/fengari/issues"
+    "url": "https://github.com/datamoc/pyroeis/issues"
   },
-  "homepage": "https://github.com/datamoc/fengari#readme",
+  "homepage": "https://datamoc.github.io/pyroeis/",
   "devDependencies": {
     "eslint": "^9.39.2",
     "espree": "^10.4.0",

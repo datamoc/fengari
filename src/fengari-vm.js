@@ -1028,4 +1028,4 @@ class FengariVm {
 
 }
 
-module.exports = { FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine };
+module.exports = { PyroeisVm: FengariVm, FengariVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine };

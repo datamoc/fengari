@@ -1,4 +1,8 @@
-# @datamoc/fengari
+# Pyroeis
+
+<img src="logo.svg" alt="Pyroeis logo" width="240">
+
+Pyroeis is an independent project derived from [Fengari](https://github.com/fengari-lua/fengari), maintained by datamoc. Install it as `@datamoc/pyroeis`.
 
 A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **browser** environments. This package implements Lua 5.4.6, including extended auxiliary library (`lauxlib`) functionality and comprehensive test coverage. Alignment with Lua 5.5.1 is in progress and tracked in [docs/lua-5.5.1](docs/lua-5.5.1); none of its milestone lots is complete yet, so the VM reports `Lua 5.4.6` through `lua.lua_version` and `_VERSION`.
 
@@ -13,17 +17,17 @@ A **Lua 5.4** VM written in JavaScript ES6, targeting both **Node.js** and **bro
 
 ## Performance
 
-Fengari interprets Lua in JavaScript, so it is much slower than native JavaScript on tight numeric loops. [`docs/benchmark`](docs/benchmark/index.html) is a self-contained page that runs the same algorithms in Lua (Fengari) and in plain JavaScript in your own browser and reports the measured slowdown. Serve the `docs/` folder with GitHub Pages to publish it, and run `npm run bench:build` to regenerate `docs/benchmark/fengari.bundle.js` after changing `src/`.
+Pyroeis interprets Lua in JavaScript, so it is much slower than native JavaScript on tight numeric loops. [`docs/benchmark`](docs/benchmark/index.html) is a self-contained page that runs the same algorithms in Lua (Pyroeis) and in plain JavaScript in your own browser and reports the measured slowdown. Serve the `docs/` folder with GitHub Pages to publish it, and run `npm run bench:build` to regenerate `docs/benchmark/pyroeis.bundle.js` after changing `src/`.
 
 ## Optional numeric compilation
 
-`FengariVm.compile(pathOrLuaRef)` captures a Lua function and returns a reusable
+`PyroeisVm.compile(pathOrLuaRef)` captures a Lua function and returns a reusable
 JavaScript callable. Eligible pure numeric functions execute as generated
 JavaScript, including complete nested numeric `for` loops:
 
 ```javascript
-const { FengariVm } = require('@datamoc/fengari/src/fengari-vm.js');
-const vm = new FengariVm();
+const { PyroeisVm } = require('@datamoc/pyroeis/src/pyroeis-vm.js');
+const vm = new PyroeisVm();
 vm.run(`
     function sum(n)
         local s = 0
@@ -77,7 +81,7 @@ npx lua2js game.lua -o game.js --format esm   # none (default) | esm | cjs
 ```
 
 ```js
-const { transpile } = require('@datamoc/fengari/src/ltranspile.js');
+const { transpile } = require('@datamoc/pyroeis/src/ltranspile.js');
 const { code, warnings, exports, freeGlobals } = transpile(luaSource, { format: 'cjs' });
 ```
 
@@ -113,7 +117,7 @@ Things to know before trusting the output:
 ## Installation
 
 ```bash
-npm install @datamoc/fengari
+npm install @datamoc/pyroeis
 ```
 
 ## Usage
@@ -121,7 +125,7 @@ npm install @datamoc/fengari
 ### Basic Example
 
 ```javascript
-const { lua, lauxlib, lualib } = require('@datamoc/fengari');
+const { lua, lauxlib, lualib } = require('@datamoc/pyroeis');
 
 // Create a new Lua state
 const L = lauxlib.luaL_newstate();
@@ -136,12 +140,12 @@ lua.lua_close(L);
 
 ### TypeScript
 
-The package ships its declarations (`src/fengari.d.ts`): `import { FengariVm, LuaToJsOptions } from '@datamoc/fengari'` is typed without `@ts-expect-error`. The C-API namespaces (`lua`, `lauxlib`, `lualib`) are typed as `any`.
+The package ships its declarations (`src/pyroeis.d.ts`): `import { PyroeisVm, LuaToJsOptions } from '@datamoc/pyroeis'` is typed without `@ts-expect-error`. The C-API namespaces (`lua`, `lauxlib`, `lualib`) are typed as `any`.
 
 ### Extended Auxiliary Library (`lauxlib`)
 
 ```javascript
-const { lauxlib } = require('@datamoc/fengari');
+const { lauxlib } = require('@datamoc/pyroeis');
 
 // Example: Using luaL_addgsub for string substitution
 const B = new lauxlib.luaL_Buffer();
@@ -161,7 +165,7 @@ enclosing protected call with status `LUA_ERRMEM` and the standard
 returns `[allocf, ud]`.
 
 ```javascript
-const { lua, lauxlib, lualib } = require('@datamoc/fengari');
+const { lua, lauxlib, lualib } = require('@datamoc/pyroeis');
 
 const L = lauxlib.luaL_newstate();
 lualib.luaL_openlibs(L);
@@ -199,8 +203,18 @@ npm run test:extended
 ## Documentation
 
 - [Lua 5.4 Reference Manual](https://www.lua.org/manual/5.4/)
-- [Lua 5.5.1 alignment plan and conformance tracking](https://github.com/datamoc/fengari/tree/master/docs/lua-5.5.1)
+- [Lua 5.5.1 alignment plan and conformance tracking](https://github.com/datamoc/pyroeis/tree/master/docs/lua-5.5.1)
 
 ## License
 
 MIT © [Benoit Giannangeli](https://github.com/fengari-lua/fengari), [Daurnimator](https://github.com/daurnimator), and contributors.
+
+## Migration from @datamoc/fengari
+
+Install `@datamoc/pyroeis` and update your imports. Use `PyroeisVm` for the high-level VM API. `FengariVm` and the legacy `src/fengari*` entry points remain compatibility aliases. The browser bundle exposes `Pyroeis` and retains `Fengari` as an alias. Existing Lua extension names and `FENGARICONF` remain supported.
+
+## Interactive demos
+
+The [Pyroeis website](https://datamoc.github.io/pyroeis/) includes [execution-limit reproductions](https://datamoc.github.io/pyroeis/security/), [four-mode benchmarks](https://datamoc.github.io/pyroeis/benchmark/), the [Lua-to-JavaScript translator](https://datamoc.github.io/pyroeis/lua2js/) and a [Lua-controlled MWG robot](https://datamoc.github.io/pyroeis/mwg/).
+
+Run `npm run pages:build` to generate the browser bundles and retrieve the pinned demo dependencies with SHA-512 verification, then serve `docs/` over HTTP (for example, `python -m http.server 8765 --directory docs`). The GitHub Pages workflow builds and deploys the same folder on pushes to `master`.
