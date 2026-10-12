@@ -297,7 +297,7 @@ end`,
         mandelbrot: ["Ensemble de Mandelbrot", "arithmétique flottante"],
         matmul: ["Multiplication de matrices", "tables et tableaux imbriqués"],
         sort: ["Tri d’entiers pseudo-aléatoires", "tri de la bibliothèque standard avec fonction de comparaison"],
-        strings: ["Construction et recherche de chaînes", "bibliothèque string : concaténation, gsub et découpage"],
+        strings: ["Construction et recherche de chaînes", "bibliothèque string\u202f: concaténation, gsub et découpage"],
         collatz: ["Plus longue chaîne de Collatz", "boucles entières avec branchements"]
     };
     for (const bench of benches) {

@@ -180,7 +180,7 @@ class MarsScene extends mw_games.Scene {
         this.redraw();
         if (!this.samples.length) {
             stop();
-            statusLine.textContent = T(`Mission complete: 6 samples in ${this.turns} turns.`, `Mission terminée : 6 échantillons en ${this.turns} tours.`);
+            statusLine.textContent = T(`Mission complete: 6 samples in ${this.turns} turns.`, `Mission terminée\u202f: 6 échantillons en ${this.turns} tours.`);
         } else if (this.turns >= 120) {
             stop();
             statusLine.textContent = T("120 turns elapsed. Try a strategy that avoids switching targets constantly.", "120 tours écoulés. Essayez une stratégie qui évite de changer de cible sans cesse.");
@@ -225,7 +225,7 @@ class MarsScene extends mw_games.Scene {
         document.getElementById("collected").textContent = T(`${6 - this.samples.length} / 6 samples`, `${6 - this.samples.length} / 6 échantillons`);
         document.getElementById("turns").textContent = T("Turn ", "Tour ") + this.turns;
         canvas.setAttribute("aria-label", T(`Mars map: robot at ${this.robot.x}, ${this.robot.y}; ${this.samples.length} samples left; turn ${this.turns}.`,
-            `Carte martienne : robot en ${this.robot.x}, ${this.robot.y} ; ${this.samples.length} échantillons restants ; tour ${this.turns}.`));
+            `Carte martienne\u202f: robot en ${this.robot.x}, ${this.robot.y}\u202f; ${this.samples.length} échantillons restants\u202f; tour ${this.turns}.`));
     }
 }
 const stack = new mw_games.SceneStack();
@@ -238,7 +238,7 @@ async function apply() {
     try {
         await request("apply", { source: editor.value });
         statusLine.textContent = T("Strategy applied. Step one turn or start the robot.", "Stratégie appliquée. Avancez d’un tour ou lancez le robot.");
-    } catch (error) { statusLine.textContent = T("Script rejected: ", "Script refusé : ") + error.message; }
+    } catch (error) { statusLine.textContent = T("Script rejected: ", "Script refusé\u202f: ") + error.message; }
     finally { setBusy(false); }
 }
 async function step() {
@@ -255,12 +255,12 @@ async function step() {
         const target = targets[choice.index - 1];
         scene.route = target.route;
         document.getElementById("log").textContent = T(`Turn ${scene.turns + 1}: Lua picks sample ${target.id}.\nMWG finds a ${target.distance}-step path.\nNext move: (${target.route[0].x}, ${target.route[0].y}).`,
-            `Tour ${scene.turns + 1} : Lua choisit l’échantillon ${target.id}.\nMWG trouve un chemin de ${target.distance} pas.\nProchain déplacement : (${target.route[0].x}, ${target.route[0].y}).`);
+            `Tour ${scene.turns + 1}\u202f: Lua choisit l’échantillon ${target.id}.\nMWG trouve un chemin de ${target.distance} pas.\nProchain déplacement\u202f: (${target.route[0].x}, ${target.route[0].y}).`);
         scene.move(target.route[0]);
-        if (scene.samples.length && scene.turns < 120) statusLine.textContent = T(`Target ${target.id} chosen by Lua; ${target.distance - 1} steps to that target.`, `Cible ${target.id} choisie par Lua ; ${target.distance - 1} pas avant cette cible.`);
+        if (scene.samples.length && scene.turns < 120) statusLine.textContent = T(`Target ${target.id} chosen by Lua; ${target.distance - 1} steps to that target.`, `Cible ${target.id} choisie par Lua\u202f; ${target.distance - 1} pas avant cette cible.`);
     } catch (error) {
         stop();
-        statusLine.textContent = T("Robot stopped: ", "Robot arrêté : ") + error.message;
+        statusLine.textContent = T("Robot stopped: ", "Robot arrêté\u202f: ") + error.message;
     } finally {
         setBusy(false);
         if (running) autoTimer = setTimeout(step, Number(document.getElementById("speed").value));

@@ -80,8 +80,8 @@ return { destination = destination, equipment = equipment,
     function showChoice(request) {
         clearTimeout(timer); // Waiting for a human is not active Lua execution.
         waiting = request;
-        status.textContent = T("Lua is suspended: JavaScript is waiting for your choice.", "Lua est suspendu : JavaScript attend votre choix.");
-        event(T(`Lua → JavaScript: Yield, question "${request.question}". Coroutine suspended.`, `Lua → JavaScript : Yield, question « ${request.question} ». Coroutine suspendue.`));
+        status.textContent = T("Lua is suspended: JavaScript is waiting for your choice.", "Lua est suspendu\u202f: JavaScript attend votre choix.");
+        event(T(`Lua → JavaScript: Yield, question "${request.question}". Coroutine suspended.`, `Lua → JavaScript\u202f: Yield, question «\u202f${request.question}\u202f». Coroutine suspendue.`));
         get("choice-question").textContent = request.question;
         const buttons = get("choice-options");
         buttons.replaceChildren();
@@ -94,7 +94,7 @@ return { destination = destination, equipment = equipment,
                 const id = waiting.id;
                 waiting = null;
                 dialog.close();
-                event(T(`JavaScript → Lua: coroutine.resume(${JSON.stringify(choice.id)}).`, `JavaScript → Lua : coroutine.resume(${JSON.stringify(choice.id)}).`));
+                event(T(`JavaScript → Lua: coroutine.resume(${JSON.stringify(choice.id)}).`, `JavaScript → Lua\u202f: coroutine.resume(${JSON.stringify(choice.id)}).`));
                 status.textContent = T("Lua is resuming with your answer…", "Lua reprend avec votre réponse…");
                 guardExecution();
                 worker.postMessage({ action: "answer", id, value: choice.id });
@@ -121,7 +121,7 @@ return { destination = destination, equipment = equipment,
                 if (worker !== currentWorker) return;
                 try {
                     if (data.kind === "ready") {
-                        event(T("JavaScript → Lua: coroutine creation and first resume().", "JavaScript → Lua : création de la coroutine et premier resume()."));
+                        event(T("JavaScript → Lua: coroutine creation and first resume().", "JavaScript → Lua\u202f: création de la coroutine et premier resume()."));
                         guardExecution();
                         worker.postMessage({ action: "start", source: source.value, lang });
                     } else if (data.kind === "choice") {
@@ -130,11 +130,11 @@ return { destination = destination, equipment = equipment,
                     } else if (data.kind === "done") {
                         get("dialogue-output").textContent = data.output.join("\n");
                         get("dialogue-result").textContent = JSON.stringify(data.values, null, 2);
-                        event(T("Lua → JavaScript: done = true, final results received.", "Lua → JavaScript : done = true, résultats finaux reçus."));
+                        event(T("Lua → JavaScript: done = true, final results received.", "Lua → JavaScript\u202f: done = true, résultats finaux reçus."));
                         status.textContent = T("Lua finished with your answers. The same script resumed after each dialogue.", "Lua a terminé avec vos réponses. Le même script a repris après chaque dialogue.");
                         cleanup();
                     } else {
-                        status.textContent = T("Run interrupted: ", "Exécution interrompue : ") + data.message;
+                        status.textContent = T("Run interrupted: ", "Exécution interrompue\u202f: ") + data.message;
                         event(status.textContent);
                         get("dialogue-output").textContent = (data.output || []).join("\n");
                         cleanup();

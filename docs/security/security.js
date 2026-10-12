@@ -30,7 +30,7 @@ function label(result, engine) {
     if (result.kind === "cancelled") return i18n.t("Requested stop", "Arrêt demandé");
     if (result.kind === "setup-error") return i18n.t("Loading failed", "Chargement échoué");
     if (result.kind === "returned") return i18n.t("Normal return to the host code", "Retour normal au code hôte");
-    if (engine === "pyroeis" && result.name === "LimitError") return i18n.t("Overrun blocked: ", "Dépassement bloqué : ") + result.limit;
+    if (engine === "pyroeis" && result.name === "LimitError") return i18n.t("Overrun blocked: ", "Dépassement bloqué\u202f: ") + result.limit;
     return i18n.t("Error reported to the host code", "Erreur signalée au code hôte");
 }
 function display(engine, result) {
@@ -39,7 +39,7 @@ function display(engine, result) {
     panel.dataset.outcome = blocked ? "blocked" : result.kind;
     panel.querySelector(".badge").textContent = label(result, engine);
     panel.querySelector("pre").textContent = result.kind === "returned" ? JSON.stringify(result.value) : result.message || i18n.t("The page stopped the worker, not the Lua engine.", "La page a arrêté le worker, pas le moteur Lua.");
-    panel.querySelector(".timing").textContent = result.ms === undefined ? "" : i18n.t("Run: ", "Exécution : ") + `${result.ms.toFixed(1)} ms`;
+    panel.querySelector(".timing").textContent = result.ms === undefined ? "" : i18n.t("Run: ", "Exécution\u202f: ") + `${result.ms.toFixed(1)} ms`;
 }
 function execute(engine, sample) {
     return new Promise(resolve => {
@@ -64,7 +64,7 @@ function execute(engine, sample) {
                 timer = setTimeout(() => finish({ kind: "timeout", ms: 1500 }), 1500);
             } else finish(data);
         };
-        worker.onerror = event => finish({ kind: "setup-error", message: event.message || i18n.t("Worker unavailable; open this page over HTTP(S).", "Worker indisponible ; ouvrez cette page via HTTP(S).") });
+        worker.onerror = event => finish({ kind: "setup-error", message: event.message || i18n.t("Worker unavailable; open this page over HTTP(S).", "Worker indisponible\u202f; ouvrez cette page via HTTP(S).") });
         worker.postMessage({ engine, id: sample.id });
         const panel = document.getElementById(engine);
         delete panel.dataset.outcome;
@@ -95,7 +95,7 @@ async function compare(samples) {
             if (cancelled) break;
             select.value = sample.id;
             showSource();
-            statusLine.textContent = i18n.t("Comparing: ", "Comparaison : ") + text(sample.title);
+            statusLine.textContent = i18n.t("Comparing: ", "Comparaison\u202f: ") + text(sample.title);
             const [upstream, pyroeis] = await Promise.all([execute("upstream", sample), execute("pyroeis", sample)]);
             history.set(sample.id, { sample, upstream, pyroeis });
             updateHistory();

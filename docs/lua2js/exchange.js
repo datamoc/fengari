@@ -149,7 +149,7 @@ ref.release();
         try {
             if (input.value.length > 16000 || source.value.length > 32000) throw new Error(T("This demo accepts 16,000 characters of data and 32,000 of Lua.", "Cette démo accepte 16 000 caractères de données et 32 000 de Lua."));
             payload = JSON.parse(input.value);
-        } catch (error) { status.textContent = T("Input rejected: ", "Entrée refusée : ") + error.message; return; }
+        } catch (error) { status.textContent = T("Input rejected: ", "Entrée refusée\u202f: ") + error.message; return; }
         hostCode();
         setBusy(true);
         status.textContent = T("Exchanging in a worker…", "Échange en cours dans un worker…");
@@ -175,12 +175,12 @@ ref.release();
                         worker.postMessage({ source: source.value, payload, mode: select.value, lang: lang() });
                     } else finish(data);
                 };
-                worker.onerror = event => finish({ kind: "error", message: event.message || T("Worker unavailable; open the page over HTTP(S).", "Worker indisponible ; ouvrez la page via HTTP(S).") });
+                worker.onerror = event => finish({ kind: "error", message: event.message || T("Worker unavailable; open the page over HTTP(S).", "Worker indisponible\u202f; ouvrez la page via HTTP(S).") });
             });
             showTrace(result.trace || []);
             get("exchange-original").textContent = JSON.stringify(result.inputAfter === undefined ? payload : result.inputAfter, null, 2);
             if (result.kind === "error") {
-                status.textContent = T("Exchange interrupted: ", "Échange interrompu : ") + result.message;
+                status.textContent = T("Exchange interrupted: ", "Échange interrompu\u202f: ") + result.message;
                 get("exchange-result").textContent = result.message;
             } else {
                 get("exchange-result").textContent = JSON.stringify(result.returned, null, 2);
@@ -189,7 +189,7 @@ ref.release();
                     `${result.returned.length} retour(s) Lua reçu(s) en JavaScript. Données JavaScript ${unchanged ? "inchangées" : "modifiées"}.`);
             }
         } catch (error) {
-            status.textContent = T("Exchange interrupted: ", "Échange interrompu : ") + error.message;
+            status.textContent = T("Exchange interrupted: ", "Échange interrompu\u202f: ") + error.message;
         } finally { setBusy(false); }
     }
     function load(refreshSource) {

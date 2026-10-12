@@ -22,7 +22,7 @@
                     timer = setTimeout(() => finish({ kind: "setup-error", message: i18n.t("Worker stopped after 30 s.", "Worker arrêté après 30 s.") }), 30000);
                 } else finish(data);
             };
-            worker.onerror = event => finish({ kind: "setup-error", message: event.message || i18n.t("Worker unavailable; open this page over HTTP(S).", "Worker indisponible ; ouvrez cette page via HTTP(S).") });
+            worker.onerror = event => finish({ kind: "setup-error", message: event.message || i18n.t("Worker unavailable; open this page over HTTP(S).", "Worker indisponible\u202f; ouvrez cette page via HTTP(S).") });
             worker.postMessage({ engine, seed: SEED, count: COUNT });
         });
     }
@@ -45,15 +45,15 @@
             ? i18n.t(`${outcomes.jsException} JavaScript exceptions escaped Lua`, `${outcomes.jsException} exceptions JavaScript sorties de Lua`)
             : i18n.t("Every failure stayed in Lua", "Tous les échecs sont restés dans Lua");
         const lines = [
-            i18n.t(`Chunks tried: ${result.count}`, `Chunks essayés : ${result.count}`),
-            i18n.t(`Refused by load (Lua error): ${outcomes.refused}`, `Refusés par load (erreur Lua) : ${outcomes.refused}`),
-            i18n.t(`Loaded and ran: ${outcomes.ran}`, `Chargés et exécutés : ${outcomes.ran}`),
-            i18n.t(`Loaded, failed in pcall: ${outcomes.luaError}`, `Chargés, échec dans pcall : ${outcomes.luaError}`),
-            i18n.t(`JavaScript exception at the host: ${outcomes.jsException}`, `Exception JavaScript chez l’hôte : ${outcomes.jsException}`)
+            i18n.t(`Chunks tried: ${result.count}`, `Chunks essayés\u202f: ${result.count}`),
+            i18n.t(`Refused by load (Lua error): ${outcomes.refused}`, `Refusés par load (erreur Lua)\u202f: ${outcomes.refused}`),
+            i18n.t(`Loaded and ran: ${outcomes.ran}`, `Chargés et exécutés\u202f: ${outcomes.ran}`),
+            i18n.t(`Loaded, failed in pcall: ${outcomes.luaError}`, `Chargés, échec dans pcall\u202f: ${outcomes.luaError}`),
+            i18n.t(`JavaScript exception at the host: ${outcomes.jsException}`, `Exception JavaScript chez l’hôte\u202f: ${outcomes.jsException}`)
         ];
         for (const [message, count] of escaped) lines.push(`  ${count} × ${message}`);
         out.textContent = lines.join("\n");
-        timing.textContent = i18n.t("Run: ", "Exécution : ") + `${result.ms.toFixed(0)} ms`;
+        timing.textContent = i18n.t("Run: ", "Exécution\u202f: ") + `${result.ms.toFixed(0)} ms`;
     }
 
     button.addEventListener("click", async () => {
@@ -69,7 +69,7 @@
         const [upstream, pyroeis] = await Promise.all([runEngine("upstream"), runEngine("pyroeis")]);
         show("upstream", upstream);
         show("pyroeis", pyroeis);
-        status.textContent = i18n.t("Done. The counts come from this browser; the seed is fixed, so the run is repeatable.", "Terminé. Les comptes proviennent de ce navigateur ; la graine est fixe, l’exécution est donc reproductible.");
+        status.textContent = i18n.t("Done. The counts come from this browser; the seed is fixed, so the run is repeatable.", "Terminé. Les comptes proviennent de ce navigateur\u202f; la graine est fixe, l’exécution est donc reproductible.");
         button.disabled = false;
     });
 })();

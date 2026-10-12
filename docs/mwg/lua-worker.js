@@ -24,7 +24,7 @@ self.onmessage = ({ data }) => {
             if (!vm) throw new Error("Appliquez une stratégie avant de jouer.");
             const index = vm.call("choose", data.targets);
             if (!Number.isInteger(index) || index < 1 || index > data.targets.length) {
-                throw new Error(`choose doit renvoyer un indice entre 1 et ${data.targets.length}. Reçu : ${String(index)}`);
+                throw new Error(`choose doit renvoyer un indice entre 1 et ${data.targets.length}. Reçu\u202f: ${String(index)}`);
             }
             self.postMessage({ id: data.id, kind: "choice", index });
         } else throw new Error("Commande inconnue");
