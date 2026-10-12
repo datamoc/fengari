@@ -10,8 +10,8 @@ const defs = require("./defs.js");
 
 /* Keep in step with "version" in package.json (test/pyroeis-version.test.js checks it). */
 const PYROEIS_VERSION_MAJOR   = "0";
-const PYROEIS_VERSION_MINOR   = "6";
-const PYROEIS_VERSION_NUM     = 6;
+const PYROEIS_VERSION_MINOR   = "7";
+const PYROEIS_VERSION_NUM     = 7;
 const PYROEIS_VERSION_RELEASE = "0";
 const PYROEIS_VERSION         = "Pyroeis " + PYROEIS_VERSION_MAJOR + "." + PYROEIS_VERSION_MINOR;
 const PYROEIS_RELEASE         = PYROEIS_VERSION + "." + PYROEIS_VERSION_RELEASE;

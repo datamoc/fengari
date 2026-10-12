@@ -80,6 +80,29 @@ describe('binary chunks are checked when they are loaded', () => {
         expect(result.message).toMatch(/does not end with a return/);
     });
 
+    test('a forged string size cannot make the loader allocate what the chunk does not contain', () => {
+        const filler = 'x'.repeat(300);
+        const bytes = dump(`return '${filler}'`);
+        const text = Buffer.from(bytes);
+        /* a string longer than 254 bytes is stored as 0xFF, its 4-byte size (length + 1) and the bytes */
+        const sizeField = Buffer.alloc(4);
+        sizeField.writeInt32LE(filler.length + 1);
+        const at = text.indexOf(Buffer.concat([Buffer.from([0xFF]), sizeField, Buffer.from(filler)]));
+        expect(at).toBeGreaterThan(0);
+        text.writeInt32LE(0x7FFFFFFF, at + 1); /* declares a 2 GB string the chunk cannot hold */
+
+        const L = lauxlib.luaL_newstate();
+        lualib.luaL_openlibs(L);
+        let peak = 0;
+        lua.lua_setallocf(L, (ud, size) => { if (size > peak) peak = size; }, null);
+        const status = lauxlib.luaL_loadbuffer(L, Uint8Array.from(text), text.length, to_luastring("=chunk"));
+        const message = status === lua.LUA_OK ? "" : to_jsstring(lua.lua_tostring(L, -1));
+        lua.lua_close(L);
+        expect(status).not.toBe(lua.LUA_OK);
+        expect(message).toMatch(/truncated precompiled chunk/);
+        expect(peak).toBeLessThan(64 * 1024); /* only what the chunk really holds was allocated */
+    });
+
     test('corrupted chunks end as Lua errors, never as JavaScript exceptions or a stalled VM', () => {
         const original = dump(PROGRAM);
         const random = mulberry32(20260512);

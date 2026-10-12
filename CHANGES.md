@@ -1,5 +1,17 @@
 # Changes in Pyroeis
 
+## Version 0.7.0
+
+### Security (binary chunks)
+- **A forged section size could still cost gigabytes**: the loader allocated every string (and every header literal) at the size the chunk declared, before reading a single byte, so 30 bytes of input asking for a 2 GB string forced the allocation first and refused it after. `read` now doubles its buffer as the bytes arrive, charging each real allocation to the allocator hook; a declared size the input cannot back is refused as `truncated`, with a peak of a few kilobytes instead of the declared size. Section counts were already bounded by the input itself (every item consumes at least one byte) and still are.
+- **Tests**: `test/lverify.test.js` loads a chunk whose long-string constant declares 2 GB and checks both the refusal (`truncated precompiled chunk`) and, through `lua_setallocf`, that nothing bigger than the bytes really present was allocated.
+
+### Documentation
+- **Security page: a test matrix checked against reality**: the nine attack cases sketched in our working notes (corrupted chunks, infinite loop, malicious metatable, string concatenation, giant table, `js.global` escape, prototype injection, constant mentioning `eval`, and a checksum that Lua chunks do not have) now appear as a static table with the behaviour both engines really have and a way to verify each row. Three rows were corrected rather than copied: the chunk format carries no checksum, `t.__proto__` written from Lua is an ordinary key, and `js.global` exists only with fengari-interop; the constant filter was set aside. Case links such as `#allocation` select their reproduction, so every comparison stays runnable on the page.
+
+### Contributors
+- **The README licence line names the people**: « MIT © Michel Weinachter (Datamoc), Benoit Giannangeli, Daurnimator, and contributors. », each name linked to the GitHub profile that commits the repository history (44 commits for datamoc, 505 for giann, 804 for daurnimator). `LICENSE` itself keeps the plain MIT text.
+
 ## Version 0.6.0
 
 ### Breaking: the last Fengari names are gone

@@ -49,6 +49,9 @@ module.exports = function createLundump(dependencies) {
 
     let LUAC_DATA = [0x19, 0x93, 13, 10, 0x1a, 10];
 
+    /* first buffer of read(); it doubles from there, so a forged size costs at most what the chunk contains */
+    const READ_CHUNK = 4096;
+
     class BytecodeParser {
 
         constructor(L, Z, name) {
@@ -80,11 +83,27 @@ module.exports = function createLundump(dependencies) {
             this.u8 = new Uint8Array(this.arraybuffer);
         }
 
+        /* Reads `size` bytes. The buffer doubles as the bytes arrive and every real allocation is
+           charged to the allocator hook: a size field forged in the chunk cannot make the loader
+           allocate what the input does not contain (30 bytes declaring a 2 GB string cost 4 KB,
+           then `truncated`). The returned array is always exactly `size` bytes long. */
         read(size) {
-            lua_alloc(this.L, size);
-            let u8 = new Uint8Array(size);
-            if(luaZ_read(this.Z, u8, 0, size) !== 0)
-                this.error("truncated");
+            const initial = Math.min(size, READ_CHUNK);
+            lua_alloc(this.L, initial);
+            let u8 = new Uint8Array(initial);
+            let filled = 0;
+            while (filled < size) {
+                if (filled === u8.length) {
+                    const grown = new Uint8Array(Math.min(size, u8.length * 2));
+                    lua_alloc(this.L, grown.length);
+                    grown.set(u8);
+                    u8 = grown;
+                }
+                const want = Math.min(size, u8.length) - filled;
+                if (luaZ_read(this.Z, u8, filled, want) !== 0)
+                    this.error("truncated");
+                filled += want;
+            }
             return u8;
         }
 
