@@ -250,7 +250,7 @@ npm run test:extended
 
 ## License
 
-MIT © [Benoit Giannangeli](https://github.com/fengari-lua/fengari), [Daurnimator](https://github.com/daurnimator), and contributors.
+MIT © [Michel Weinachter (Datamoc)](https://github.com/datamoc), [Benoit Giannangeli](https://github.com/giann), [Daurnimator](https://github.com/daurnimator), and contributors.
 
 ## Migration from @datamoc/fengari
 
