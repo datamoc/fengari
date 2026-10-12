@@ -25,8 +25,8 @@ function canonical(value) {
 }
 
 function isInteger(value) {
-    return (typeof value === "bigint" && value >= MIN && value <= MAX) ||
-        (typeof value === "number" && Number.isSafeInteger(value) && value >= MIN && value <= MAX);
+    if (typeof value === "number") return value >= LO && value <= HI && Number.isInteger(value);
+    return typeof value === "bigint" && value >= MIN && value <= MAX;
 }
 
 function wrap(value) {

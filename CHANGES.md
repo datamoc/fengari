@@ -3,24 +3,26 @@
 ## Unreleased
 
 ### Fixes
-- **Two different strings could share a table slot**: the key built for a table lookup wrote each byte as unpadded hexadecimal, so `"\1#"` and `"\18\3"` (both `1`,`23` or `12`,`3`) produced the same key and `t["\1#"]` returned the value stored under `"\18\3"`. The key is now one UTF-16 code unit per byte, which is one-to-one.
+- **Two different strings could share a table slot**: the key built for a table lookup wrote each byte as unpadded hexadecimal, so `"\1#"` and `"\18\3"` (both `1`,`23` or `12`,`3`) produced the same key and `t["\1#"]` returned the value stored under `"\18\3"`. The key is now one UTF-16 code unit per byte, which is one-to-one. String comparison used the same key, so it was also wrong (`"\10" < "\16"` was false); it now follows byte values.
 
 ### Performance
 Measured on the `docs/benchmark` Lua algorithms in Node 22 (median of 5 runs, milliseconds, before to after):
 
 | benchmark | before | after |
 |---|---|---|
-| fib (calls) | 112 | 24 |
-| sort | 145 | 78 |
-| collatz (integer maths) | 144 | 46 |
-| nested loops | 24 | 10 |
-| matmul | 65 | 32 |
-| integer sum | 7.8 | 3.7 |
-| strings | 100 | 65 |
-| sieve | 31 | 24 |
-| mandelbrot | 70 | 46 |
+| fib (calls) | 112 | 20 |
+| sort | 145 | 62 |
+| collatz (integer maths) | 144 | 39 |
+| nested loops | 24 | 5 |
+| matmul | 65 | 18 |
+| integer sum | 7.8 | 2 |
+| strings | 100 | 58 |
+| sieve | 31 | 12 |
+| mandelbrot | 70 | 28 |
 
 - **Integer arithmetic no longer goes through BigInt for ordinary values** (`src/linteger.js`): `wrap`, `canonical`, `fromFloat`, `add`, `sub`, `mul`, `neg`, `div`, `mod` and the bitwise operators first try plain Number arithmetic and fall back to BigInt only when the result leaves the exactly representable range. Results are identical in 32 and 64-bit builds (checked against the previous implementation on about 3 million operand pairs, with `Object.is` so a stray `-0` counts; `test/linteger.test.js` keeps a smaller version).
+- **Numeric `for` loops** (`OP_FORLOOP`/`OP_FORPREP`) looked the loop state up in a `Map` and stepped it with BigInt on every iteration. The state is now kept in a plain array and in Numbers whenever the span is below 2^53, with BigInt state only for wider loops (`math.maxinteger` bounds, `math.huge` limits). Checked against the previous implementation on 55 boundary cases; `test/pyroeis-vm.test.js` keeps them.
+- **Arithmetic in the VM loop**: integer results are stored without wrapping them a second time, float-by-float `+ - * /` skips the generic number conversion, and `==` between two numbers of the same variant skips the type dispatch.
 - **The Lua stack no longer uses `delete`**: `delete L.stack[i]` punched holes in a JavaScript array, and V8 handles such arrays slowly (`moveresults` alone was 22% of a recursive call benchmark). The slot is set to `undefined` instead, which still releases the value.
 - **`luaL_addlstring`** (used by `gsub`, `concat`, `format`...) no longer builds two temporary views per call.
 - **Native UTF-8 for longer strings**: `to_jsstring` uses a strict `TextDecoder` from 16 bytes, and `to_luastring` uses `TextEncoder` from 150 characters when `String.prototype.isWellFormed()` (ES2024) says the string is well formed. Shorter strings are faster with the existing loops (measured), and anything the strict decoder refuses (encoded surrogates, overlong forms, invalid bytes) still goes through the existing loop, so results do not change (120,000 differential comparisons).

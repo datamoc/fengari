@@ -196,6 +196,17 @@ module.exports = function createLobject(dependencies) {
             this.value = integer.wrap(x);
         }
 
+        /* for a value that is already canonical (a result of the integer module): no wrap */
+        setivalueRaw(x) {
+            this.type = LUA_TNUMINT;
+            this.value = x;
+        }
+
+        chgivalueRaw(x) {
+            lua_assert(this.type == LUA_TNUMINT);
+            this.value = x;
+        }
+
         setnilvalue() {
             this.type = LUA_TNIL;
             this.value = null;

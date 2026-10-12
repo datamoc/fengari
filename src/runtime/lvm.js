@@ -283,7 +283,9 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if (op1.ttisinteger() && op2.ttisinteger()) {
-                        L.stack[ra].setivalue(integer.add(op1.value, op2.value));
+                        L.stack[ra].setivalueRaw(integer.add(op1.value, op2.value));
+                    } else if (op1.type === LUA_TNUMFLT && op2.type === LUA_TNUMFLT) {
+                        L.stack[ra].setfltvalue(op1.value + op2.value);
                     } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(numberop1 + numberop2);
                     } else {
@@ -297,7 +299,9 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if (op1.ttisinteger() && op2.ttisinteger()) {
-                        L.stack[ra].setivalue(integer.sub(op1.value, op2.value));
+                        L.stack[ra].setivalueRaw(integer.sub(op1.value, op2.value));
+                    } else if (op1.type === LUA_TNUMFLT && op2.type === LUA_TNUMFLT) {
+                        L.stack[ra].setfltvalue(op1.value - op2.value);
                     } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(numberop1 - numberop2);
                     } else {
@@ -311,7 +315,9 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if (op1.ttisinteger() && op2.ttisinteger()) {
-                        L.stack[ra].setivalue(luaV_imul(op1.value, op2.value));
+                        L.stack[ra].setivalueRaw(luaV_imul(op1.value, op2.value));
+                    } else if (op1.type === LUA_TNUMFLT && op2.type === LUA_TNUMFLT) {
+                        L.stack[ra].setfltvalue(op1.value * op2.value);
                     } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(numberop1 * numberop2);
                     } else {
@@ -325,7 +331,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if (op1.ttisinteger() && op2.ttisinteger()) {
-                        L.stack[ra].setivalue(luaV_mod(L, op1.value, op2.value));
+                        L.stack[ra].setivalueRaw(luaV_mod(L, op1.value, op2.value));
                     } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(luai_nummod(L, numberop1, numberop2));
                     } else {
@@ -350,7 +356,9 @@ module.exports = function createLvm(dependencies) {
                     let op2 = RKC(L, base, k, i);
                     let numberop1, numberop2;
 
-                    if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
+                    if (op1.type === LUA_TNUMFLT && op2.type === LUA_TNUMFLT) {
+                        L.stack[ra].setfltvalue(op1.value / op2.value);
+                    } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(numberop1 / numberop2);
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_DIV);
@@ -363,7 +371,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if (op1.ttisinteger() && op2.ttisinteger()) {
-                        L.stack[ra].setivalue(luaV_div(L, op1.value, op2.value));
+                        L.stack[ra].setivalueRaw(luaV_div(L, op1.value, op2.value));
                     } else if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
                         L.stack[ra].setfltvalue(Math.floor(numberop1 / numberop2));
                     } else {
@@ -377,7 +385,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tointeger(op1)) !== false && (numberop2 = tointeger(op2)) !== false) {
-                        L.stack[ra].setivalue(integer.band(numberop1, numberop2));
+                        L.stack[ra].setivalueRaw(integer.band(numberop1, numberop2));
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_BAND);
                     }
@@ -389,7 +397,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tointeger(op1)) !== false && (numberop2 = tointeger(op2)) !== false) {
-                        L.stack[ra].setivalue(integer.bor(numberop1, numberop2));
+                        L.stack[ra].setivalueRaw(integer.bor(numberop1, numberop2));
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_BOR);
                     }
@@ -401,7 +409,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tointeger(op1)) !== false && (numberop2 = tointeger(op2)) !== false) {
-                        L.stack[ra].setivalue(integer.bxor(numberop1, numberop2));
+                        L.stack[ra].setivalueRaw(integer.bxor(numberop1, numberop2));
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_BXOR);
                     }
@@ -413,7 +421,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tointeger(op1)) !== false && (numberop2 = tointeger(op2)) !== false) {
-                        L.stack[ra].setivalue(luaV_shiftl(numberop1, numberop2));
+                        L.stack[ra].setivalueRaw(luaV_shiftl(numberop1, numberop2));
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_SHL);
                     }
@@ -425,7 +433,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tointeger(op1)) !== false && (numberop2 = tointeger(op2)) !== false) {
-                        L.stack[ra].setivalue(luaV_shiftl(numberop1, -numberop2));
+                        L.stack[ra].setivalueRaw(luaV_shiftl(numberop1, -numberop2));
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_SHR);
                     }
@@ -436,7 +444,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop;
 
                     if (op.ttisinteger()) {
-                        L.stack[ra].setivalue(integer.neg(op.value));
+                        L.stack[ra].setivalueRaw(integer.neg(op.value));
                     } else if ((numberop = tonumber(op)) !== false) {
                         L.stack[ra].setfltvalue(-numberop);
                     } else {
@@ -448,7 +456,7 @@ module.exports = function createLvm(dependencies) {
                     let op = L.stack[RB(L, base, i)];
 
                     if (op.ttisinteger()) {
-                        L.stack[ra].setivalue(integer.bnot(op.value));
+                        L.stack[ra].setivalueRaw(integer.bnot(op.value));
                     } else {
                         ltm.luaT_trybinTM(L, op, op, L.stack[ra], ltm.TMS.TM_BNOT);
                     }
@@ -575,16 +583,16 @@ module.exports = function createLvm(dependencies) {
                 }
                 case OP_FORLOOP: {
                     if (L.stack[ra].ttisinteger()) { /* integer loop? */
-                        const loop = ci.integerloops.get(ra);
-                        if (loop.remaining > 0n) {
-                            const idx = integer.wrap(loop.next);
+                        const loop = ci.integerloops[ra];
+                        if (loop.remaining > 0) {  /* Number or BigInt state, see OP_FORPREP */
+                            const idx = typeof loop.next === "number" ? loop.next : integer.wrap(loop.next);
                             loop.remaining--;
                             loop.next += loop.step;
                             ci.l_savedpc += i.sBx;
-                            L.stack[ra].chgivalue(idx);  /* update internal index... */
-                            L.stack[ra + 3].setivalue(idx);
+                            L.stack[ra].chgivalueRaw(idx);  /* update internal index... */
+                            L.stack[ra + 3].setivalueRaw(idx);
                         } else {
-                            ci.integerloops.delete(ra);
+                            ci.integerloops[ra] = undefined;
                         }
                     } else { /* floating loop */
                         let step = L.stack[ra + 2].value;
@@ -607,15 +615,10 @@ module.exports = function createLvm(dependencies) {
 
                     if (init.ttisinteger() && pstep.ttisinteger() && (forlim = forlimit(plimit, pstep.value))) {
                         /* all values are integer */
-                        const first = BigInt(init.value);
-                        const step = BigInt(pstep.value);
-                        if (step === 0n)
+                        if (pstep.value == 0)
                             ldebug.luaG_runerror(L, to_luastring("'for' step is zero"));
-                        const limit = BigInt(forlim.ilimit);
-                        const empty = forlim.stopnow || (step > 0n ? first > limit : first < limit);
-                        const remaining = empty ? 0n : (step > 0n ? (limit - first) / step : (first - limit) / -step) + 1n;
-                        if (!ci.integerloops) ci.integerloops = new Map();
-                        ci.integerloops.set(ra, { next: first, step, remaining });
+                        if (!ci.integerloops) ci.integerloops = [];
+                        ci.integerloops[ra] = newintegerloop(init.value, pstep.value, forlim);
                         plimit.setivalue(forlim.ilimit);
                     } else { /* try making all values floats */
                         let nlimit, nstep, ninit;
@@ -763,6 +766,9 @@ module.exports = function createLvm(dependencies) {
     };
 
     const luaV_equalobj = function(L, t1, t2) {
+        /* same numeric variant: the common comparison in loops */
+        if (t1.type === t2.type && (t1.type === LUA_TNUMINT || t1.type === LUA_TNUMFLT))
+            return t1.value === t2.value ? 1 : 0;
         if (t1.ttype() !== t2.ttype()) { /* not the same variant? */
             if (t1.ttnov() !== t2.ttnov() || t1.ttnov() !== LUA_TNUMBER)
                 return 0; /* only numbers can be equal with different variants */
@@ -812,6 +818,28 @@ module.exports = function createLvm(dependencies) {
 
     const luaV_rawequalobj = function(t1, t2) {
         return luaV_equalobj(null, t1, t2);
+    };
+
+    /*
+    ** State of an integer 'for' loop. Operands that are Numbers (the common case) keep Number
+    ** state: with the span below 2^53 the double quotient of two safe integers floors exactly
+    ** and every index is at most the limit, so it is exact too (the value after the last
+    ** index is never used). Anything wider keeps the BigInt state.
+    */
+    const newintegerloop = function(first, step, forlim) {
+        const limit = forlim.ilimit;
+        if (typeof first === "number" && typeof step === "number" && typeof limit === "number") {
+            const empty = forlim.stopnow || (step > 0 ? first > limit : first < limit);
+            const span = step > 0 ? limit - first : first - limit;
+            if (empty)
+                return { next: first, step, remaining: 0 };
+            if (Number.isSafeInteger(span))
+                return { next: first, step, remaining: Math.floor(span / Math.abs(step)) + 1 };
+        }
+        const f = BigInt(first), s = BigInt(step), l = BigInt(limit);
+        const empty = forlim.stopnow || (s > 0n ? f > l : f < l);
+        const remaining = empty ? 0n : (s > 0n ? (l - f) / s : (f - l) / -s) + 1n;
+        return { next: f, step: s, remaining };
     };
 
     const forlimit = function(obj, step) {
