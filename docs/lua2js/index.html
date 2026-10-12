@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <link rel="icon" href="../assets/pyroeis.svg" type="image/svg+xml">
 <link rel="alternate icon" href="../assets/pyroeis.png" type="image/png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pyroeis — Lua ↔ JavaScript</title>
-<meta name="description" content="Paste Lua, get readable JavaScript, and benchmark the result against Pyroeis in your own browser.">
+<meta name="description" content="Essayez les échanges JavaScript vers Lua et Lua vers JavaScript : données, callbacks, retours multiples et fonctions Lua. Traduisez aussi une source Lua en JavaScript.">
 <style>
 :root {
   --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --line: #d0d7de; --panel: #f6f8fa;
@@ -55,6 +55,16 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .summary strong { font-size: 1.4rem; }
 @media (max-width: 52rem) { .panes { grid-template-columns: 1fr; } }
 noscript { color: var(--bad); }
+
+#exchange-demo { margin: 0 0 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--edge); }
+#exchange-demo textarea { height: 18rem; min-height: 18rem; }
+#exchange-demo pre { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 3rem; }
+#exchange-demo .panes { margin: 1rem 0; }
+#exchange-demo h3 { margin-top: .7rem; }
+#exchange-trace { padding-left: 1.5rem; }
+#exchange-trace li { padding: .6rem 0; }
+#exchange-trace pre { margin: .3rem 0 0; max-height: 14rem; overflow: auto; }
+#translation-demo { margin-top: 3rem; }
 </style>
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -62,6 +72,28 @@ noscript { color: var(--bad); }
 <header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Main navigation"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/" aria-current="page">Lua ↔ JavaScript</a><a href="../mwg/">Démo MWG</a><a href="../interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
 <main class="site-main">
   <h1>Lua ↔ JavaScript</h1>
+  <section id="exchange-demo" aria-labelledby="exchange-heading">
+    <p class="lead">Envoyez des données JavaScript à Lua, appelez une fonction hôte depuis Lua et récupérez ses résultats en JavaScript.</p>
+    <p>Les quatre exemples exécutent les appels réels de <code>PyroeisVm</code>. Modifiez les données ou la fonction <code>exchange(data)</code>, puis observez chaque passage dans le journal. Le code Lua tourne dans un worker avec un budget d’exécution.</p>
+    <h2 id="exchange-heading">Les échanges dans les deux sens</h2>
+    <div class="controls"><label for="exchange-example">Exemple</label><select id="exchange-example"><option value="data">Données et tables</option><option value="callback">Lua appelle JavaScript</option><option value="multiple">Retours multiples</option><option value="reference">JavaScript rappelle une fonction Lua</option></select><button id="exchange-run" class="primary" type="button">Exécuter l’échange</button><button id="exchange-stop" type="button" disabled>Arrêter</button></div>
+    <div class="panes">
+      <section><h3><label for="exchange-data">JavaScript → Lua : les données envoyées</label></h3><p class="muted">Saisissez les données de l’objet JavaScript au format JSON.</p><textarea id="exchange-data" spellcheck="false" aria-describedby="exchange-input-note"></textarea><p id="exchange-input-note" class="muted">Objets et tableaux deviennent des tables Lua ; les indices d’un tableau commencent à 1 dans Lua.</p></section>
+      <section><h3><label for="exchange-lua">Lua : la fonction appelée par JavaScript</label></h3><p class="muted"><code>exchange(data)</code> reçoit les données converties et peut appeler <code>host.scale(value, factor)</code>.</p><textarea id="exchange-lua" spellcheck="false"></textarea></section>
+    </div>
+    <p id="exchange-status" class="status" role="status" aria-live="polite">Chargement de l’exemple…</p>
+    <div class="panes">
+      <section><h3>Objet JavaScript après l’appel Lua</h3><pre id="exchange-original" tabindex="0" aria-label="Données JavaScript après l’échange"></pre></section>
+      <section><h3>Lua → JavaScript : les valeurs reçues</h3><pre id="exchange-result" tabindex="0" aria-label="Retours Lua convertis en JavaScript"></pre></section>
+    </div>
+    <p class="muted"><code>callMulti</code> renvoie une liste de tous les retours Lua. Les tables sont converties en données JavaScript ; une fonction Lua devient une référence <code>LuaRef</code> que l’hôte peut rappeler. Les mentions <code>Map</code>, <code>BigInt</code> ou <code>LuaRef</code> dans les résultats décrivent les types réellement reçus ; ce ne sont pas des champs ajoutés à vos tables Lua.</p>
+    <details><summary>Voir le code JavaScript de l’hôte</summary><pre id="exchange-host-code" tabindex="0"></pre><p class="muted">Extrait des appels utilisés par la démo. Le worker ajoute le journal, la validation des références et leur libération.</p></details>
+    <h3>Journal des passages entre les deux langages</h3><ol id="exchange-trace"></ol>
+    <p><a href="../interop/">Comprendre le contrat d’échange et le choix face à fengari-interop</a>. Les données JavaScript restent des copies lors du passage en table Lua. Les callbacks sont des opérations hôtes explicites ; les budgets Lua ne préemptent pas du JavaScript arbitraire.</p>
+  </section>
+  <section id="translation-demo" lang="en" aria-labelledby="translation-heading">
+  <h2 id="translation-heading">Translate Lua source to JavaScript</h2>
+
   <p class="muted">Paste Lua, get readable JavaScript you can keep. Translation runs in your browser; nothing is uploaded.</p>
   <p>This is the offline translator behind <code>lua2js</code> and <code>PyroeisVm.toJs()</code> from <a href="https://github.com/datamoc/pyroeis">Pyroeis</a>. It prints idiomatic JavaScript from the Lua source and marks with <code>TODO(lua2js)</code> whatever it cannot translate faithfully. The benchmark below runs the same function as Lua in Pyroeis's interpreter and as the translated JavaScript. See also the <a href="../benchmark/">Pyroeis vs JavaScript benchmark</a>.</p>
 
@@ -117,6 +149,7 @@ noscript { color: var(--bad); }
   <h2>What to know</h2>
   <p>Arrays are shifted to 0-based, <code>nil</code> is <code>undefined</code>, <code>if x</code> becomes <code>truthy(x)</code> because Lua treats <code>0</code> and <code>""</code> as true, and multiple returns become arrays. Literal Lua patterns become <code>RegExp</code> calls; metatables, coroutines, patterns using <code>%b</code> or <code>%f</code>, general <code>goto</code> and 64-bit bitwise operators are not translated. The benchmark executes the translated code in this page, so only run Lua you wrote or trust.</p>
   <p class="muted" id="env"></p>
+  </section>
 </main>
 
 <script src="../benchmark/pyroeis.bundle.js"></script>
@@ -292,5 +325,6 @@ $("copy").addEventListener("click", async () => {
 $("env").textContent = `${Pyroeis.lua.LUA_RELEASE} in Pyroeis. ${navigator.userAgent}.`;
 loadExample();
 </script>
+<script src="exchange.js?v=bidirectional-1"></script>
 </body>
 </html>

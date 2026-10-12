@@ -16,6 +16,7 @@
     <p class="lead">Nous voulons que Lua manipule les données d’une application et appelle les opérations que celle-ci lui confie. L’hôte garde la maîtrise de ses objets et de l’exécution.</p>
     <p><code>PyroeisVm</code> fournit donc une interface d’échange intégrée au moteur. Ce choix répond aux besoins des règles de jeu, des stratégies et des scripts intégrés dans une application. Il explique pourquoi nous n’utilisons pas directement <a href="https://github.com/fengari-lua/fengari-interop">fengari-interop</a>.</p>
 
+    <p><a href="../lua2js/">Essayer les échanges dans les deux sens</a> : données, callbacks JavaScript, retours multiples et références à des fonctions Lua.</p>
     <h2>Des données copiées et des opérations explicites</h2>
     <p>Un objet JavaScript ordinaire transmis à Lua devient une table construite à partir de ses propriétés propres énumérables. Un tableau devient une table indexée à partir de 1. Lua peut modifier ces tables sans modifier automatiquement les objets JavaScript d’origine. Leurs prototypes ne sont pas exposés par cette conversion.</p>
     <p>Dans l’autre sens, les tables Lua deviennent des tableaux, des objets ou des <code>Map</code> JavaScript suivant leurs clés. Ce sont des instantanés de leurs données : leurs métatables et leur comportement ne sont pas transportés. Les appels utilisent <code>run</code>, <code>call</code> et les fonctions enregistrées avec <code>defineFunction</code>.</p>
