@@ -74,8 +74,8 @@ module.exports = function createLoadlib(dependencies) {
         to_jsstring,
         to_luastring,
         to_uristring
-    } = require("../fengaricore.js");
-    const { fengari } = dependencies;
+    } = require("../pyroeiscore.js");
+    const { pyroeis } = dependencies;
 
     const global_env = (function() {
         if (isnode) {
@@ -143,12 +143,12 @@ module.exports = function createLoadlib(dependencies) {
                 code += " //# sourceURL=" + path;
             let func;
             try {
-                func = Function("fengari", code);
+                func = Function("pyroeis", code);
             } catch (e) {
                 lua_pushstring(L, to_luastring(`${e.name}: ${e.message}`));
                 return null;
             }
-            let res = func(fengari);
+            let res = func(pyroeis);
             if (typeof res === "function" || (typeof res === "object" && res !== null)) {
                 return res;
             } else if (res === void 0) { /* assume library added symbols to global environment */

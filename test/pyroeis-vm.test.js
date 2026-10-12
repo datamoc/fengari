@@ -1,31 +1,31 @@
 "use strict";
 
-const { FengariVm, LuaError, Yield } = require("../src/fengari-vm.js");
+const { PyroeisVm, LuaError, Yield } = require("../src/pyroeis-vm.js");
 
-describe("FengariVm libraries", () => {
+describe("PyroeisVm libraries", () => {
     test("default opens everything", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return type(load) .. type(require) .. type(os)")).toBe("functionfunctiontable");
     });
 
     test("libs selects libraries", () => {
-        const vm = new FengariVm(undefined, undefined, { libs: ["base", "string", "table", "coroutine"] });
+        const vm = new PyroeisVm(undefined, undefined, { libs: ["base", "string", "table", "coroutine"] });
         expect(vm.run("return type(require) .. type(os) .. type(string.rep)")).toBe("nilnilfunction");
     });
 
     test("remove drops globals", () => {
-        const vm = new FengariVm(undefined, undefined, { remove: ["load", "dofile", "loadfile", "os.exit"] });
+        const vm = new PyroeisVm(undefined, undefined, { remove: ["load", "dofile", "loadfile", "os.exit"] });
         expect(vm.run("return type(load) .. type(dofile) .. type(os.exit) .. type(os.time)")).toBe("nilnilnilfunction");
     });
 
     test("unknown library throws", () => {
-        expect(() => new FengariVm(undefined, undefined, { libs: ["nope"] })).toThrow(/Unknown/);
+        expect(() => new PyroeisVm(undefined, undefined, { libs: ["nope"] })).toThrow(/Unknown/);
     });
 });
 
-describe("FengariVm sandbox leaves no host helper behind", () => {
+describe("PyroeisVm sandbox leaves no host helper behind", () => {
     test("__random, __fs_read and __fs_list are not visible to a sandboxed script", () => {
-        const vm = new FengariVm(undefined, undefined, { sandbox: true });
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true });
         expect(vm.run("return type(__random) .. type(__fs_read) .. type(__fs_list)")).toBe("nilnilnil");
         const names = vm.run("local names = {} for key in pairs(_G) do names[#names + 1] = key end table.sort(names) return table.concat(names, ',')");
         expect(names).not.toMatch(/__/);
@@ -33,22 +33,22 @@ describe("FengariVm sandbox leaves no host helper behind", () => {
     });
 
     test("outside the sandbox the helpers keep working", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return type(__random)")).toBe("function");
         const value = vm.run("return __random()");
         expect(value >= 0 && value < 1).toBe(true);
     });
 });
 
-describe("FengariVm print option", () => {
+describe("PyroeisVm print option", () => {
     test("'buffer' (default) collects the lines", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run("print('a', 1)");
         expect(vm.output).toEqual(["a\t1"]);
     });
 
     test("'native' keeps the print of the base library and does not touch the buffer", () => {
-        const vm = new FengariVm(undefined, undefined, { print: "native" });
+        const vm = new PyroeisVm(undefined, undefined, { print: "native" });
         const written = [];
         const write = process.stdout.write;
         process.stdout.write = (chunk) => { written.push(String(chunk)); return true; };
@@ -62,30 +62,30 @@ describe("FengariVm print option", () => {
     });
 
     test("false removes print", () => {
-        const vm = new FengariVm(undefined, undefined, { print: false });
+        const vm = new PyroeisVm(undefined, undefined, { print: false });
         expect(vm.run("return type(print)")).toBe("nil");
     });
 
     test("'native' with the sandbox keeps string.dump removed (no library re-opening needed)", () => {
-        const vm = new FengariVm(undefined, undefined, { sandbox: true, print: "native" });
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true, print: "native" });
         expect(vm.run("return type(print) .. type(string.dump) .. type(os)")).toBe("functionnilnil");
     });
 
     test("rejects an unknown value", () => {
-        expect(() => new FengariVm(undefined, undefined, { print: "buffered" })).toThrow(RangeError);
+        expect(() => new PyroeisVm(undefined, undefined, { print: "buffered" })).toThrow(RangeError);
     });
 });
 
-describe("FengariVm conversions", () => {
+describe("PyroeisVm conversions", () => {
     test("arrays vs objects", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return {1, 2, 3}")).toEqual([1, 2, 3]);
         expect(vm.run("return {a = 1, [1] = 2}")).toEqual({ a: 1, 1: 2 });
         expect(vm.run("return {}")).toEqual({});
     });
 
     test("functions come back as callable refs", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const ref = vm.run("return function(a, b) return a + b end");
         expect(ref.type).toBe("function");
         expect(ref.call(2, 3)).toBe(5);
@@ -96,13 +96,13 @@ describe("FengariVm conversions", () => {
     });
 
     test("JS functions can be pushed", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("give", () => ({ f: (x) => x + 1 }));
         expect(vm.run("return give().f(1)")).toBe(2);
     });
 
     test("cyclic tables are preserved, cyclic JS throws", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const t = vm.run("local t = {} t.self = t return t");
         expect(t.self).toBe(t);
         const cyc = {}; cyc.self = cyc;
@@ -111,15 +111,15 @@ describe("FengariVm conversions", () => {
     });
 
     test("host function called from a coroutine sees the right stack", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("echo", (v) => v);
         expect(vm.run("return coroutine.wrap(function() return echo({1, 2}) end)()")).toEqual([1, 2]);
     });
 });
 
-describe("FengariVm coroutines", () => {
+describe("PyroeisVm coroutines", () => {
     test("resume/yield from Lua with values both ways", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run("function gen(a) local b = coroutine.yield(a + 1) local c = coroutine.yield(b * 2) return 'end', c end");
         const co = vm.coroutine("gen");
         expect(co.status).toBe("suspended");
@@ -131,7 +131,7 @@ describe("FengariVm coroutines", () => {
     });
 
     test("host function yields and receives the answer on resume", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const log = [];
         vm.defineFunction("ask", (question) => new Yield([question]));
         vm.defineFunction("log", (v) => { log.push(v); });
@@ -143,13 +143,13 @@ describe("FengariVm coroutines", () => {
     });
 
     test("yield outside a coroutine is a Lua error", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("ask", () => new Yield([]));
         expect(() => vm.run("return ask()")).toThrow(LuaError);
     });
 
     test("errors carry a traceback and kill the coroutine", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const co = vm.coroutineFromSource("error('boom')", "=co");
         let error;
         try { co.resume(); } catch (e) { error = e; }
@@ -160,7 +160,7 @@ describe("FengariVm coroutines", () => {
     });
 
     test("close runs pending <close> variables", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("mark", () => { vm.closed = true; });
         const co = vm.coroutineFromSource("local x <close> = setmetatable({}, {__close = mark}) coroutine.yield(1)");
         expect(co.resume().done).toBe(false);
@@ -170,14 +170,14 @@ describe("FengariVm coroutines", () => {
     });
 
     test("bad target and syntax errors throw", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(() => vm.coroutine("nothing.here")).toThrow(TypeError);
         expect(() => vm.coroutineFromSource("this is not lua")).toThrow(LuaError);
         expect(vm.lua.lua_gettop(vm.state)).toBe(0);
     });
 
     test("two coroutines interleave independently", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run("function counter() local i = 0 while true do i = i + 1 coroutine.yield(i) end end");
         const a = vm.coroutine("counter");
         const b = vm.coroutine("counter");
@@ -187,18 +187,18 @@ describe("FengariVm coroutines", () => {
     });
 });
 
-describe("FengariVm numbers and exports", () => {
-    const { LuaFloat } = require("../src/fengari-vm.js");
+describe("PyroeisVm numbers and exports", () => {
+    const { LuaFloat } = require("../src/pyroeis-vm.js");
 
     test("LuaFloat pushes a float", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("f", () => new LuaFloat(5));
         vm.defineFunction("i", () => 5);
         expect(vm.run("return math.type(f()) .. math.type(i())")).toBe("floatinteger");
     });
 
     test("preserveFloats round-trips float-valued integers", () => {
-        const vm = new FengariVm(undefined, undefined, { preserveFloats: true });
+        const vm = new PyroeisVm(undefined, undefined, { preserveFloats: true });
         const value = vm.run("return 5.0");
         expect(value).toBeInstanceOf(LuaFloat);
         expect(Number(value)).toBe(5);
@@ -209,22 +209,22 @@ describe("FengariVm numbers and exports", () => {
     });
 
     test("default reads 5.0 as a plain number", () => {
-        expect(new FengariVm().run("return 5.0")).toBe(5);
+        expect(new PyroeisVm().run("return 5.0")).toBe(5);
     });
 
     test("fengari entry point exposes the VM", () => {
-        const fengari = require("../src/fengari.js");
-        expect(fengari.FengariVm).toBe(FengariVm);
+        const fengari = require("../src/pyroeis.js");
+        expect(fengari.PyroeisVm).toBe(PyroeisVm);
         expect(fengari.Coroutine).toBeDefined();
         expect(fengari.lua).toBeDefined();
     });
 });
 
-describe("FengariVm userdata and 64-bit integers", () => {
-    const { Userdata, LuaRef } = require("../src/fengari-vm.js");
+describe("PyroeisVm userdata and 64-bit integers", () => {
+    const { Userdata, LuaRef } = require("../src/pyroeis-vm.js");
 
     test("full userdata is a LuaRef", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const stdout = vm.run("return io.stdout");
         expect(stdout).toBeInstanceOf(LuaRef);
         expect(stdout.type).toBe("userdata");
@@ -234,7 +234,7 @@ describe("FengariVm userdata and 64-bit integers", () => {
     });
 
     test("host values round-trip as light userdata", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const unit = { id: 7 };
         vm.defineFunction("get_unit", () => new Userdata(unit));
         vm.defineFunction("unit_id", (u) => u.value.id);
@@ -243,7 +243,7 @@ describe("FengariVm userdata and 64-bit integers", () => {
     });
 
     test("integers beyond 2^53 are BigInt and round-trip", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return math.maxinteger")).toBe(9223372036854775807n);
         expect(vm.run("return 42")).toBe(42);
         vm.defineFunction("id", (v) => v);
@@ -252,13 +252,13 @@ describe("FengariVm userdata and 64-bit integers", () => {
     });
 
     test("unsafe JS numbers are pushed as floats instead of throwing", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("big", () => 1e300);
         expect(vm.run("return math.type(big())")).toBe("float");
     });
 
     test("print and error tables tolerate non-JSON values", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run("print(function() end, math.maxinteger, io.stdout, {f = print})");
         expect(vm.output[0]).toContain("<function>");
         expect(() => vm.run("error({f = print})")).toThrow(/error table/);
@@ -266,7 +266,7 @@ describe("FengariVm userdata and 64-bit integers", () => {
 });
 
 test("runMulti and callMulti return every value", () => {
-    const vm = new FengariVm();
+    const vm = new PyroeisVm();
     expect(vm.runMulti("return 1, 'a', {2}")).toEqual([1, "a", [2]]);
     expect(vm.runMulti("return")).toEqual([]);
     vm.run("function pair(a) return a, a * 2 end");
@@ -275,9 +275,9 @@ test("runMulti and callMulti return every value", () => {
     expect(vm.lua.lua_gettop(vm.state)).toBe(0);
 });
 
-describe("FengariVm binary strings and exotic keys", () => {
+describe("PyroeisVm binary strings and exotic keys", () => {
     test("non-UTF-8 strings are Uint8Array and round-trip", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const bytes = vm.run("return string.char(255, 254, 97)");
         expect(bytes).toBeInstanceOf(Uint8Array);
         expect(Array.from(bytes)).toEqual([255, 254, 97]);
@@ -287,12 +287,12 @@ describe("FengariVm binary strings and exotic keys", () => {
     });
 
     test("valid UTF-8 and a leading BOM stay strings", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return '\u{FEFF}ok'")).toBe("\uFEFFok");
     });
 
     test("boolean, float, function and binary keys become a Map", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const map = vm.run("return {[true] = 1, [1.5] = 'x', a = 2}");
         expect(map).toBeInstanceOf(Map);
         expect(map.get(true)).toBe(1);
@@ -304,7 +304,7 @@ describe("FengariVm binary strings and exotic keys", () => {
     });
 
     test("a string key colliding with an integer key becomes a Map", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const map = vm.run("return {[1] = 'i', ['1'] = 's'}");
         expect(map).toBeInstanceOf(Map);
         expect(map.get(1)).toBe("i");
@@ -312,7 +312,7 @@ describe("FengariVm binary strings and exotic keys", () => {
     });
 
     test("Map pushes back with exact key types", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("m", () => new Map([[true, "t"], [1.5, "f"], ["1", "s"], [1, "i"]]));
         expect(vm.run("local t = m() return t[true] .. t[1.5] .. t['1'] .. t[1]")).toBe("tfsi");
         vm.defineFunction("bad", () => new Map([[NaN, 1]]));
@@ -320,22 +320,22 @@ describe("FengariVm binary strings and exotic keys", () => {
     });
 
     test("round trip keeps booleans keys", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.defineFunction("id", (v) => v);
         expect(vm.run("local t = id({[true] = 'y', [false] = 'n'}) return t[true] .. t[false]")).toBe("yn");
     });
 
     test("cyclic tables become arrays/maps without stale references", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const arr = vm.run("local t = {} t[1] = t t[2] = 5 return t");
         expect(Array.isArray(arr)).toBe(true);
         expect(arr[0]).toBe(arr);
     });
 });
 
-describe("FengariVm hardening", () => {
+describe("PyroeisVm hardening", () => {
     test("a __proto__ key stays an own property", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const value = vm.run("return {['__proto__'] = {polluted = true}, a = 1}");
         expect(Object.getPrototypeOf(value)).toBe(Object.prototype);
         expect(value.polluted).toBeUndefined();
@@ -344,24 +344,24 @@ describe("FengariVm hardening", () => {
     });
 
     test("references from another VM are rejected", () => {
-        const a = new FengariVm();
-        const b = new FengariVm();
+        const a = new PyroeisVm();
+        const b = new PyroeisVm();
         const ref = a.run("return function() return 'A' end");
         b.defineFunction("leak", () => ref);
-        expect(() => b.run("return leak()")).toThrow(/another FengariVm/);
+        expect(() => b.run("return leak()")).toThrow(/another PyroeisVm/);
         b.defineFunction("leakCo", () => a.coroutineFromSource("return 1"));
-        expect(() => b.run("return leakCo()")).toThrow(/another FengariVm/);
+        expect(() => b.run("return leakCo()")).toThrow(/another PyroeisVm/);
     });
 
     test("removing a library also removes it from package.loaded and preload", () => {
-        const vm = new FengariVm(undefined, undefined, { remove: ["os", "io"] });
+        const vm = new PyroeisVm(undefined, undefined, { remove: ["os", "io"] });
         expect(vm.run("return type(os) .. type(package.loaded.os) .. type(package.loaded.io)")).toBe("nilnilnil");
         expect(vm.run("return pcall(require, 'os')")).toBe(false);
     });
 });
 
-describe("FengariVm sandbox preset", () => {
-    const sandbox = () => new FengariVm(undefined, undefined, { sandbox: true });
+describe("PyroeisVm sandbox preset", () => {
+    const sandbox = () => new PyroeisVm(undefined, undefined, { sandbox: true });
 
     test("only the safe libraries are present", () => {
         const vm = sandbox();
@@ -375,9 +375,9 @@ describe("FengariVm sandbox preset", () => {
 
     test("the host file helpers are not exposed, except in a normal VM", () => {
         const files = { read: () => "secret", list: () => ["a"] };
-        const vm = new FengariVm(files, undefined, { sandbox: true });
+        const vm = new PyroeisVm(files, undefined, { sandbox: true });
         expect(vm.run("return type(__fs_read) .. type(__fs_list)")).toBe("nilnil");
-        const normal = new FengariVm(files);
+        const normal = new PyroeisVm(files);
         expect(normal.run("return __fs_read('x')")).toBe("secret");
     });
 
@@ -391,7 +391,7 @@ describe("FengariVm sandbox preset", () => {
     });
 
     test("load refuses binary chunks even when asked for them", () => {
-        const dumper = new FengariVm();
+        const dumper = new PyroeisVm();
         const vm = sandbox();
         vm.defineFunction("bytecode", () => dumper.run("return string.dump(function() return 42 end)"));
         expect(vm.run("local f, err = load(bytecode(), 'b', 'b') return f == nil and err ~= nil")).toBe(true);
@@ -406,14 +406,14 @@ describe("FengariVm sandbox preset", () => {
     });
 
     test("libs can narrow the preset but not widen it", () => {
-        const narrowed = new FengariVm(undefined, undefined, { sandbox: true, libs: ["base", "string"] });
+        const narrowed = new PyroeisVm(undefined, undefined, { sandbox: true, libs: ["base", "string"] });
         expect(narrowed.run("return type(table) .. type(string.rep)")).toBe("nilfunction");
-        expect(() => new FengariVm(undefined, undefined, { sandbox: true, libs: ["base", "os"] })).toThrow(/not allowed/);
-        expect(() => new FengariVm(undefined, undefined, { sandbox: true, libs: ["debug"] })).toThrow(/not allowed/);
+        expect(() => new PyroeisVm(undefined, undefined, { sandbox: true, libs: ["base", "os"] })).toThrow(/not allowed/);
+        expect(() => new PyroeisVm(undefined, undefined, { sandbox: true, libs: ["debug"] })).toThrow(/not allowed/);
     });
 
     test("remove adds to the preset removals", () => {
-        const vm = new FengariVm(undefined, undefined, { sandbox: true, remove: ["load", "print"] });
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true, remove: ["load", "print"] });
         expect(vm.run("return type(load) .. type(dofile)")).toBe("nilnil");
     });
 });

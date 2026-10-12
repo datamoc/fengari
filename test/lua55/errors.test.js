@@ -1,7 +1,7 @@
 "use strict";
 
-const { lua, lauxlib } = require("../../src/fengari.js");
-const { runFengari } = require("../../tools/lua55/differential.cjs");
+const { lua, lauxlib } = require("../../src/pyroeis.js");
+const { runPyroeis } = require("../../tools/lua55/differential.cjs");
 const absentError = "string:" + Buffer.from("<no error object>").toString("hex");
 
 test.each([
@@ -14,7 +14,7 @@ test.each([
     ["local t={}; local ok,e=pcall(error,t); return ok,e==t", ["boolean:false", "boolean:true"]],
     ["return pcall(assert,false,nil)", ["boolean:false", absentError]]
 ])("Lua 5.5 error contract: %s", (source, expected) => {
-    expect(runFengari({ id: "error-contract", source })).toEqual({ phase: "execution", status: "ok", values: expected });
+    expect(runPyroeis({ id: "error-contract", source })).toEqual({ phase: "execution", status: "ok", values: expected });
 });
 
 test("the native-style API normalizes a nil error object and preserves stack values", () => {

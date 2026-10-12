@@ -48,7 +48,7 @@ const {
     luastring_eq,
     to_jsstring,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 /* options for ANSI C 89 (only 1-char options) */
 // const L_STRFTIMEC89 = to_luastring("aAbBcdHIjmMpSUwWxXyYZ%");

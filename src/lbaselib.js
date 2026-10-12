@@ -77,7 +77,7 @@ const {
 const {
     to_jsstring,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 let lua_writestring;
 let lua_writeline;

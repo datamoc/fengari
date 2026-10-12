@@ -16,7 +16,7 @@ const {
     FENGARI_VERSION_NUM,
     FENGARI_VERSION_RELEASE,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 const luaopen_fengari = function(L) {
     luaL_newlib(L, {});

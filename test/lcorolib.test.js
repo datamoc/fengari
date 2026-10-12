@@ -4,7 +4,7 @@ const lua = require('../src/lua.js');
 const lauxlib = require('../src/lauxlib.js');
 const lualib = require('../src/lualib.js');
 const lstate = require('../src/lstate.js');
-const {to_luastring} = require("../src/fengaricore.js");
+const {to_luastring} = require("../src/pyroeiscore.js");
 
 test('coroutine.create, coroutine.yield, coroutine.resume', () => {
     let L = lauxlib.luaL_newstate();

@@ -86,7 +86,7 @@ const {
     luastring_eq,
     to_luastring,
     to_uristring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 /* extra error code for 'luaL_loadfilex' */
 const LUA_ERRFILE = LUA_ERRERR+1;

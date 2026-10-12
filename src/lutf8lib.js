@@ -28,7 +28,7 @@ const {
 const {
     luastring_of,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 const MAXUNICODE = 0x10FFFF;
 const MAXUTF = 0x7FFFFFFF;

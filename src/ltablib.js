@@ -49,7 +49,7 @@ const {
     luaL_typename
 } = require('./lauxlib.js');
 const lualib = require("./lualib-constants.js");
-const { to_luastring } = require("./fengaricore.js");
+const { to_luastring } = require("./pyroeiscore.js");
 
 /*
 ** Operations that an object must define to mimic a table
@@ -158,7 +158,7 @@ const tmove = function(L) {
         luaL_argcheck(L, n <= integer.MAX, 3, "too many elements to move");
         luaL_argcheck(L, target + n - 1n <= integer.MAX, 4, "destination wrap around");
 
-        /* a move of 2^40 elements is one VM instruction: let the embedder interrupt it (see FengariVm limits) */
+        /* a move of 2^40 elements is one VM instruction: let the embedder interrupt it (see PyroeisVm limits) */
         const interrupt = L.l_G.interrupt;
         let steps = 0;
         const tick = function() {

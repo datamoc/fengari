@@ -1,11 +1,11 @@
 "use strict";
 
-const { FengariVm } = require('../src/fengari-vm.js');
+const { PyroeisVm } = require('../src/pyroeis-vm.js');
 const { transpile, LuaSyntaxError } = require('../src/ltranspile.js');
 
 /* Runs `main()` in Fengari and in the translated JavaScript. */
 function both(lua, ...args) {
-    const vm = new FengariVm();
+    const vm = new PyroeisVm();
     vm.run(lua);
     const expected = vm.call('main', ...args);
     const { code } = transpile(lua, { format: 'cjs' });
@@ -314,9 +314,9 @@ describe('translated programs agree with the Lua VM', () => {
     });
 });
 
-describe('FengariVm.toJs', () => {
+describe('PyroeisVm.toJs', () => {
     test('translates without running the source', () => {
-        const { code, exports } = FengariVm.toJs('function twice(x) return x * 2 end', { format: 'cjs', header: false });
+        const { code, exports } = PyroeisVm.toJs('function twice(x) return x * 2 end', { format: 'cjs', header: false });
         expect(code).toContain('function twice(x)');
         expect(exports).toEqual(['twice']);
     });

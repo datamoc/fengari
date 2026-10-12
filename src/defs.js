@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Fengari specific string conversion functions
+ * Pyroeis specific string conversion functions
  */
 
 let luastring_from;

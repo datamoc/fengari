@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const entry = path.join(__dirname, '..', 'src', 'fengari.js');
+const entry = path.join(__dirname, '..', 'src', 'pyroeis.js');
 const NODE_ONLY = ['fs', 'os', 'path', 'tmp', 'child_process', 'readline-sync'];
 
 /* Runs a script in a fresh Node whose `process` looks like a browser bundler's shim and where
@@ -22,7 +22,7 @@ function runAsBrowser(body, { shim }) {
             return load.apply(this, arguments);
         };
         ${shim ? "Object.defineProperty(process, 'versions', { value: {} }); Object.defineProperty(process, 'platform', { value: 'browser' });" : ''}
-        const fengari = require(${JSON.stringify(entry)});
+        const pyroeis = require(${JSON.stringify(entry)});
         ${body}
     `;
     const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'browser-compat-')), 'run.js');
@@ -37,7 +37,7 @@ function runAsBrowser(body, { shim }) {
 describe('browser bundles', () => {
     test('a bundler\'s process shim does not make the library require Node-only modules', () => {
         const result = runAsBrowser(`
-            const vm = new fengari.FengariVm();
+            const vm = new pyroeis.PyroeisVm();
             console.log(JSON.stringify([vm.run('return 1 + 2'), vm.run('return type(io)'), vm.run('return package.config:sub(1, 1)')]));
         `, { shim: true });
         expect(result.stderr).toBe('');

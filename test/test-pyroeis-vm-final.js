@@ -1,12 +1,12 @@
 "use strict";
 
-// Test final pour vérifier que FengariVm peut exécuter du code Lua simple
+// Test final pour vérifier que PyroeisVm peut exécuter du code Lua simple
 function testFinal() {
     try {
-        const { FengariVm } = require('../src/fengari-vm');
+        const { PyroeisVm } = require('../src/pyroeis-vm');
         
-        // Créer une instance de FengariVm
-        const vm = new FengariVm();
+        // Créer une instance de PyroeisVm
+        const vm = new PyroeisVm();
         
         // Exécuter une expression Lua simple
         const result = vm.run("return 42 + 8");

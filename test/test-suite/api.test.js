@@ -3,7 +3,7 @@
 const lua = require('../../src/lua.js');
 const lauxlib = require('../../src/lauxlib.js');
 const lualib = require('../../src/lualib.js');
-const {to_luastring} = require("../../src/fengaricore.js");
+const {to_luastring} = require("../../src/pyroeiscore.js");
 
 const ltests = require('./ltests.js');
 
@@ -65,7 +65,7 @@ test("[test-suite] api: testing alignment", () => {
     if (!L) throw Error("failed to create lua state");
 
     let luaCode = `
-        -- Useless tests in fengari since we do the same thing in d2s than in string.pack
+        -- Useless tests in Pyroeis since we do the same thing in d2s than in string.pack
         a = T.d2s(12458954321123.0)
         assert(a == string.pack("d", 12458954321123.0))
         assert(T.s2d(a) == 12458954321123.0)

@@ -1,10 +1,10 @@
 "use strict";
 
-const { lua, lauxlib, lualib, to_luastring } = require("../../src/fengari.js");
-const { runFengari } = require("../../tools/lua55/differential.cjs");
+const { lua, lauxlib, lualib, to_luastring } = require("../../src/pyroeis.js");
+const { runPyroeis } = require("../../tools/lua55/differential.cjs");
 
 function run(source) {
-    const result = runFengari({ id: "library-test", source });
+    const result = runPyroeis({ id: "library-test", source });
     expect(result.status).toBe("ok");
     return result.values;
 }

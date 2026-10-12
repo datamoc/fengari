@@ -1,13 +1,13 @@
 "use strict";
 
-const { FengariVm, LuaError, LimitError } = require("../src/fengari-vm.js");
+const { PyroeisVm, LuaError, LimitError } = require("../src/pyroeis-vm.js");
 
-const limited = (limits, options = {}) => new FengariVm(undefined, undefined, { limits, ...options });
+const limited = (limits, options = {}) => new PyroeisVm(undefined, undefined, { limits, ...options });
 
 describe('a limit overrun cannot be hidden by the script', () => {
 
     test('a coroutine created by Lua that exceeds the budget fails the host call even if Lua catches it', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 1000 } });
         const run = () => vm.run('local co = coroutine.create(function() while true do end end); local ok = coroutine.resume(co); return 42');
         expect(run).toThrow(LimitError);
         expect(vm.limitHit).toBe('instructions');
@@ -16,7 +16,7 @@ describe('a limit overrun cannot be hidden by the script', () => {
     });
 
     test('coroutine.wrap inside pcall is covered too, and so is vm.call', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 1000 } });
         expect(() => vm.run('local f = coroutine.wrap(function() while true do end end); local ok = pcall(f); return 43')).toThrow(LimitError);
         vm.run('function caught() local co = coroutine.create(function() while true do end end); coroutine.resume(co); return 44 end');
         expect(() => vm.call('caught')).toThrow(LimitError);
@@ -24,13 +24,13 @@ describe('a limit overrun cannot be hidden by the script', () => {
     });
 
     test('a host coroutine whose Lua code catches an inner overrun fails resume', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 1000 } });
         const co = vm.coroutineFromSource('local inner = coroutine.create(function() while true do end end); coroutine.resume(inner); return 45');
         expect(() => co.resume()).toThrow(LimitError);
     });
 
     test('a removed limit leaves no stale overrun behind', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 1000 } });
         expect(() => vm.run('while true do end')).toThrow(LimitError);
         vm.setLimits(null);
         expect(vm.run('return 46')).toBe(46);
@@ -38,7 +38,7 @@ describe('a limit overrun cannot be hidden by the script', () => {
     });
 
     test('Coroutine#close runs the pending __close handlers with a fresh budget', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 1000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 1000 } });
         const source = 'local x <close> = setmetatable({}, {__close = function() for i = 1, 10000 do end end}); coroutine.yield(1)';
         const co = vm.coroutineFromSource(source);
         co.resume();
@@ -54,7 +54,7 @@ describe('looking up a global path runs under the limits', () => {
     const hostile = 'setmetatable(_G, {__index = function(_, key) while true do end end})';
 
     test('an endless __index on _G cannot hang call, callMulti, compile or coroutine', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 5000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 5000 } });
         vm.run('function present() return 1 end');
         vm.run(hostile);
         expect(() => vm.call('missing')).toThrow(LimitError);
@@ -65,7 +65,7 @@ describe('looking up a global path runs under the limits', () => {
     });
 
     test('a failing __index is a LuaError, not an unprotected raise, and leaves the stack clean', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run('setmetatable(_G, {__index = function(_, key) error("no global " .. key) end}); function present() return 1 end');
         const before = vm.lua.lua_gettop(vm.state);
         expect(() => vm.call('absent')).toThrow(/no global absent/);
@@ -76,7 +76,7 @@ describe('looking up a global path runs under the limits', () => {
     });
 });
 
-describe("FengariVm execution limits", () => {
+describe("PyroeisVm execution limits", () => {
     test("an instruction budget stops an infinite loop", () => {
         const vm = limited({ instructions: 100000 });
         let error;
@@ -165,7 +165,7 @@ describe("FengariVm execution limits", () => {
     });
 
     test("setLimits changes or removes the limits and validates", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.setLimits({ instructions: 20000 });
         expect(() => vm.run("while true do end")).toThrow(LimitError);
         vm.setLimits(null);
@@ -181,7 +181,7 @@ describe("FengariVm execution limits", () => {
     });
 });
 
-describe("FengariVm limits against hooks that are switched off", () => {
+describe("PyroeisVm limits against hooks that are switched off", () => {
     test("an xpcall message handler cannot run unchecked", () => {
         const vm = limited({ instructions: 20000 });
         expect(() => vm.run("xpcall(function() while true do end end, function(e) while true do end end)")).toThrow(LimitError);
@@ -210,7 +210,7 @@ describe("FengariVm limits against hooks that are switched off", () => {
     });
 
     test("pattern matching stays correct and fast without limits", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return select(2, (string.rep('ab', 50000)):gsub('ab', 'x'))")).toBe(50000);
         expect(vm.run("return (string.rep('a', 100000) .. 'b'):find('a*b')")).toBe(1);
     });
@@ -254,7 +254,7 @@ describe("FengariVm limits against hooks that are switched off", () => {
     });
 
     test("plain and pattern searches keep their results", () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(vm.run("return (string.find('hello world', 'o w', 1, true))")).toBe(5);
         expect(vm.runMulti("return string.find('hello world', 'wor', 1, true)")).toEqual([7, 9]);
         expect(vm.runMulti("return string.find('hello', '', 3, true)")).toEqual([3, 2]);
@@ -264,7 +264,7 @@ describe("FengariVm limits against hooks that are switched off", () => {
     });
 
     test("sandbox accepts a library list without base", () => {
-        const vm = new FengariVm(undefined, undefined, { sandbox: true, libs: ["string"] });
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true, libs: ["string"] });
         expect(vm.run("return string.rep('a', 3)")).toBe("aaa");
     });
 

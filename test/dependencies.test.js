@@ -88,8 +88,8 @@ test("browser initialization and JS libraries use the complete public API", () =
         send() {
             this.status = 200;
             this.response = `return { luaopen_fixture: function(L) {
-                fengari.lua.lua_pushboolean(L, fengari === window.publicFengari &&
-                    typeof fengari.lualib.luaL_openlibs === 'function');
+                pyroeis.lua.lua_pushboolean(L, pyroeis === window.publicPyroeis &&
+                    typeof pyroeis.lualib.luaL_openlibs === 'function');
                 return 1;
             } };`;
         }
@@ -111,8 +111,8 @@ test("browser initialization and JS libraries use the complete public API", () =
         cache.set(filename, module.exports);
         return module.exports;
     }
-    const f = load(path.join(sourceDirectory, "fengari.js"));
-    context.publicFengari = f;
+    const f = load(path.join(sourceDirectory, "pyroeis.js"));
+    context.publicPyroeis = f;
     const L = f.lauxlib.luaL_newstate();
     expect(L).toBeTruthy();
     f.lualib.luaL_openlibs(L);
@@ -122,15 +122,15 @@ test("browser initialization and JS libraries use the complete public API", () =
 });
 
 test("the VM extension evaluates code and calls host functions", () => {
-    const { FengariVm } = require("../src/fengari-vm.js");
-    const engine = new FengariVm();
+    const { PyroeisVm } = require("../src/pyroeis-vm.js");
+    const engine = new PyroeisVm();
     engine.defineFunction("add", (a, b) => a + b);
     expect(engine.run("value = add(20, 22); return value")).toBe(42);
     expect(engine.run("return value + 1")).toBe(43);
 });
 
 test("API extensions use the composed API without importing the auxiliary libraries", () => {
-    const { lua, lauxlib, to_luastring } = require("../src/fengari.js");
+    const { lua, lauxlib, to_luastring } = require("../src/pyroeis.js");
     const extensions = require("../src/lapi-ext.js");
     expect(extensions.lua_resetthread).toBe(lua.lua_resetthread);
     expect(extensions.lua_closeslot).toBe(lua.lua_closeslot);
@@ -162,12 +162,12 @@ test.each(["defs", "luaconf"])("custom stack configuration is consistent when %s
 test.each([
     "defs", "luaconf", "lobject", "lfunc", "lstate", "ltable", "ltm", "llex", "lcode",
     "lparser", "lundump", "lvm", "ldebug", "ldo", "lapi", "lua", "lauxlib", "lualib",
-    "linit", "loadlib", "fengari", "fengari-vm", "lapi-ext", "tvalue", "lstate_clean"
+    "linit", "loadlib", "pyroeis", "pyroeis-vm", "lapi-ext", "tvalue", "lstate_clean"
 ])("cold import of %s preserves the complete runtime", first => {
     const script = `
         const assert = require('assert');
         require(${JSON.stringify(path.join(sourceDirectory, first + ".js"))});
-        const f = require(${JSON.stringify(path.join(sourceDirectory, "fengari.js"))});
+        const f = require(${JSON.stringify(path.join(sourceDirectory, "pyroeis.js"))});
         const L = f.lauxlib.luaL_newstate();
         assert(L);
         f.lualib.luaL_openlibs(L);

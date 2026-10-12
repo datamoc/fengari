@@ -9,7 +9,7 @@ const {
     luastring_indexOf,
     to_jsstring,
     to_luastring
-} = require("../../src/fengaricore.js");
+} = require("../../src/pyroeiscore.js");
 const ljstype  = require('../../src/ljstype.js');
 const lopcodes = require('../../src/lopcodes.js');
 const { pushobj2s } = require('../../src/lobject.js');

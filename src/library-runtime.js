@@ -2,7 +2,7 @@
 
 const isnode = require("./isnode.js");
 
-const core = require("./fengaricore.js");
+const core = require("./pyroeiscore.js");
 const luaconf = require("./luaconf.js");
 const lua = require("./lua.js");
 const lauxlib = require("./lauxlib.js");
@@ -12,7 +12,7 @@ const createLoadlib = require("./runtime/loadlib.js");
 const lualib = { ...constants };
 /* Browser JS libraries receive the same API as the public entry point. */
 const fengari = { ...core, luaconf, lua, lauxlib, lualib };
-const loadlib = createLoadlib({ fengari });
+const loadlib = createLoadlib({ fengari, pyroeis: fengari });
 
 const loadedlibs = {
     _G: require("./lbaselib.js").luaopen_base,
@@ -24,7 +24,7 @@ const loadedlibs = {
     [constants.LUA_MATHLIBNAME]: require("./lmathlib.js").luaopen_math,
     [constants.LUA_DBLIBNAME]: require("./ldblib.js").luaopen_debug,
     [constants.LUA_LOADLIBNAME]: loadlib.luaopen_package,
-    [constants.LUA_FENGARILIBNAME]: require("./fengarilib.js").luaopen_fengari
+    [constants.LUA_FENGARILIBNAME]: require("./pyroeislib.js").luaopen_fengari
 };
 
 lualib.luaopen_base = loadedlibs._G;

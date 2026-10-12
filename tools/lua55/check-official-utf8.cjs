@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { execFileSync } = require("child_process");
-const { runFengari, runOracle, equivalent, sourceHashes } = require("./differential.cjs");
+const { runPyroeis, runOracle, equivalent, sourceHashes } = require("./differential.cjs");
 const root = path.resolve(__dirname, "../..");
 const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex");
 const archive = path.join(root, "docs/lua-5.5.1/reference/lua-5.5.1-tests.tar.gz");
@@ -20,7 +20,7 @@ const declaration = /^global <const> \*\r?\n/m;
 if (!declaration.test(original)) throw new Error("Official UTF-8 fixture changed; review adaptation");
 const adapted = original.replace(declaration, "-- Adapter: global wildcard declaration omitted; assertions unchanged.\n");
 const fixture = { id: "official-utf8", source: original };
-const actual = runFengari({ ...fixture, source: adapted });
+const actual = runPyroeis({ ...fixture, source: adapted });
 const results = ["int32", "int64"].map(profile => {
     const directory = path.join(root, ".lua55-build", profile);
     const manifest = JSON.parse(fs.readFileSync(path.join(directory, "manifest.json"), "utf8"));

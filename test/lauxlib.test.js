@@ -2,7 +2,7 @@
 
 const lua = require('../src/lua.js');
 const lauxlib = require("../src/lauxlib.js");
-const {to_luastring} = require("../src/fengaricore.js");
+const {to_luastring} = require("../src/pyroeiscore.js");
 
 
 test('luaL_ref, lua_rawgeti, luaL_unref, LUA_REGISTRYINDEX', () => {

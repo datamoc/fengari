@@ -5,7 +5,7 @@ const path = require("path");
 const crypto = require("crypto");
 const { spawnSync, execFileSync } = require("child_process");
 const root = path.resolve(__dirname, "../..");
-const { lua, lauxlib, lualib, to_luastring } = require(path.join(root, "src/fengari.js"));
+const { lua, lauxlib, lualib, to_luastring } = require(path.join(root, "src/pyroeis.js"));
 const protocol = "@@lua55@@";
 
 function sourceHashes() {
@@ -40,9 +40,9 @@ function encode(L, index) {
     throw new Error("Unsupported differential result type " + type);
 }
 
-function runFengari(fixture) {
+function runPyroeis(fixture) {
     const L = lauxlib.luaL_newstate();
-    if (!L) throw new Error("Cannot create Fengari state");
+    if (!L) throw new Error("Cannot create Pyroeis state");
     try {
         lualib.luaL_openlibs(L);
         const source = to_luastring(fixture.source);
@@ -92,7 +92,7 @@ function equivalent(actual, expected, fixture) {
 }
 
 function compare(fixture, profile = "int32") {
-    const actual = runFengari(fixture);
+    const actual = runPyroeis(fixture);
     const expected = runOracle(fixture, profile);
     return { id: fixture.id, requirements: fixture.requirements, profile, source: fixture.source, actual, expected,
         matches: equivalent(actual, expected, fixture) };
@@ -109,7 +109,7 @@ function main() {
     const report = {
         capturedAt: new Date().toISOString(), gitHead: execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim(),
         sourceHashes: sourceHashes(), fixturesSha256: crypto.createHash("sha256").update(fs.readFileSync(path.join(root, "test/lua55/cases.json"))).digest("hex"),
-        oracle: manifest, currentFengariProfile: "int32/double; default distribution target remains int64/double",
+        oracle: manifest, currentPyroeisProfile: "int32/double; default distribution target remains int64/double",
         normalizations: ["Error wording is retained in reports; default comparison checks phase and error-object type. Set compareDiagnostics for exact wording."],
         limitations: ["Scalar results only; library/GC/native API suite coverage remains incomplete", "stdout side effects are not compared; fixtures must return observable traces", "Matching corpus does not certify the full specification"],
         total: results.length, matched: results.filter(result => result.matches).length, results
@@ -120,5 +120,5 @@ function main() {
     if (report.matched !== report.total && !process.argv.includes("--report-only")) process.exitCode = 1;
 }
 
-module.exports = { runFengari, runOracle, equivalent, compare, sourceHashes };
+module.exports = { runPyroeis, runOracle, equivalent, compare, sourceHashes };
 if (require.main === module) main();

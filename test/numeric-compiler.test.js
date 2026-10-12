@@ -1,9 +1,9 @@
 "use strict";
 
-const { FengariVm, LuaFloat, LimitError } = require('../src/fengari-vm.js');
+const { PyroeisVm, LuaFloat, LimitError } = require('../src/pyroeis-vm.js');
 
 function setup(source, options) {
-    const vm = new FengariVm(undefined, undefined, options);
+    const vm = new PyroeisVm(undefined, undefined, options);
     vm.run(source);
     return { vm, fn: vm.compile('f') };
 }
@@ -93,7 +93,7 @@ test('compiled callable captures its function and can be released', () => {
 });
 
 test('LuaRefs, host functions and varargs are supported through fallback', () => {
-    const vm = new FengariVm();
+    const vm = new PyroeisVm();
     const ref = vm.run('return function(x) return x^2 end');
     expect(vm.compile(ref)(3)).toBe(9);
     vm.defineFunction('host', x => x + 1);
@@ -107,7 +107,7 @@ test('LuaRefs, host functions and varargs are supported through fallback', () =>
 });
 
 test('environments blocking dynamic compilation retain interpreter fallback', () => {
-    const vm = new FengariVm();
+    const vm = new PyroeisVm();
     vm.run('function f(x) return x+2 end');
     const original = global.Function;
     let fn;

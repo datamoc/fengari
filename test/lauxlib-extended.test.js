@@ -1,11 +1,11 @@
 "use strict";
 
 const assert = require('assert');
-const fengari = require('../src/fengari.js');
+const fengari = require('../src/pyroeis.js');
 const lauxlib = require('../src/lauxlib');
 const lua = require('../src/lua');
 const lualib = require('../src/lualib');
-const { to_luastring } = require('../src/fengaricore');
+const { to_luastring } = require('../src/pyroeiscore');
 
 describe('Extended lauxlib Tests', function() {
     let L;

@@ -1,10 +1,10 @@
 "use strict";
 
-// Test de base pour FengariVm
-function testFengariVm() {
+// Test de base pour PyroeisVm
+function testPyroeisVm() {
     try {
-        const { FengariVm } = require('../src/fengari-vm');
-        const vm = new FengariVm();
+        const { PyroeisVm } = require('../src/pyroeis-vm');
+        const vm = new PyroeisVm();
         
         // Exécuter une expression Lua simple
         const result = vm.run("return 42");
@@ -18,4 +18,4 @@ function testFengariVm() {
 }
 
 // Exécution du test
-testFengariVm();
+testPyroeisVm();

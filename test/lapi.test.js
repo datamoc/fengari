@@ -4,7 +4,7 @@ const {toByteCode} = require("./tests.js");
 
 const lua = require('../src/lua.js');
 const lauxlib = require("../src/lauxlib.js");
-const {to_luastring} = require("../src/fengaricore.js");
+const {to_luastring} = require("../src/pyroeiscore.js");
 
 
 test('luaL_newstate, lua_pushnil, luaL_typename', () => {

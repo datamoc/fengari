@@ -32,7 +32,7 @@ const {
     luaL_testudata
 } = require('./lauxlib.js');
 const lualib = require("./lualib-constants.js");
-const { to_luastring } = require("./fengaricore.js");
+const { to_luastring } = require("./pyroeiscore.js");
 
 const IO_PREFIX = "_IO_";
 const IOPREF_LEN = IO_PREFIX.length;

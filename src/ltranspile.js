@@ -1614,7 +1614,7 @@ function transpile(source, options = {}) {
     const hoisted = [...info.assigned].filter(n => !info.functions.has(n)).sort();
     const exported = [...new Set([...info.functions, ...info.assigned])].sort();
     const parts = [];
-    if (options.header !== false) parts.push('// Translated from Lua by fengari lua2js. Review every TODO(lua2js) before relying on it.');
+    if (options.header !== false) parts.push('// Translated from Lua by pyroeis lua2js. Review every TODO(lua2js) before relying on it.');
     const helpers = HELPER_ORDER.filter(h => gen.helpers.has(h));
     if (helpers.length) parts.push(helpers.map(h => HELPERS[h]).join('\n\n'));
     if (hoisted.length) parts.push(`let ${hoisted.join(', ')};`);

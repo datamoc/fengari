@@ -1,9 +1,9 @@
 "use strict";
 
 const { performance } = require('node:perf_hooks');
-const { FengariVm } = require('../src/fengari-vm.js');
+const { PyroeisVm } = require('../src/pyroeis-vm.js');
 
-const vm = new FengariVm();
+const vm = new PyroeisVm();
 vm.run('function sum(n) local s=0; for i=1,n do s=s+i end; return s end');
 const compiled = vm.compile('sum');
 if (!compiled.compiled) throw new Error(compiled.reason);

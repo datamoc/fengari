@@ -2,7 +2,7 @@
 
 const lua     = require("../src/lua.js");
 const lauxlib = require("../src/lauxlib.js");
-const {to_luastring} = require("../src/fengaricore.js");
+const {to_luastring} = require("../src/pyroeiscore.js");
 
 const toByteCode = function(luaCode) {
     let L = lauxlib.luaL_newstate();

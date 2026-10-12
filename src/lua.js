@@ -194,37 +194,25 @@ module.exports.lua_closeslot           = lapi.lua_closeslot;
 module.exports.lua_closethread         = lapi.lua_closethread;
 module.exports.lua_toclose             = lapi.lua_toclose;
 module.exports.lua_pushjsfunction_ex   = lapi.lua_pushjsfunction_ex;
-// Function to evaluate several Lua expressions in one go
+// Evaluate each semicolon-separated chunk and collect its results.
 const lua_eval_multiple = function(L, str) {
-
-    // Split the string into several Lua expressions
     const expressions = str.split(';').map(s => s.trim()).filter(s => s.length > 0);
-
-    let results = [];
-    for (let i = 0; i < expressions.length; i++) {
-        const expr = expressions[i];
-        if (expr.length === 0) continue;
-
-        // Load the Lua expression
+    const results = [];
+    for (const expr of expressions) {
         let source = defs.to_luastring(expr);
-        const status = lapi.lua_load(L, () => {
+        let status = lapi.lua_load(L, () => {
             const chunk = source;
             source = null;
             return chunk;
         }, null, source, null);
+        if (status === defs.thread_status.LUA_OK) status = lapi.lua_pcall(L, 0, defs.LUA_MULTRET, 0);
         if (status !== defs.thread_status.LUA_OK) {
             return { status, error: lapi.lua_tojsstring(L, -1) };
         }
 
-        // Execute the expression
-        const pcall_status = lapi.lua_pcall(L, 0, defs.LUA_MULTRET, 0);
-        if (pcall_status !== defs.thread_status.LUA_OK) {
-            return { status: pcall_status, error: lapi.lua_tojsstring(L, -1) };
-        }
-
         // Collect the results
         const top = lapi.lua_gettop(L);
-        let result = [];
+        const result = [];
         for (let j = 1; j <= top; j++) {
             const type = lapi.lua_type(L, j);
             switch (type) {

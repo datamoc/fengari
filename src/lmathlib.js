@@ -36,7 +36,7 @@ const {
     LUA_MININTEGER,
     lua_numbertointeger
 } = require('./luaconf.js');
-const { to_luastring } = require("./fengaricore.js");
+const { to_luastring } = require("./pyroeiscore.js");
 
 /*
 ** Random-integer machinery ported from Lua 5.5.1 lmathlib.c:

@@ -2,10 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const fengari = require('../src/fengari.js');
+const fengari = require('../src/pyroeis.js');
 
-const { FengariVm, LuaError, LimitError } = fengari;
-const declarations = fs.readFileSync(path.join(__dirname, '..', 'src', 'fengari.d.ts'), 'utf8').replace(/\r\n/g, '\n');
+const { PyroeisVm, LuaError, LimitError } = fengari;
+const declarations = fs.readFileSync(path.join(__dirname, '..', 'src', 'pyroeis.d.ts'), 'utf8').replace(/\r\n/g, '\n');
 
 describe('TypeScript declarations', () => {
     test('package.json points to the declarations, which are published', () => {
@@ -26,17 +26,17 @@ describe('TypeScript declarations', () => {
         expect(values.filter(name => !(name in fengari))).toEqual([]);
     });
 
-    test('every public FengariVm method that is declared exists', () => {
-        const body = declarations.slice(declarations.indexOf('export class FengariVm'));
+    test('every public PyroeisVm method that is declared exists', () => {
+        const body = declarations.slice(declarations.indexOf('export class PyroeisVm'));
         const methods = [...body.matchAll(/^    (?:static )?(\w+)(?:<\w+>)?\(/gm)].map(m => m[1]).filter(name => name !== 'constructor');
-        const missing = methods.filter(name => !(name in FengariVm.prototype) && !(name in FengariVm));
+        const missing = methods.filter(name => !(name in PyroeisVm.prototype) && !(name in PyroeisVm));
         expect(missing).toEqual([]);
     });
 });
 
-describe('FengariVm internals used by hosts', () => {
+describe('PyroeisVm internals used by hosts', () => {
     test('pushPath pushes the value of a dotted path, or nil', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run('cfg = {level = {depth = 3}}');
         const { lua, state } = vm;
         vm.pushPath(state, 'cfg.level.depth');
@@ -47,7 +47,7 @@ describe('FengariVm internals used by hosts', () => {
     });
 
     test('classifyKeys tells arrays, objects and maps apart without touching the stack', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const { lua, state } = vm;
         const classify = (source) => {
             const index = lua.lua_gettop(state) + 1;
@@ -68,7 +68,7 @@ describe('FengariVm internals used by hosts', () => {
     });
 
     test('nextRandom is deterministic per seed and within [0, 1)', () => {
-        const a = new FengariVm(undefined, 42), b = new FengariVm(undefined, 42), c = new FengariVm(undefined, 43);
+        const a = new PyroeisVm(undefined, 42), b = new PyroeisVm(undefined, 42), c = new PyroeisVm(undefined, 43);
         const first = [a.nextRandom(), a.nextRandom(), a.nextRandom()];
         expect([b.nextRandom(), b.nextRandom(), b.nextRandom()]).toEqual(first);
         expect(c.nextRandom()).not.toBe(first[0]);
@@ -76,7 +76,7 @@ describe('FengariVm internals used by hosts', () => {
     });
 
     test('limitHit names the limit that stopped the call and resets for the next one', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 5000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 5000 } });
         expect(vm.limitHit).toBeNull();
         expect(() => vm.run('while true do end')).toThrow(LimitError);
         expect(vm.limitHit).toBe('instructions');
@@ -85,13 +85,13 @@ describe('FengariVm internals used by hosts', () => {
     });
 });
 
-describe('FengariVm#protect', () => {
+describe('PyroeisVm#protect', () => {
     const failingIndex = `
         t = setmetatable({}, {__index = function(_, key) error("no field " .. key) end})
         function ok() return 42 end`;
 
     test('returns the value of the callback and keeps the stack balanced', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const before = vm.lua.lua_gettop(vm.state);
         const value = vm.protect((L) => {
             vm.lua.lua_pushinteger(L, 7);
@@ -103,7 +103,7 @@ describe('FengariVm#protect', () => {
     });
 
     test('turns a Lua error raised through the C API into a LuaError and leaves the VM usable', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run(failingIndex);
         const before = vm.lua.lua_gettop(vm.state);
         const read = () => vm.protect((L) => {
@@ -118,13 +118,13 @@ describe('FengariVm#protect', () => {
     });
 
     test('luaL_error inside the callback is a LuaError', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         expect(() => vm.protect((L) => vm.lauxlib.luaL_error(L, vm.to_luastring('raised by the host')))).toThrow(/raised by the host/);
         expect(vm.run('return 1 + 1')).toBe(2);
     });
 
     test('rethrows a JavaScript error of the callback unchanged', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const failure = new TypeError('host bug');
         let caught;
         try {
@@ -137,13 +137,13 @@ describe('FengariVm#protect', () => {
     });
 
     test('reports a limit overrun inside the callback as a LimitError', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 10000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 10000 } });
         expect(() => vm.protect(() => vm.run('while true do end'))).toThrow(LimitError);
         expect(vm.run('return 5')).toBe(5);
     });
 
     test('works from a host function called by Lua (uses the running coroutine)', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.run(failingIndex);
         vm.defineFunction('probe', () => {
             try {
@@ -162,9 +162,9 @@ describe('FengariVm#protect', () => {
     });
 });
 
-describe('FengariVm#throwLuaError', () => {
+describe('PyroeisVm#throwLuaError', () => {
     test('throws the error value at the given index with the message as traceback', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const { lua, state } = vm;
         lua.lua_pushstring(state, vm.to_luastring('boom'));
         lua.lua_pushstring(state, vm.to_luastring('other'));
@@ -182,20 +182,20 @@ describe('FengariVm#throwLuaError', () => {
     });
 
     test('defaults to the top of the stack and describes non-string errors', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         vm.lua.lua_newtable(vm.state);
         expect(() => vm.throwLuaError(vm.state)).toThrow(/error table/);
     });
 
     test('raises a LimitError once a limit was exceeded', () => {
-        const vm = new FengariVm(undefined, undefined, { limits: { instructions: 10000 } });
+        const vm = new PyroeisVm(undefined, undefined, { limits: { instructions: 10000 } });
         expect(() => vm.run('while true do end')).toThrow(LimitError);
         vm.lua.lua_pushstring(vm.state, vm.to_luastring('late'));
         expect(() => vm.throwLuaError(vm.state)).toThrow(LimitError);
     });
 
     test('Coroutine#close reports a failing closer as a LuaError and resets the thread', () => {
-        const vm = new FengariVm();
+        const vm = new PyroeisVm();
         const co = vm.coroutineFromSource('local x <close> = setmetatable({}, {__close = function() error("closing failed") end}); coroutine.yield(1)');
         co.resume();
         expect(() => co.close()).toThrow(/closing failed/);

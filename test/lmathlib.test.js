@@ -3,7 +3,7 @@
 const lua = require('../src/lua.js');
 const lauxlib = require('../src/lauxlib.js');
 const lualib = require('../src/lualib.js');
-const {to_luastring} = require("../src/fengaricore.js");
+const {to_luastring} = require("../src/pyroeiscore.js");
 
 test('math.abs, math.sin, math.cos, math.tan, math.asin, math.acos, math.atan', () => {
     let L = lauxlib.luaL_newstate();

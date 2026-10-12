@@ -82,7 +82,7 @@ const {
     luastring_indexOf,
     to_jsstring,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 const sL_ESC  = '%';
 const L_ESC   = sL_ESC.charCodeAt(0);
@@ -725,34 +725,25 @@ const str_reverse = function(L) {
     return 1;
 };
 
-const str_lower = function(L) {
-    let s = luaL_checkstring(L, 1);
-    let l = s.length;
-    lua_alloc(L, l);
-    let r = new Uint8Array(l);
-    for (let i=0; i<l; i++) {
-        let c = s[i];
-        if (isupper(c))
-            c = c | 0x20;
-        r[i] = c;
+/* ASCII case conversion leaves all other bytes untouched, including invalid UTF-8. */
+function str_case(L, matches) {
+    const s = luaL_checkstring(L, 1);
+    lua_alloc(L, s.length);
+    const r = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) {
+        const c = s[i];
+        r[i] = matches(c) ? c ^ 0x20 : c;
     }
     lua_pushstring(L, r);
     return 1;
+}
+
+const str_lower = function(L) {
+    return str_case(L, isupper);
 };
 
 const str_upper = function(L) {
-    let s = luaL_checkstring(L, 1);
-    let l = s.length;
-    lua_alloc(L, l);
-    let r = new Uint8Array(l);
-    for (let i=0; i<l; i++) {
-        let c = s[i];
-        if (islower(c))
-            c = c & 0xdf;
-        r[i] = c;
-    }
-    lua_pushstring(L, r);
-    return 1;
+    return str_case(L, islower);
 };
 
 const str_rep = function(L) {
@@ -1145,7 +1136,7 @@ const match = function(ms, s, p) {
     if (ms.matchdepth-- === 0)
         luaL_error(ms.L, to_luastring("pattern too complex"));
 
-    /* give the embedder a chance to interrupt long pattern matches (see FengariVm limits) */
+    /* give the embedder a chance to interrupt long pattern matches (see PyroeisVm limits) */
     if ((++ms.steps & MATCH_INTERRUPT_MASK) === 0 && ms.L.l_G.interrupt !== null)
         ms.L.l_G.interrupt(ms.L);
 

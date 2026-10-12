@@ -146,7 +146,7 @@ const LUA_MININTEGER = integer.canonical(integer.MIN);
 @@ of a function in debug information.
 ** CHANGE it if you want a different size.
 */
-const LUA_IDSIZE = conf.LUA_IDSIZE || (60-1); /* fengari uses 1 less than lua as we don't embed the null byte */
+const LUA_IDSIZE = conf.LUA_IDSIZE || (60-1); /* pyroeis uses 1 less than lua as we don't embed the null byte */
 
 const lua_integer2str = function(n) {
     return String(n); /* should match behaviour of LUA_INTEGER_FMT */

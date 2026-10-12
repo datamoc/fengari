@@ -80,7 +80,7 @@ const lualib = require("./lualib-constants.js");
 const {
     luastring_indexOf,
     to_luastring
-} = require("./fengaricore.js");
+} = require("./pyroeiscore.js");
 
 /*
 ** If L1 != L, L1 can be in any state, and therefore there are no

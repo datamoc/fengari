@@ -1,32 +1,32 @@
 "use strict";
 
-// Test de structure pour vérifier que FengariVm peut être chargé et instancié
+// Test de structure pour vérifier que PyroeisVm peut être chargé et instancié
 function testStructure() {
     try {
-        const { FengariVm } = require('../src/fengari-vm');
+        const { PyroeisVm } = require('../src/pyroeis-vm');
         
-        // Vérifier que FengariVm est une classe
-        if (typeof FengariVm !== 'function') {
-            console.error("FengariVm n'est pas une classe.");
+        // Vérifier que PyroeisVm est une classe
+        if (typeof PyroeisVm !== 'function') {
+            console.error("PyroeisVm n'est pas une classe.");
             return false;
         }
         
         // Vérifier que la classe a un constructeur
-        if (typeof FengariVm.prototype.constructor !== 'function') {
-            console.error("FengariVm n'a pas de constructeur.");
+        if (typeof PyroeisVm.prototype.constructor !== 'function') {
+            console.error("PyroeisVm n'a pas de constructeur.");
             return false;
         }
         
         // Vérifier que la classe a les méthodes attendues
         const methods = ['run', 'call', 'defineFunction', 'push', 'read', 'saveState', 'restoreState'];
         for (const method of methods) {
-            if (typeof FengariVm.prototype[method] !== 'function') {
-                console.error(`FengariVm n'a pas la méthode ${method}.`);
+            if (typeof PyroeisVm.prototype[method] !== 'function') {
+                console.error(`PyroeisVm n'a pas la méthode ${method}.`);
                 return false;
             }
         }
         
-        console.log("✅ Structure de FengariVm: VALIDE");
+        console.log("✅ Structure de PyroeisVm: VALIDE");
         return true;
     } catch (e) {
         console.error("Test échoué:", e.message);

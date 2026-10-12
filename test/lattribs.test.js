@@ -1,12 +1,12 @@
 "use strict";
 
-const { lua, lauxlib, lualib, to_luastring, to_jsstring } = require("../src/fengari.js");
-const { runFengari } = require("../tools/lua55/differential.cjs");
+const { lua, lauxlib, lualib, to_luastring, to_jsstring } = require("../src/pyroeis.js");
+const { runPyroeis } = require("../tools/lua55/differential.cjs");
 
 const text = s => "string:" + Buffer.from(s).toString("hex");
 
 function run(source) {
-    return runFengari({ id: "attribs", source });
+    return runPyroeis({ id: "attribs", source });
 }
 
 function values(source) {

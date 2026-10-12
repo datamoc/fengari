@@ -535,7 +535,7 @@ module.exports = function createLlex(dependencies) {
     const llex = function(ls, seminfo) {
         luaZ_resetbuffer(ls.buff);
         for (;;) {
-            lua_assert(typeof ls.current == "number"); /* fengari addition */
+            lua_assert(typeof ls.current == "number"); /* pyroeis addition */
             switch (ls.current) {
                 case 10 /* ('\n').charCodeAt(0) */:
                 case 13 /* ('\r').charCodeAt(0) */: {  /* line breaks */

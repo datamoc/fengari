@@ -64,8 +64,8 @@ require.cache[require.resolve('../src/lualib.js')] = { exports: mockLualib };
 // Test avec les mocks
 function testWithMocks() {
     try {
-        const { FengariVm } = require('../src/fengari-vm');
-        const vm = new FengariVm();
+        const { PyroeisVm } = require('../src/pyroeis-vm');
+        const vm = new PyroeisVm();
         
         // Exécuter une expression Lua simple
         vm.run("return 42");

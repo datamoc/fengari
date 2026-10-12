@@ -1,3 +1,14 @@
+/**
+@license MIT
+
+Copyright © 2017-2019 Benoit Giannangeli
+Copyright © 2017-2019 Daurnimator
+Copyright © 1994–2017 Lua.org, PUC-Rio.
+*/
+
 "use strict";
 
-module.exports = require("./fengari.js");
+const pyroeis = require("./library-runtime.js").fengari;
+const { PyroeisVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine } = require("./pyroeis-vm.js");
+
+module.exports = Object.assign(pyroeis, { PyroeisVm, LuaError, LimitError, Multi, Yield, LuaRef, LuaFloat, Userdata, Coroutine });

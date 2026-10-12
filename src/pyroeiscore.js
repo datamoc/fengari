@@ -1,8 +1,8 @@
-/* Fengari specific functions
+/* Pyroeis specific functions
  *
- * This file includes fengari-specific data or and functionality for users to
- * manipulate fengari's string type.
- * The fields are exposed to the user on the 'fengari' entry point; however to
+ * This file includes pyroeis-specific data or and functionality for users to
+ * manipulate the engine's string type.
+ * The fields are exposed to the user on the 'pyroeis' entry point; however to
  * avoid a dependency on defs.js from lauxlib.js they are defined in this file.
  */
 

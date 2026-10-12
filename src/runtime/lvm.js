@@ -886,7 +886,7 @@ module.exports = function createLvm(dependencies) {
 
     /*
     ** Return 'l < r', for numbers.
-    ** As fengari uses javascript numbers for both floats and integers and has
+    ** As Pyroeis uses javascript numbers for both floats and integers and has
     ** correct semantics, we can just compare values.
     */
     const LTnum = function(l, r) {
@@ -907,7 +907,7 @@ module.exports = function createLvm(dependencies) {
     const l_strcmp = function(ls, rs) {
         let l = luaS_hashlongstr(ls);
         let r = luaS_hashlongstr(rs);
-        /* In fengari we assume string hash has same collation as byte values */
+        /* In Pyroeis we assume string hash has same collation as byte values */
         if (l === r)
             return 0;
         else if (l < r)

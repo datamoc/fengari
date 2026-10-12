@@ -1,10 +1,10 @@
 "use strict";
 
-// Test simplifié pour vérifier que FengariVm peut être instancié et exécuter du code Lua basique
+// Test simplifié pour vérifier que PyroeisVm peut être instancié et exécuter du code Lua basique
 function testBasicFunctionality() {
     try {
-        const { FengariVm } = require('../src/fengari-vm');
-        const vm = new FengariVm();
+        const { PyroeisVm } = require('../src/pyroeis-vm');
+        const vm = new PyroeisVm();
         
         // Test basique: exécuter une expression Lua
         const result = vm.run("return 42");

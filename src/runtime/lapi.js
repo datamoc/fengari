@@ -68,12 +68,12 @@ module.exports = function createLapi(dependencies) {
         api_check(L, n < (L.top - L.ci.funcOff), "not enough elements in the stack");
     };
 
-    const fengari_argcheck = function(c) {
+    const pyroeis_argcheck = function(c) {
         if (!c) throw TypeError("invalid argument");
     };
 
-    const fengari_argcheckinteger = function(n) {
-        fengari_argcheck(typeof n === "number" && (n|0) === n);
+    const pyroeis_argcheckinteger = function(n) {
+        pyroeis_argcheck(typeof n === "number" && (n|0) === n);
     };
 
     const isvalid = function(o) {
@@ -266,19 +266,19 @@ module.exports = function createLapi(dependencies) {
     };
 
     const lua_pushnumber = function(L, n) {
-        fengari_argcheck(typeof n === "number");
+        pyroeis_argcheck(typeof n === "number");
         L.stack[L.top] = new TValue(LUA_TNUMFLT, n);
         api_incr_top(L);
     };
 
     const lua_pushinteger = function(L, n) {
-        fengari_argcheck(integer.isInteger(n));
+        pyroeis_argcheck(integer.isInteger(n));
         L.stack[L.top] = new TValue(LUA_TNUMINT, n);
         api_incr_top(L);
     };
 
     const lua_pushlstring = function(L, s, len) {
-        fengari_argcheckinteger(len);
+        pyroeis_argcheckinteger(len);
         let ts;
         if (len === 0) {
             s = to_luastring("", true);
@@ -322,7 +322,7 @@ module.exports = function createLapi(dependencies) {
             L.stack[L.top] = new TValue(LUA_TNIL, null);
             L.top++;
         } else {
-            fengari_argcheck(typeof s === "string");
+            pyroeis_argcheck(typeof s === "string");
             let ts = luaS_newliteral(L, s);
             lobject.pushsvalue2s(L, ts);
             s = ts.getstr(); /* internal copy */
@@ -333,8 +333,8 @@ module.exports = function createLapi(dependencies) {
     };
 
     const lua_pushcclosure = function(L, fn, n) {
-        fengari_argcheck(typeof fn === "function");
-        fengari_argcheckinteger(n);
+        pyroeis_argcheck(typeof fn === "function");
+        pyroeis_argcheckinteger(n);
         if (n === 0)
             L.stack[L.top] = new TValue(LUA_TLCF, fn);
         else {
@@ -442,7 +442,7 @@ module.exports = function createLapi(dependencies) {
     };
 
     const lua_seti = function(L, idx, n) {
-        fengari_argcheck(integer.isInteger(n));
+        pyroeis_argcheck(integer.isInteger(n));
         api_checknelems(L, 1);
         let t = index2addr(L, idx);
         L.stack[L.top] = new TValue(LUA_TNUMINT, n);
@@ -466,7 +466,7 @@ module.exports = function createLapi(dependencies) {
     };
 
     const lua_rawseti = function(L, idx, n) {
-        fengari_argcheck(integer.isInteger(n));
+        pyroeis_argcheck(integer.isInteger(n));
         api_checknelems(L, 1);
         let o = index2addr(L, idx);
         api_check(L, o.ttistable(), "table expected");
@@ -498,7 +498,7 @@ module.exports = function createLapi(dependencies) {
 
     const lua_rawgeti = function(L, idx, n) {
         let t = index2addr(L, idx);
-        fengari_argcheck(integer.isInteger(n));
+        pyroeis_argcheck(integer.isInteger(n));
         api_check(L, t.ttistable(), "table expected");
         lobject.pushobj2s(L, ltable.luaH_getint(t.value, n));
         api_check(L, L.top <= L.ci.top, "stack overflow");
@@ -540,7 +540,7 @@ module.exports = function createLapi(dependencies) {
     };
 
     const aux_upvalue = function(L, fi, n) {
-        fengari_argcheckinteger(n);
+        pyroeis_argcheckinteger(n);
         switch(fi.ttype()) {
             case LUA_TCCL: {  /* C closure */
                 let f = fi.value;
@@ -643,7 +643,7 @@ module.exports = function createLapi(dependencies) {
 
     const lua_geti = function(L, idx, n) {
         let t = index2addr(L, idx);
-        fengari_argcheck(integer.isInteger(n));
+        pyroeis_argcheck(integer.isInteger(n));
         L.stack[L.top] = new TValue(LUA_TNUMINT, n);
         api_incr_top(L);
         lvm.luaV_gettable(L, t, L.stack[L.top - 1], L.top - 1);
@@ -678,15 +678,8 @@ module.exports = function createLapi(dependencies) {
     const lua_tostring =  lua_tolstring;
 
     const lua_tojsstring = function(L, idx) {
-        let o = index2addr(L, idx);
-
-        if (!o.ttisstring()) {
-            if (!lvm.cvt2str(o)) {  /* not convertible? */
-                return null;
-            }
-            lobject.luaO_tostring(L, o);
-        }
-        return o.jsstring();
+        const bytes = lua_tolstring(L, idx);
+        return bytes === null ? null : to_jsstring(bytes, undefined, undefined, true);
     };
 
     const lua_todataview = function(L, idx) {
@@ -1075,7 +1068,7 @@ module.exports = function createLapi(dependencies) {
         let fi = index2addr(L, fidx);
         api_check(L, fi.ttisLclosure(), "Lua function expected");
         let f = fi.value;
-        fengari_argcheckinteger(n);
+        pyroeis_argcheckinteger(n);
         api_check(L, 1 <= n && n <= f.p.upvalues.length, "invalid upvalue index");
         return {
             f: f,
@@ -1241,7 +1234,7 @@ module.exports = function createLapi(dependencies) {
     exports.lua_xmove             = lua_xmove;
     // Function to expose a JavaScript function to Lua with argument and result handling
     const lua_pushjsfunction_ex = function(L, jsFunc) {
-        fengari_argcheck(typeof jsFunc === "function");
+        pyroeis_argcheck(typeof jsFunc === "function");
 
         const wrappedFunc = function(L) {
             // Collect the arguments from the Lua stack
