@@ -148,6 +148,11 @@ export interface LuaToJsOptions {
 export interface LuaToJsWarning {
     line: number;
     message: string;
+    /**
+     * Set when the construct reaches the JavaScript environment or its prototypes (`eval`, `Function`,
+     * `globalThis`, `t.__proto__`, `t.constructor`...). Do not run the translation of untrusted Lua.
+     */
+    unsafe?: boolean;
 }
 
 export interface LuaToJsResult {

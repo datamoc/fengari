@@ -690,6 +690,11 @@ const LIB_ROOTS = new Set(['print', 'tostring', 'tonumber', 'type', 'assert', 'p
 
 const UNSUPPORTED = new Set(['select', 'ipairs', 'pairs', 'setmetatable', 'getmetatable', 'rawget', 'rawset', 'rawequal', 'rawlen', 'next', 'load', 'loadstring', 'dofile', 'loadfile', 'collectgarbage', 'coroutine', 'utf8', 'debug']);
 
+/* Properties that mean something on a JavaScript object: `t.__proto__` reads a prototype, `t.constructor` a constructor. */
+const SPECIAL_KEYS = new Set(['__proto__', 'constructor']);
+/* Free globals that are not Lua at all: in the translated code they are the JavaScript ones. */
+const JS_ENVIRONMENT = new Set(['eval', 'Function', 'globalThis', 'window', 'document', 'process', 'require', 'importScripts', 'fetch', 'XMLHttpRequest', 'WebSocket', 'Worker', 'localStorage', 'sessionStorage', 'location', 'navigator', 'Reflect', 'Proxy']);
+
 class Gen {
     constructor(info, ast, options = {}) {
         this.info = info;
@@ -706,9 +711,29 @@ class Gen {
     }
 
     /* ---- diagnostics and helpers ---- */
-    warn(message) {
+    /* `unsafe` marks constructs that reach the JavaScript environment or its prototypes: the result must not run untrusted Lua. */
+    warn(message, unsafe = false) {
         if (!this.todo.includes(message)) this.todo.push(message);
-        if (!this.warnings.some(w => w.line === this.line && w.message === message)) this.warnings.push({ line: this.line, message });
+        if (!this.warnings.some(w => w.line === this.line && w.message === message)) this.warnings.push(unsafe ? { line: this.line, message, unsafe: true } : { line: this.line, message });
+    }
+    /* `.name` or `["name"]` for a constant string key. */
+    member(key) {
+        this.checkSpecialKey(key);
+        return IDENT.test(key) ? `.${key}` : `[${JSON.stringify(key)}]`;
+    }
+    checkSpecialKey(key) {
+        if (SPECIAL_KEYS.has(key)) this.warn(`key '${key}' has a special meaning on JavaScript objects: it reaches a prototype or constructor instead of a table field`, true);
+    }
+    /* Key of an object literal. A computed `["__proto__"]` makes an own property; `__proto__:` would set the prototype. */
+    propertyKey(key) {
+        if (key === '__proto__') {
+            this.checkSpecialKey(key);
+            return '["__proto__"]';
+        }
+        return IDENT.test(key) ? key : JSON.stringify(key);
+    }
+    jsEnvironment(name) {
+        if (JS_ENVIRONMENT.has(name)) this.warn(`global '${name}' is the JavaScript one in the translated code: it reaches the JavaScript environment`, true);
     }
     use(name) {
         this.helpers.add(name);
@@ -942,7 +967,7 @@ class Gen {
             return this.functionDeclaration(base, s.func);
         }
         let target = this.nameExpr(base);
-        for (const f of [...fields, ...(method ? [method] : [])]) target = R(`${wrap(target, PREC.MEMBER)}${IDENT.test(f) ? `.${f}` : `[${JSON.stringify(f)}]`}`, PREC.MEMBER);
+        for (const f of [...fields, ...(method ? [method] : [])]) target = R(`${wrap(target, PREC.MEMBER)}${this.member(f)}`, PREC.MEMBER);
         return this.put(`${target.c} = ${this.funcExpr(s.func, true).c};`);
     }
     returnStat(s) {
@@ -1001,6 +1026,7 @@ class Gen {
             if (entry) return entry.js;
             this.info.globals.add(t.name);
             this.info.assigned.add(t.name);
+            this.jsEnvironment(t.name);
             return t.name;
         }
         return this.indexExpr(t).c;
@@ -1243,6 +1269,7 @@ class Gen {
             default:
                 this.info.globals.add(name);
                 this.info.read.add(name);
+                this.jsEnvironment(name);
                 if (UNSUPPORTED.has(name)) this.warn(`global '${name}' has no direct JavaScript equivalent`);
                 return R(name);
         }
@@ -1264,7 +1291,7 @@ class Gen {
         const obj = this.expr(e.obj);
         const o = wrap(obj, PREC.MEMBER);
         if (e.key.type === 'String') {
-            return R(IDENT.test(e.key.value) ? `${o}.${e.key.value}` : `${o}[${JSON.stringify(e.key.value)}]`, PREC.MEMBER);
+            return R(`${o}${this.member(e.key.value)}`, PREC.MEMBER);
         }
         const key = this.expr(e.key);
         const kind = obj.elements || 'unknown';
@@ -1425,8 +1452,8 @@ class Gen {
         const object = () => items.filter(i => i.kind !== 'pos').map(item => {
             const field = item.kind === 'named' ? item.key : item.key.type === 'String' ? item.key.value : null;
             const value = wrap(field && item.value.type === 'Table' && !item.value.items.length ? this.emptyTable(field) : this.expr(item.value), PREC.ASSIGN);
-            if (item.kind === 'named') return `${IDENT.test(item.key) ? item.key : JSON.stringify(item.key)}: ${value}`;
-            if (item.key.type === 'String') return `${IDENT.test(item.key.value) ? item.key.value : JSON.stringify(item.key.value)}: ${value}`;
+            if (item.kind === 'named') return `${this.propertyKey(item.key)}: ${value}`;
+            if (item.key.type === 'String') return `${this.propertyKey(item.key.value)}: ${value}`;
             if (item.key.type === 'Number') this.warn('numeric key in a table constructor becomes an object property (1-based)');
             return `[${this.expr(item.key).c}]: ${value}`;
         });
@@ -1457,7 +1484,7 @@ class Gen {
             const mapped = this.stringCall(e.name, recv, e.args, raw);
             if (mapped) return mapped;
         }
-        const name = IDENT.test(e.name) ? `.${e.name}` : `[${JSON.stringify(e.name)}]`;
+        const name = this.member(e.name);
         const args = this.exprList(e.args);
         let call;
         if (this.isSimple(e.obj)) call = R(`${wrap(recv, PREC.MEMBER)}${name}(${[recv.c, ...args].join(', ')})`, PREC.MEMBER);

@@ -415,3 +415,33 @@ describe('lua2js command', () => {
         expect(run(input, '--format', 'amd').status).toBe(2);
     });
 });
+
+describe('constructs that reach the JavaScript environment are flagged unsafe', () => {
+    const unsafe = lua => transpile(lua).warnings.filter(w => w.unsafe);
+
+    test.each([
+        ['calling Function', 'Function("return 1")()'],
+        ['calling eval', 'eval("1")'],
+        ['reading globalThis', 'local g = globalThis'],
+        ['assigning a JavaScript global', 'document = nil'],
+        ['reading __proto__', 'local t = {} local p = t.__proto__'],
+        ['writing through constructor', 'local t = {} t["constructor"].prototype.x = 1'],
+        ['declaring a function on __proto__', 'local t = {} function t.__proto__.f() end'],
+        ['calling a method named constructor', 'local t = {} t:constructor()'],
+        ['a __proto__ key in a table constructor', 'local t = {__proto__ = {}}']
+    ])('%s', (_, lua) => {
+        expect(unsafe(lua).length).toBeGreaterThan(0);
+    });
+
+    test('ordinary code produces no unsafe warning', () => {
+        expect(unsafe('local t = {a = 1, ["b-c"] = 2} t.d = t.a + t["b-c"] return math.floor(t.d) .. string.upper("x")')).toEqual([]);
+    });
+
+    test('a __proto__ key in a table constructor is an own property, not the prototype', () => {
+        const { code } = transpile('local t = {__proto__ = {polluted = 1}} return t.polluted', { format: 'cjs' });
+        expect(code).toContain('["__proto__"]');
+        const mod = { exports: {} };
+        new Function('module', code.replace('return t.polluted', 'module.exports.seen = t.polluted'))(mod);
+        expect(mod.exports.seen).toBeUndefined();
+    });
+});

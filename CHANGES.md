@@ -1,5 +1,15 @@
 # Changes in Pyroeis
 
+## Version 0.5.5
+
+### Security (binary chunks and the translator)
+- **A corrupted binary chunk could stall the VM**: the loader trusted every operand, so a chunk whose `CONCAT` named registers far beyond the frame made the VM spin inside that one instruction, where no count hook can interrupt it. `src/lverify.js` now checks each loaded function (registers, constants, upvalues, prototypes, jump targets, the test-then-jump pairs, a closing `RETURN`) and the upvalue descriptors of its children; a chunk that fails is refused with `malformed (...)`. The loader also refuses a negative string size, a line table that does not match the code, more upvalue names than upvalues, and a closure whose upvalue count differs from its prototype. A JavaScript `Error` raised while reading a chunk becomes `malformed (corrupted data)` instead of a status `-1` with no message. 60,000 corrupted chunks no longer stall or leak an exception. A few still reach `lua_pcall` as status `-1`: structurally valid code that the VM then runs with the wrong types. A binary chunk remains trusted input; `sandbox: true` still refuses them all (`load` is text-only).
+- **`lua2js` warnings can be `unsafe`**: a warning now carries `unsafe: true` when the translation reaches the JavaScript environment (free globals `eval`, `Function`, `globalThis`, `window`, `document`, `process`, `require`, `fetch`...) or a prototype (`t.__proto__`, `t.constructor`, including as a method name or function field). Translated code is plain JavaScript, not a sandbox. A `__proto__` key in a table constructor is now emitted as the computed key `["__proto__"]`, an own property, instead of setting the prototype. The Lua ↔ JavaScript page refuses to run a translation with an unsafe warning.
+- **Tests**: `test/lverify.test.js`, `test/ltranspile.test.js`.
+
+### Documentation
+- **Security page**: why games with untrusted Lua cannot use `fengari-interop` (it hands `js.global` to the script) and how the exchange mode differs; a demonstration that replays 1,500 corrupted binary chunks on upstream Fengari 0.1.5 (72 JavaScript exceptions cross `pcall`) and on the Pyroeis sandbox (none).
+
 ## Version 0.5.4
 
 ### Security (execution limits)

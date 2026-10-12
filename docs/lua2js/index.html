@@ -306,6 +306,7 @@ async function runBenchmark() {
   const runs = Number($("runs").value);
   if (!current) { statusLine.textContent = T("Fix the Lua syntax error first.", "Corrigez d’abord l’erreur de syntaxe Lua."); return; }
   const flagged = current.warnings.length;
+  if (current.warnings.some((w) => w.unsafe)) { statusLine.textContent = T("Not run: the translation reaches the JavaScript environment or its prototypes (see the warnings above). Translated code is plain JavaScript, so it is not sandboxed.", "Non exécuté : la traduction atteint l’environnement JavaScript ou ses prototypes (voir les avertissements ci-dessus). Le code traduit est du JavaScript ordinaire, donc sans sandbox."); return; }
   if (!Number.isFinite(size) || size < 1) { statusLine.textContent = T("n must be a positive number.", "n doit être un nombre positif."); return; }
   benchButton.disabled = true;
   $("summary").hidden = true;

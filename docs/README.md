@@ -25,7 +25,7 @@ explains why Pyroeis uses data conversion and host-selected functions instead
 of `fengari-interop`, with examples, compatibility considerations and the
 limits of the model. Its source is [interop/index.html](interop/index.html).
 
-`index.html` is the site entry point. `security/` compares pinned upstream Fengari 0.1.5 with Pyroeis under resource limits; `benchmark/` compares upstream, interpreted Pyroeis, compiled Lua and JavaScript; `lua2js/` translates Lua; `mwg/` runs a Lua-controlled robot using MWG 0.35.1.
+`index.html` is the site entry point. `security/` compares pinned upstream Fengari 0.1.5 with Pyroeis under resource limits, explains why untrusted game scripts get an exchange mode rather than a fengari-interop bridge, and replays corrupted binary chunks; `benchmark/` compares upstream, interpreted Pyroeis, compiled Lua and JavaScript; `lua2js/` translates Lua; `mwg/` runs a Lua-controlled robot using MWG 0.35.1.
 
 Every page is bilingual English/French. Static text uses paired
 `<span data-l="en">…</span><span data-l="fr">…</span>` blocks (toggled by

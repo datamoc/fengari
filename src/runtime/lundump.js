@@ -38,6 +38,7 @@ module.exports = function createLundump(dependencies) {
         SIZE_C,
         SIZE_OP
     } = require('../lopcodes.js');
+    const { verifyProto, verifyChildren } = require('../lverify.js');
     const { lua_assert } = require("../llimits.js");
     const { luaS_bless } = require('../lstring.js');
     const {
@@ -119,6 +120,8 @@ module.exports = function createLundump(dependencies) {
             let size = this.LoadByte();
             if (size === 0xFF)
                 size = this.LoadSize_t();
+            if (size < 0)
+                this.error("truncated");
             if (size === 0)
                 return null;
             return luaS_bless(this.L, this.read(size-1));
@@ -202,6 +205,8 @@ module.exports = function createLundump(dependencies) {
 
         LoadDebug(f) {
             let n = this.LoadInt();
+            if (n !== 0 && n !== f.code.length)
+                this.error("malformed (line information does not match the code)");
             for (let i = 0; i < n; i++)
                 f.lineinfo[i] = this.LoadInt();
 
@@ -215,6 +220,8 @@ module.exports = function createLundump(dependencies) {
             }
 
             n = this.LoadInt();
+            if (n > f.upvalues.length)
+                this.error("malformed (more upvalue names than upvalues)");
             for (let i = 0; i < n; i++) {
                 f.upvalues[i].name = this.LoadString();
             }
@@ -234,6 +241,10 @@ module.exports = function createLundump(dependencies) {
             this.LoadUpvalues(f);
             this.LoadProtos(f);
             this.LoadDebug(f);
+            /* a forged operand must not address a register, constant or jump target that does not exist */
+            const problem = verifyProto(f) || verifyChildren(f);
+            if (problem)
+                this.error(`malformed (${problem})`);
         }
 
         checkliteral(s, msg) {
@@ -287,12 +298,20 @@ module.exports = function createLundump(dependencies) {
     const luaU_undump = function(L, Z, name) {
         let S = new BytecodeParser(L, Z, name);
         S.checkHeader();
-        let cl = lfunc.luaF_newLclosure(L, S.LoadByte());
+        const nupvalues = S.LoadByte();
+        let cl = lfunc.luaF_newLclosure(L, nupvalues);
         ldo.luaD_inctop(L);
         L.stack[L.top-1].setclLvalue(cl);
         cl.p = new lfunc.Proto(L);
-        S.LoadFunction(cl.p, null);
-        lua_assert(cl.nupvalues === cl.p.upvalues.length);
+        try {
+            S.LoadFunction(cl.p, null);
+        } catch (e) {
+            /* Lua errors are thrown as plain objects by luaD_throw; a JavaScript Error means the data defeated the loader */
+            if (e instanceof Error) S.error("malformed (corrupted data)");
+            throw e;
+        }
+        if (nupvalues !== cl.p.upvalues.length)
+            S.error("malformed (upvalue count mismatch)");
         /* luai_verifycode */
         return cl;
     };
