@@ -5,7 +5,7 @@
 <link rel="alternate icon" href="../assets/pyroeis.png" type="image/png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lua to JavaScript translator</title>
+<title>Pyroeis — Lua ↔ JavaScript</title>
 <meta name="description" content="Paste Lua, get readable JavaScript, and benchmark the result against Pyroeis in your own browser.">
 <style>
 :root {
@@ -59,9 +59,9 @@ noscript { color: var(--bad); }
 <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Main navigation"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/">Lua → JS</a><a href="../mwg/">Démo MWG</a><a href="../interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
+<header class="site-header"><a class="brand" href="../"><img src="../assets/pyroeis.svg" alt="">Pyroeis</a><nav class="site-nav" aria-label="Main navigation"><a href="../security/">Sécurité</a><a href="../benchmark/">Benchmarks</a><a href="../lua2js/" aria-current="page">Lua ↔ JavaScript</a><a href="../mwg/">Démo MWG</a><a href="../interop/">JS ↔ Lua</a><a href="https://github.com/datamoc/pyroeis">GitHub</a></nav></header>
 <main class="site-main">
-  <h1>Lua to JavaScript</h1>
+  <h1>Lua ↔ JavaScript</h1>
   <p class="muted">Paste Lua, get readable JavaScript you can keep. Translation runs in your browser; nothing is uploaded.</p>
   <p>This is the offline translator behind <code>lua2js</code> and <code>PyroeisVm.toJs()</code> from <a href="https://github.com/datamoc/pyroeis">Pyroeis</a>. It prints idiomatic JavaScript from the Lua source and marks with <code>TODO(lua2js)</code> whatever it cannot translate faithfully. The benchmark below runs the same function as Lua in Pyroeis's interpreter and as the translated JavaScript. See also the <a href="../benchmark/">Pyroeis vs JavaScript benchmark</a>.</p>
 
