@@ -68,6 +68,16 @@ noscript { color: var(--bad); }
 #exchange-trace li { padding: .6rem 0; }
 #exchange-trace pre { margin: .3rem 0 0; max-height: 14rem; overflow: auto; }
 #translation-demo { margin-top: 3rem; }
+
+#dialogue-demo { padding-bottom: 2rem; border-bottom: 1px solid var(--edge); }
+#dialogue-lua { height: 24rem; min-height: 18rem; margin-top: .5rem; }
+#dialogue-demo pre { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 3rem; }
+#dialogue-trace { padding-left: 1.5rem; }
+#dialogue-trace li { margin: .5rem 0; }
+#choice-dialog { background: var(--surface); color: var(--ink); border: 1px solid var(--edge); border-radius: 8px; padding: 1.5rem; width: min(32rem, calc(100% - 2rem)); }
+#choice-dialog::backdrop { background: #14132bb3; }
+#choice-dialog h2 { margin-top: 0; }
+#choice-options { flex-direction: column; align-items: stretch; }
 </style>
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -93,6 +103,32 @@ noscript { color: var(--bad); }
     <details><summary>Voir le code JavaScript de l’hôte</summary><pre id="exchange-host-code" tabindex="0"></pre><p class="muted">Extrait des appels utilisés par la démo. Le worker ajoute le journal, la validation des références et leur libération.</p></details>
     <h3>Journal des passages entre les deux langages</h3><ol id="exchange-trace"></ol>
     <p><a href="../interop/">Comprendre le contrat d’échange et le choix face à fengari-interop</a>. Les données JavaScript restent des copies lors du passage en table Lua. Les callbacks sont des opérations hôtes explicites ; les budgets Lua ne préemptent pas du JavaScript arbitraire.</p>
+  </section>
+
+  <section id="dialogue-demo" aria-labelledby="dialogue-heading">
+    <h2 id="dialogue-heading">Lua en pause pendant un choix utilisateur</h2>
+    <p class="lead">Le script demande un choix à JavaScript, se suspend, puis reprend avec votre réponse.</p>
+    <p><code>host.choose</code> renvoie un <code>Yield</code>. JavaScript reçoit la question, affiche un dialogue et attend. Une fois le choix effectué, <code>coroutine.resume(choice)</code> fait de votre réponse le résultat de l’appel Lua à <code>host.choose</code>. Les variables et la position dans le script sont conservées.</p>
+    <label for="dialogue-lua">Script Lua : deux dialogues successifs</label>
+    <textarea id="dialogue-lua" spellcheck="false"></textarea>
+    <div class="controls"><button id="dialogue-run" class="primary" type="button">Lancer le dialogue Lua</button><button id="dialogue-stop" type="button" disabled>Arrêter</button></div>
+    <p id="dialogue-status" class="status" role="status" aria-live="polite">Le script attend d’être lancé.</p>
+    <div class="panes"><section><h3>Les réponses revenues dans Lua</h3><pre id="dialogue-result" tabindex="0"></pre></section><section><h3>Messages du script Lua</h3><pre id="dialogue-output" tabindex="0"></pre></section></div>
+    <h3>Suspensions et reprises</h3><ol id="dialogue-trace"></ol>
+    <details><summary>Le mécanisme côté JavaScript</summary><pre><code>vm.defineFunction('host.choose', (question, choices) =&gt;
+  new Yield([{ kind: 'choice', question, choices }])
+);
+const co = vm.coroutineFromSource(luaSource);
+let step = co.resume();
+while (!step.done) {
+  // La Promise appartient à l’hôte JavaScript.
+  // Lua est suspendu pendant l’attente de l’utilisateur.
+  const selected = await showChoiceDialog(step.values[0]);
+  step = co.resume(selected);
+}
+console.log(step.values); // les retours finaux du script</code></pre><p class="muted">Dans cette page, la coroutine vit dans un worker et le dialogue dans la page. Les messages transportent la demande puis la réponse entre les deux. <a href="dialogue-worker.js">Code du worker</a> · <a href="dialogue.js">Code du dialogue</a>.</p></details>
+    <p>L’attente humaine ne consomme aucun budget d’exécution Lua. Chaque <code>resume</code> reçoit le budget configuré sur la VM ; le watchdog extérieur de 2 secondes ne couvre que l’exécution active. Annuler le dialogue, appuyer sur Échap ou cliquer sur Arrêter termine cet exemple. Une Promise renvoyée par un callback JavaScript n’est pas attendue automatiquement par Lua : la suspension et la reprise sont explicites.</p>
+    <dialog id="choice-dialog" aria-labelledby="choice-question"><h2 id="choice-question"></h2><p>Lua est suspendu jusqu’à votre réponse.</p><div id="choice-options" class="controls"></div><button id="choice-cancel" type="button">Annuler le script</button></dialog>
   </section>
   <section id="translation-demo" lang="en" aria-labelledby="translation-heading">
   <h2 id="translation-heading">Translate Lua source to JavaScript</h2>
@@ -329,5 +365,6 @@ $("env").textContent = `${Pyroeis.lua.LUA_RELEASE} in Pyroeis. ${navigator.userA
 loadExample();
 </script>
 <script src="exchange.js?v=bidirectional-1"></script>
+<script src="dialogue.js?v=yield-dialogue-1"></script>
 </body>
 </html>
