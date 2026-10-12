@@ -32,13 +32,18 @@ const luaS_eqlngstr = function(a, b) {
 };
 
 /* converts strings (arrays) to a consistent map key
-   make sure this doesn't conflict with any of the anti-collision strategies in ltable */
+   make sure this doesn't conflict with any of the anti-collision strategies in ltable.
+   One UTF-16 code unit per byte (Latin-1), so the mapping is one-to-one. */
+const HASH_CHUNK = 8192;  /* keeps spread arguments well under the engine's argument limit */
 const luaS_hash = function(str) {
     lua_assert(is_luastring(str));
-    let len = str.length;
+    const len = str.length;
+    /* apply() on the typed array: measured faster than spread, which goes through the iterator */
+    if (len <= HASH_CHUNK)
+        return "|" + String.fromCharCode.apply(null, str);
     let s = "|";
-    for (let i=0; i<len; i++)
-        s += str[i].toString(16);
+    for (let i = 0; i < len; i += HASH_CHUNK)
+        s += String.fromCharCode.apply(null, str.subarray(i, i + HASH_CHUNK));
     return s;
 };
 

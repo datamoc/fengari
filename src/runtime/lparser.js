@@ -1746,7 +1746,7 @@ module.exports = function createLparser(dependencies) {
         lua_assert(!funcstate.prev && funcstate.nups === 1 && !lexstate.fs);
         /* all scopes should be correctly finished */
         lua_assert(dyd.actvar.n === 0 && dyd.gt.n === 0 && dyd.label.n === 0);
-        delete L.stack[--L.top];  /* remove scanner's table */
+        L.stack[--L.top] = undefined;  /* remove scanner's table */
         return cl;  /* closure is on the stack, too */
     };
 

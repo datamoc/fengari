@@ -458,16 +458,21 @@ const luaL_optinteger = function(L, arg, def) {
     return luaL_opt(L, luaL_checkinteger, arg, def);
 };
 
-const luaL_prepbuffsize = function(B, sz) {
-    let newend = B.n + sz;
+/* grows the buffer so that 'sz' more bytes fit after B.n */
+const growbuff = function(B, sz) {
+    const newend = B.n + sz;
     if (B.b.length < newend) {
-        let newsize = Math.max(B.b.length * 2, newend);  /* double buffer size */
+        const newsize = Math.max(B.b.length * 2, newend);  /* double buffer size */
         lua_alloc(B.L, newsize);
-        let newbuff = new Uint8Array(newsize);  /* create larger buffer */
+        const newbuff = new Uint8Array(newsize);  /* create larger buffer */
         newbuff.set(B.b);  /* copy original content */
         B.b = newbuff;
     }
-    return B.b.subarray(B.n, newend);
+};
+
+const luaL_prepbuffsize = function(B, sz) {
+    growbuff(B, sz);
+    return B.b.subarray(B.n, B.n + sz);
 };
 
 const luaL_buffinit = function(L, B) {
@@ -487,8 +492,8 @@ const luaL_prepbuffer = function(B) {
 const luaL_addlstring = function(B, s, l) {
     if (l > 0) {
         s = from_userstring(s);
-        let b = luaL_prepbuffsize(B, l);
-        b.set(s.subarray(0, l));
+        growbuff(B, l);
+        B.b.set(l === s.length ? s : s.subarray(0, l), B.n);  /* no temporary views on the common path */
         luaL_addsize(B, l);
     }
 };
@@ -650,8 +655,8 @@ const luaL_requiref = function(L, modname, openf, glb) {
 };
 
 const find_subarray = function(arr, subarr, from_index) {
-    var i = from_index >>> 0,
-        sl = subarr.length,
+    let i = from_index >>> 0;
+    const sl = subarr.length,
         l = arr.length + 1 - sl;
 
     loop: for (; i < l; i++) {
@@ -991,9 +996,8 @@ const luaL_dofile = function(L, filename) {
     return (luaL_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0));
 };
 
-const lua_writestringerror = function() {
-    for (let i=0; i<arguments.length; i++) {
-        let a = arguments[i];
+const lua_writestringerror = function(...args) {
+    for (const a of args) {
         if (!isnode) {
             /* split along new lines for separate console.error invocations */
             do {

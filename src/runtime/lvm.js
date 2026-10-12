@@ -117,12 +117,12 @@ module.exports = function createLvm(dependencies) {
             case OP_UNM: case OP_BNOT: case OP_LEN:
             case OP_GETTABUP: case OP_GETTABLE: case OP_SELF: {
                 lobject.setobjs2s(L, base + inst.A, L.top-1);
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
                 break;
             }
             case OP_LE: case OP_LT: case OP_EQ: {
                 let res = !L.stack[L.top - 1].l_isfalse();
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
                 if (ci.callstatus & lstate.CIST_LEQ) {  /* "<=" using "<" instead? */
                     lua_assert(op === OP_LE);
                     ci.callstatus ^= lstate.CIST_LEQ;  /* clear mark */
@@ -339,7 +339,7 @@ module.exports = function createLvm(dependencies) {
                     let numberop1, numberop2;
 
                     if ((numberop1 = tonumber(op1)) !== false && (numberop2 = tonumber(op2)) !== false) {
-                        L.stack[ra].setfltvalue(Math.pow(numberop1, numberop2));
+                        L.stack[ra].setfltvalue(numberop1 ** numberop2);
                     } else {
                         ltm.luaT_trybinTM(L, op1, op2, L.stack[ra], ltm.TMS.TM_POW);
                     }
@@ -1070,7 +1070,7 @@ module.exports = function createLvm(dependencies) {
             total -= n - 1; /* got 'n' strings to create 1 new */
             /* popped 'n' strings and pushed one */
             for (; L.top > top-(n-1);)
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
         } while (total > 1); /* repeat until only 1 result left */
     };
 

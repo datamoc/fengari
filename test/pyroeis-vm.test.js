@@ -417,3 +417,16 @@ describe("PyroeisVm sandbox preset", () => {
         expect(vm.run("return type(load) .. type(dofile)")).toBe("nilnil");
     });
 });
+
+describe("string keys", () => {
+    test("strings whose bytes differ never share a table slot", () => {
+        const vm = new PyroeisVm();
+        /* "\1#" and "\18\3" used to hash to the same key because hex digits were not padded */
+        expect(vm.run('local t = {}; t["\\1#"] = 1; t["\\18\\3"] = 2; return t["\\1#"] * 10 + t["\\18\\3"]')).toBe(12);
+    });
+
+    test("long string keys beyond the hashing chunk size stay distinct", () => {
+        const vm = new PyroeisVm();
+        expect(vm.run('local a, b = ("x"):rep(20000) .. "a", ("x"):rep(20000) .. "b"; local t = {[a] = 1, [b] = 2}; return t[a] * 10 + t[b]')).toBe(12);
+    });
+});

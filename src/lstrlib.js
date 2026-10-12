@@ -365,18 +365,18 @@ const formatint = function(fmt, n) {
     }
     let sign = "";
     if (negative) sign = "-";
-    else if (flags.indexOf("+") >= 0) sign = "+";
-    else if (flags.indexOf(" ") >= 0) sign = " ";
+    else if (flags.includes("+")) sign = "+";
+    else if (flags.includes(" ")) sign = " ";
     let prefix = "";
-    if (flags.indexOf("#") >= 0 && magnitude !== 0n) {  /* alternate form */
+    if (flags.includes("#") && magnitude !== 0n) {  /* alternate form */
         if (base === 16) prefix = spec === "X" ? "0X" : "0x";
         else if (base === 8 && digits[0] !== "0") prefix = "0";
     }
     let body = sign + prefix + digits;
     if (body.length < width) {
         const pad = width - body.length;
-        if (flags.indexOf("-") >= 0) body += " ".repeat(pad);
-        else if (flags.indexOf("0") >= 0) body = sign + prefix + "0".repeat(pad) + digits;
+        if (flags.includes("-")) body += " ".repeat(pad);
+        else if (flags.includes("0")) body = sign + prefix + "0".repeat(pad) + digits;
         else body = " ".repeat(pad) + body;
     }
     return body;
@@ -1291,9 +1291,9 @@ const reprepstate = function(ms) {
 
 /* Plain substring search; worst case is quadratic, so it reports its work to the embedder interrupt. */
 const find_subarray = function(L, arr, subarr, from_index) {
-    var i = from_index >>> 0,
-        sl = subarr.length,
+    let i = from_index >>> 0,
         work = 0;
+    const sl = subarr.length;
 
     if (sl === 0)
         return i;

@@ -31,3 +31,22 @@ jobs:
     - run: yarn test:extended
       env:
         FENGARICONF: '{"LUAI_MAXSTACK":100000}'
+
+  browsers:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 24.x
+        cache: 'yarn'
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: Install Chromium and Firefox
+      run: npx playwright-core install --with-deps chromium firefox
+    - name: Run the browser bundle in Chromium and Firefox
+      run: yarn test:browsers
+      env:
+        CI: 'true'

@@ -109,7 +109,7 @@ if (!isnode) {
             buff.push(s);
         };
         lua_writeline = function() {
-            console.log.apply(console.log, buff);
+            console.log(...buff);
             buff = [];
         };
     }

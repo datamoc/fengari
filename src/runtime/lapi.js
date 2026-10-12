@@ -168,7 +168,7 @@ module.exports = function createLapi(dependencies) {
         for (let i = 0; i < n; i++) {
             to.stack[to.top] = new lobject.TValue();
             lobject.setobj2s(to, to.top, from.stack[from.top + i]);
-            delete from.stack[from.top + i];
+            from.stack[from.top + i] = undefined;
             to.top++;
         }
     };
@@ -344,7 +344,7 @@ module.exports = function createLapi(dependencies) {
             for (let i=0; i<n; i++)
                 cl.upvalue[i].setfrom(L.stack[L.top - n + i]);
             for (let i=1; i<n; i++)
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
             if (n>0)
                 --L.top;
             L.stack[L.top].setclCvalue(cl);
@@ -394,8 +394,8 @@ module.exports = function createLapi(dependencies) {
         api_check(L, L.top <= L.ci.top, "stack overflow");
         lvm.settable(L, t, L.stack[L.top - 1], L.stack[L.top - 2]);
         /* pop value and key */
-        delete L.stack[--L.top];
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
+        L.stack[--L.top] = undefined;
     };
 
     const lua_setglobal = function(L, name) {
@@ -425,7 +425,7 @@ module.exports = function createLapi(dependencies) {
             }
         }
 
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
         return true;
     };
 
@@ -433,8 +433,8 @@ module.exports = function createLapi(dependencies) {
         api_checknelems(L, 2);
         let t = index2addr(L, idx);
         lvm.settable(L, t, L.stack[L.top - 2], L.stack[L.top - 1]);
-        delete L.stack[--L.top];
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
+        L.stack[--L.top] = undefined;
     };
 
     const lua_setfield = function(L, idx, k) {
@@ -449,8 +449,8 @@ module.exports = function createLapi(dependencies) {
         api_incr_top(L);
         lvm.settable(L, t, L.stack[L.top - 1], L.stack[L.top - 2]);
         /* pop value and key */
-        delete L.stack[--L.top];
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
+        L.stack[--L.top] = undefined;
     };
 
     const lua_rawset = function(L, idx) {
@@ -461,8 +461,8 @@ module.exports = function createLapi(dependencies) {
         let v = L.stack[L.top - 1];
         ltable.luaH_setfrom(L, o.value, k, v);
         ltable.invalidateTMcache(o.value);
-        delete L.stack[--L.top];
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
+        L.stack[--L.top] = undefined;
     };
 
     const lua_rawseti = function(L, idx, n) {
@@ -471,7 +471,7 @@ module.exports = function createLapi(dependencies) {
         let o = index2addr(L, idx);
         api_check(L, o.ttistable(), "table expected");
         ltable.luaH_setint(o.value, n, L.stack[L.top - 1]);
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
     };
 
     const lua_rawsetp = function(L, idx, p) {
@@ -481,7 +481,7 @@ module.exports = function createLapi(dependencies) {
         let k = new TValue(LUA_TLIGHTUSERDATA, p);
         let v = L.stack[L.top - 1];
         ltable.luaH_setfrom(L, o.value, k, v);
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
     };
 
     /*
@@ -584,7 +584,7 @@ module.exports = function createLapi(dependencies) {
             let name = aux.name;
             let val = aux.val;
             val.setfrom(L.stack[L.top-1]);
-            delete L.stack[--L.top];
+            L.stack[--L.top] = undefined;
             return name;
         }
         return null;
@@ -904,7 +904,7 @@ module.exports = function createLapi(dependencies) {
         }
         /* first operand at top - 2, second at top - 1; result go to top - 2 */
         lobject.luaO_arith(L, op, L.stack[L.top - 2], L.stack[L.top - 1], L.stack[L.top - 2]);
-        delete L.stack[--L.top];  /* remove second operand */
+        L.stack[--L.top] = undefined;  /* remove second operand */
     };
 
     /*
@@ -947,7 +947,7 @@ module.exports = function createLapi(dependencies) {
         let o = index2addr(L, idx);
         api_check(L, o.ttisfulluserdata(), "full userdata expected");
         o.value.uservalue.setfrom(L.stack[L.top - 1]);
-        delete L.stack[--L.top];
+        L.stack[--L.top] = undefined;
     };
 
     const checkresults = function(L,na,nr) {
@@ -1040,8 +1040,8 @@ module.exports = function createLapi(dependencies) {
             api_incr_top(L);
             return 1;
         } else {
-            delete L.stack[L.top];
-            delete L.stack[--L.top];
+            L.stack[L.top] = undefined;
+            L.stack[--L.top] = undefined;
             return 0;
         }
     };
@@ -1276,7 +1276,7 @@ module.exports = function createLapi(dependencies) {
             // Call the JavaScript function
             let result;
             try {
-                result = jsFunc.apply(null, args);
+                result = jsFunc(...args);
             } catch (e) {
                 lua_pushstring(L, to_luastring(`JavaScript Error: ${e.message}`));
                 lua_error(L);

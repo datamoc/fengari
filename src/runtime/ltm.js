@@ -135,7 +135,7 @@ module.exports = function createLtm(dependencies) {
 
         if (hasres) {  /* if has result, move it to its place */
             let tv = L.stack[L.top-1];
-            delete L.stack[--L.top];
+            L.stack[--L.top] = undefined;
             p3.setfrom(tv);
         }
     };

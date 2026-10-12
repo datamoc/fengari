@@ -1,5 +1,37 @@
 # Changes in Pyroeis
 
+## Unreleased
+
+### Fixes
+- **Two different strings could share a table slot**: the key built for a table lookup wrote each byte as unpadded hexadecimal, so `"\1#"` and `"\18\3"` (both `1`,`23` or `12`,`3`) produced the same key and `t["\1#"]` returned the value stored under `"\18\3"`. The key is now one UTF-16 code unit per byte, which is one-to-one.
+
+### Performance
+Measured on the `docs/benchmark` Lua algorithms in Node 22 (median of 5 runs, milliseconds, before to after):
+
+| benchmark | before | after |
+|---|---|---|
+| fib (calls) | 112 | 24 |
+| sort | 145 | 78 |
+| collatz (integer maths) | 144 | 46 |
+| nested loops | 24 | 10 |
+| matmul | 65 | 32 |
+| integer sum | 7.8 | 3.7 |
+| strings | 100 | 65 |
+| sieve | 31 | 24 |
+| mandelbrot | 70 | 46 |
+
+- **Integer arithmetic no longer goes through BigInt for ordinary values** (`src/linteger.js`): `wrap`, `canonical`, `fromFloat`, `add`, `sub`, `mul`, `neg`, `div`, `mod` and the bitwise operators first try plain Number arithmetic and fall back to BigInt only when the result leaves the exactly representable range. Results are identical in 32 and 64-bit builds (checked against the previous implementation on about 3 million operand pairs, with `Object.is` so a stray `-0` counts; `test/linteger.test.js` keeps a smaller version).
+- **The Lua stack no longer uses `delete`**: `delete L.stack[i]` punched holes in a JavaScript array, and V8 handles such arrays slowly (`moveresults` alone was 22% of a recursive call benchmark). The slot is set to `undefined` instead, which still releases the value.
+- **`luaL_addlstring`** (used by `gsub`, `concat`, `format`...) no longer builds two temporary views per call.
+- **Native UTF-8 for longer strings**: `to_jsstring` uses a strict `TextDecoder` from 16 bytes, and `to_luastring` uses `TextEncoder` from 150 characters when `String.prototype.isWellFormed()` (ES2024) says the string is well formed. Shorter strings are faster with the existing loops (measured), and anything the strict decoder refuses (encoded surrogates, overlong forms, invalid bytes) still goes through the existing loop, so results do not change (120,000 differential comparisons).
+- The key built for a table lookup from a string (once per string, then cached) is about 3x faster on short strings and 5x on 200-byte strings, using `String.fromCharCode.apply` on the typed array in chunks (spread was measured slower).
+
+### Tests
+- `npm run test:browsers` (`test/browsers/run.js`, Playwright) builds the browser bundle and runs it in real Chromium and Firefox: arithmetic, `string.format`, the string-key collision, long keys, binary strings, coroutines. A new `browsers` CI job runs it on every push. Locally a browser that cannot start is skipped; behind a proxy, set `HTTPS_PROXY` for `npx playwright-core install chromium firefox`, or `PYROEIS_CHROME_PATH` to use an installed Chrome.
+
+### JavaScript modernisation
+- Uses `Object.hasOwn` (ES2022), `**` and `Array#includes` (ES2016), rest parameters and spread calls instead of `arguments` / `apply`, `let` / `const` instead of `var`, `slice` instead of the deprecated `substr`. The pre-ES2015 fallbacks for `Uint8Array.from` / `of` / `indexOf` were removed. Node.js 20 or later (the oldest version in CI) is declared in `engines`. Features newer than Node 22 (`Uint8Array#toHex`, `RegExp.escape`, `Promise.try`, `Math.sumPrecise`) are deliberately not used so that the package keeps running on current browsers and LTS Node.
+
 ## Version 0.5.5
 
 ### Security (binary chunks and the translator)

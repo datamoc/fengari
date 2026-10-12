@@ -69,7 +69,7 @@ function tokenize(src) {
             const e = src[++i];
             const simple = { a: '\x07', b: '\b', f: '\f', n: '\n', r: '\r', t: '\t', v: '\v', '\\': '\\', '"': '"', '\'': '\'' };
             if (e in simple) { out += simple[e]; i++; } else if (e === '\n') { out += '\n'; line++; i++; } else if (e === 'x') {
-                const hex = src.substr(i + 1, 2);
+                const hex = src.slice(i + 1, i + 3);
                 if (!/^[\da-fA-F]{2}$/.test(hex)) fail('hexadecimal digit expected');
                 out += String.fromCharCode(parseInt(hex, 16));
                 i += 3;

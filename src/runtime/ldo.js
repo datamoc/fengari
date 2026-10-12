@@ -56,7 +56,7 @@ module.exports = function createLdo(dependencies) {
                 L.stack[L.top++] = new lobject.TValue(LUA_TNIL, null);
         } else {
             while (L.top > newtop)
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
         }
     };
 
@@ -82,7 +82,7 @@ module.exports = function createLdo(dependencies) {
         }
 
         while (L.top > oldtop + 1)
-            delete L.stack[--L.top];
+            L.stack[--L.top] = undefined;
     };
 
     const ERRORSTACKSIZE = LUAI_MAXSTACK + 200;
@@ -244,7 +244,7 @@ module.exports = function createLdo(dependencies) {
                 for (let i = 0; i < nres; i++)
                     lobject.setobjs2s(L, res + i, firstResult + i);
                 for (let i=L.top; i>=(res + nres); i--)
-                    delete L.stack[i];
+                    L.stack[i] = undefined;
                 L.top = res + nres;
                 return false;
             }
@@ -268,7 +268,7 @@ module.exports = function createLdo(dependencies) {
         }
         let newtop = res + wanted; /* top points after the last result */
         for (let i=L.top; i>=newtop; i--)
-            delete L.stack[i];
+            L.stack[i] = undefined;
         L.top = newtop;
         return true;
     };
@@ -541,7 +541,7 @@ module.exports = function createLdo(dependencies) {
         } else {
             /* remove args from the stack */
             for (let i=1; i<narg; i++)
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
             lobject.setsvalue2s(L, L.top-1, ts);  /* push error message */
         }
         return LUA_ERRRUN;
@@ -640,7 +640,7 @@ module.exports = function createLdo(dependencies) {
             seterrorobj(L, status, 1);
         else
             while (L.top > 1)
-                delete L.stack[--L.top];
+                L.stack[--L.top] = undefined;
         L.ci.top = L.top + LUA_MINSTACK;
         L.status = status;
         return status;

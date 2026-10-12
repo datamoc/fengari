@@ -182,23 +182,23 @@ const LUAL_BUFFERSIZE = conf.LUAL_BUFFERSIZE || 8192;
 // See: http://croquetweak.blogspot.fr/2014/08/deconstructing-floats-frexp-and-ldexp.html
 const frexp = function(value) {
     if (value === 0) return [value, 0];
-    var data = new DataView(new ArrayBuffer(8));
+    const data = new DataView(new ArrayBuffer(8));
     data.setFloat64(0, value);
-    var bits = (data.getUint32(0) >>> 20) & 0x7FF;
+    let bits = (data.getUint32(0) >>> 20) & 0x7FF;
     if (bits === 0) { // denormal
-        data.setFloat64(0, value * Math.pow(2, 64));  // exp + 64
+        data.setFloat64(0, value * 2 ** 64);  // exp + 64
         bits = ((data.getUint32(0) >>> 20) & 0x7FF) - 64;
     }
-    var exponent = bits - 1022;
-    var mantissa = ldexp(value, -exponent);
+    const exponent = bits - 1022;
+    const mantissa = ldexp(value, -exponent);
     return [mantissa, exponent];
 };
 
 const ldexp = function(mantissa, exponent) {
-    var steps = Math.min(3, Math.ceil(Math.abs(exponent) / 1023));
-    var result = mantissa;
-    for (var i = 0; i < steps; i++)
-        result *= Math.pow(2, Math.floor((exponent + i) / steps));
+    const steps = Math.min(3, Math.ceil(Math.abs(exponent) / 1023));
+    let result = mantissa;
+    for (let i = 0; i < steps; i++)
+        result *= 2 ** Math.floor((exponent + i) / steps);
     return result;
 };
 
