@@ -8,8 +8,14 @@
 
 ### Security (limits)
 - **`limits.coroutines`**: a script could create a million coroutines (about 1.7 GiB of heap, in 3.5 s) under a generous instruction budget, because `allocation` and `totalAllocation` only see strings and buffers. The new limit caps the coroutines created per top-level call (`coroutine.create`, `coroutine.wrap`, and host coroutines made during the call); the next one raises a `LimitError` (`limit: "coroutines"`) that `pcall` cannot catch. It counts creations, not live coroutines, since the garbage collector is not observable, so a persistent VM can still keep 10,000 new ones per call. 10,000 costs about 17 MiB. Opt-in: without it nothing is counted.
-- **Not covered**: tables and closures cost as much (3 million empty tables: about 2.2 GiB); only the instruction and time budgets bound them.
+- **`limits.tables` and `limits.closures`**: the same mechanism for tables (3 million empty tables: about 2.2 GiB) and Lua closures. Each counts creations per top-level call, raises an uncatchable `LimitError` (`limit: "tables"` / `"closures"`) and is opt-in. Closures are counted when actually created, so an upvalue-free function reused from the cache is not recounted.
+- **`LimitError` always has a message**: a limit raised in the middle of an instruction (table or closure creation) could reach the host with an empty message; it is now `<limit> limit exceeded` (the `memory` limit keeps `not enough memory`, as the script sees it). `LimitError#limit` is one of `instructions`, `time`, `memory`, `coroutines`, `tables`, `closures`.
+- **Persistent VMs**: the creation counters do not see live objects (the garbage collector is not observable), so a VM kept across calls can accumulate up to the limit per call. Discard it, or run untrusted scripts on a fresh VM per script.
 - **Tests**: `test/pyroeis-vm-limits.test.js`.
+
+### Host API (untrusted scripts)
+- **`sandbox` makes the host's own chunks text-only**: `run`, `runMulti` and `coroutineFromSource` now load in text mode when `sandbox: true`, like the script's `load` already did, so a binary chunk never reaches the undumper from either side.
+- **`pushJson` / `readJson`**: a strict JSON exchange for hosts that run untrusted scripts. `readJson` refuses functions, threads, userdata, non-UTF-8 strings and exotic keys, creates no Lua reference (`read` anchors every function in the registry), never returns BigInt, Map or Uint8Array, bounds nesting (`maxDepth`, 20 by default) and keeps `__proto__` an ordinary key; tables become plain objects, or arrays with `{ arrays: true }`. `pushJson` pushes numbers as Lua floats and refuses anything that is not JSON, where `push` converts it.
 
 ### Documentation
 - **Security page**: the demonstration uses `coroutines: 10000`, with a new case (`coroutines`) comparing it with upstream Fengari under the same instruction budget.

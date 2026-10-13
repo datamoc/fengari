@@ -1016,6 +1016,7 @@ module.exports = function createLvm(dependencies) {
     const pushclosure = function(L, p, encup, base, ra) {
         let nup = p.upvalues.length;
         let uv = p.upvalues;
+        if (L.l_G.onnewclosure !== null) L.l_G.onnewclosure(L);
         let ncl = new lobject.LClosure(L, nup);
         ncl.p = p;
         L.stack[ra].setclLvalue(ncl);

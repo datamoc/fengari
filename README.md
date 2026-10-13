@@ -76,6 +76,15 @@ the sandbox guarantees in one place. This is not a gap to work around:
 - if you need the speed, call `compile` only for functions you wrote or reviewed, on a
   VM without `limits`, and keep untrusted scripts on a separate, limited VM.
 
+`limits.coroutines`, `limits.tables` and `limits.closures` count the objects a script
+creates per top-level call, not the live ones (the garbage collector is not
+observable). On a VM kept across calls a script can therefore still keep up to that
+many new objects per call: for untrusted scripts, use a fresh VM per script, or discard
+the VM when it is done. A call that exceeds any limit fails with a `LimitError` whose
+`limit` names it (`instructions`, `time`, `memory`, `coroutines`, `tables`,
+`closures`) and whose message is `<limit> limit exceeded`, on `run`, `call`, `callRef`,
+`Coroutine#resume` and `protect` alike (`memory` keeps `not enough memory`).
+
 ## Offline Lua to JavaScript translation
 
 To leave Lua behind, `lua2js` turns Lua source into JavaScript a developer can read and keep editing. It is separate from the runtime numeric compiler above: it never runs Lua, it prints idiomatic JavaScript from the source and marks what it cannot translate.

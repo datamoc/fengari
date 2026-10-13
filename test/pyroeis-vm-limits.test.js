@@ -42,6 +42,35 @@ describe('limits.coroutines caps the coroutines created by one call', () => {
     });
 });
 
+describe('limits.tables and limits.closures cap the objects created by one call', () => {
+    test('a script creating more tables than allowed gets an uncatchable LimitError', () => {
+        const vm = limited({ tables: 100 });
+        expect(vm.run('local t for i = 1, 50 do t = {} end return "ok"')).toBe('ok');
+        expect(() => vm.run('pcall(function() for i = 1, 1000 do local t = {} end end) return "survived"')).toThrow(LimitError);
+        expect(vm.limitHit).toBe('tables');
+        expect(vm.run('local t for i = 1, 50 do t = {} end return "renewed"')).toBe('renewed');
+    });
+
+    test('closures are counted, and the message names the limit on every entry point', () => {
+        const vm = limited({ closures: 50 });
+        const spin = 'local f for i = 1, 1000 do f = function() return i end end return 1';
+        expect(() => vm.run(spin)).toThrow(/closures limit exceeded/);
+        const vm2 = limited({ closures: 50 });
+        vm2.run('function spin() local f for i = 1, 1000 do f = function() return i end end end');
+        expect(() => vm2.call('spin')).toThrow(/closures limit exceeded/);
+        expect(vm2.limitHit).toBe('closures');
+    });
+
+    test('without these options nothing is counted, an invalid value is refused, and removal clears the hooks', () => {
+        const vm = limited({ instructions: 1e8 });
+        expect(vm.run('local t for i = 1, 20000 do t = {} end return 1')).toBe(1);
+        expect(() => limited({ tables: 0 })).toThrow(RangeError);
+        const counted = limited({ tables: 1, closures: 1 });
+        counted.setLimits(null);
+        expect(counted.run('local t for i = 1, 50 do t = {} end return 1')).toBe(1);
+    });
+});
+
 describe('a limit overrun cannot be hidden by the script', () => {
 
     test('a coroutine created by Lua that exceeds the budget fails the host call even if Lua catches it', () => {
@@ -311,5 +340,67 @@ describe("PyroeisVm limits against hooks that are switched off", () => {
         vm.setLimits(null);
         expect(vm.run("return #string.rep('x', 100000)")).toBe(100000);
         expect(vm.state.l_G.interrupt).toBeNull();
+    });
+});
+
+describe('sandbox: the host\'s own chunks are text-only too', () => {
+    const binary = '\x1bLua';
+    test('run, runMulti and coroutineFromSource refuse a binary chunk', () => {
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true });
+        expect(() => vm.run(binary)).toThrow(/binary chunk/);
+        expect(() => vm.runMulti(binary)).toThrow(/binary chunk/);
+        expect(() => vm.coroutineFromSource(binary)).toThrow(/binary chunk/);
+        expect(vm.run('return 1 + 1')).toBe(2);
+    });
+
+    test('without sandbox the mode is unchanged', () => {
+        expect(() => new PyroeisVm().run(binary)).not.toThrow(/binary chunk/);
+    });
+});
+
+describe('pushJson / readJson: the strict JSON exchange', () => {
+    const roundTrip = (vm, value, options) => {
+        vm.pushJson(value);
+        const out = vm.readJson(-1, options);
+        vm.lua.lua_pop(vm.state, 1);
+        return out;
+    };
+
+    test('JSON values round-trip; arrays come back as objects unless asked', () => {
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true });
+        const value = { a: 1, b: [true, 'x'], c: { d: 1.5 } };
+        expect(roundTrip(vm, value, { arrays: true })).toEqual({ a: 1, b: [true, 'x'], c: { d: 1.5 } });
+        expect(roundTrip(vm, [1, 2])).toEqual({ 1: 1, 2: 2 });
+        expect(roundTrip(vm, [1, 2], { arrays: true })).toEqual([1, 2]);
+        expect(vm.lua.lua_gettop(vm.state)).toBe(0);
+    });
+
+    test('anything that is not JSON is refused, and no Lua reference is created', () => {
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true });
+        expect(() => vm.pushJson(() => 1)).toThrow(TypeError);
+        expect(() => vm.pushJson(undefined)).toThrow(TypeError);
+        expect(() => vm.pushJson(new Map())).toThrow(TypeError);
+        const cycle = {}; cycle.self = cycle;
+        expect(() => vm.pushJson(cycle)).toThrow(RangeError);
+        vm.lua.lua_settop(vm.state, 0);
+        vm.run('t = { f = function() end }; u = {}; u.u = u; k = { [true] = 1 }');
+        for (const name of ['t', 'u', 'k', 'print']) {
+            vm.lua.lua_getglobal(vm.state, vm.to_luastring(name));
+            expect(() => vm.readJson(-1)).toThrow();
+            vm.lua.lua_settop(vm.state, 0);
+        }
+        vm.run('t = nil');
+        vm.lua.lua_getglobal(vm.state, vm.to_luastring('t'));
+        expect(vm.readJson(-1)).toBeNull();
+    });
+
+    test('__proto__ stays an ordinary key', () => {
+        const vm = new PyroeisVm(undefined, undefined, { sandbox: true });
+        vm.run('t = { ["__proto__"] = { polluted = true } }');
+        vm.lua.lua_getglobal(vm.state, vm.to_luastring('t'));
+        const out = vm.readJson(-1);
+        expect(Object.getPrototypeOf(out)).toBe(Object.prototype);
+        expect(({}).polluted).toBeUndefined();
+        expect(Object.keys(out)).toEqual(['__proto__']);
     });
 });
