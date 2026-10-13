@@ -1,6 +1,6 @@
 # Changes in Pyroeis
 
-## Unreleased
+## Version 0.9.0
 
 ### Performance
 - **String buffers and copies**: `luaL_addchar` no longer builds a view per character, and `luastring_from` copies typed arrays with `new Uint8Array` (3-4x faster than `Uint8Array.from` on short strings).
