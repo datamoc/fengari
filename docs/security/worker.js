@@ -11,7 +11,8 @@ self.onmessage = ({ data }) => {
     try {
         if (data.engine === "upstream") {
             importScripts("../assets/fengari-0.1.5.bundle.js", "../assets/upstream-vm.js");
-            vm = new UpstreamVm(20000);
+            if (sample.interop) importScripts("../assets/fengari-interop-0.1.4.bundle.js");
+            vm = new UpstreamVm(20000, Boolean(sample.interop));
         } else {
             importScripts("../benchmark/pyroeis.bundle.js");
             vm = new Pyroeis.PyroeisVm(undefined, undefined, {

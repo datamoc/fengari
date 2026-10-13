@@ -25,7 +25,15 @@ function showSource() {
     document.getElementById("description").textContent = text(sample.description);
     document.getElementById("source").textContent = sample.source;
 }
-function label(result, engine) {
+/* A case with a `breach` marker is judged on what the script returned, not on the fact that it returned. */
+function breached(result, sample) {
+    return result.kind === "returned" && Boolean(sample.breach) && String(result.value).includes(sample.breach.match);
+}
+function label(result, engine, sample) {
+    if (sample.breach && result.kind === "returned") {
+        const wording = breached(result, sample) ? sample.breach.yes : sample.breach.no;
+        return i18n.t(wording.en, wording.fr);
+    }
     if (result.kind === "timeout") return i18n.t("Worker stopped after 1.5 s", "Worker arrêté après 1,5 s");
     if (result.kind === "cancelled") return i18n.t("Requested stop", "Arrêt demandé");
     if (result.kind === "setup-error") return i18n.t("Loading failed", "Chargement échoué");
@@ -33,11 +41,15 @@ function label(result, engine) {
     if (engine === "pyroeis" && result.name === "LimitError") return i18n.t("Overrun blocked: ", "Dépassement bloqué\u202f: ") + result.limit;
     return i18n.t("Error reported to the host code", "Erreur signalée au code hôte");
 }
-function display(engine, result) {
+function outcome(result, sample) {
+    if (result.kind === "error" && (result.name === "LimitError" || /memory|mémoire/i.test(result.message))) return "blocked";
+    if (sample.breach && result.kind === "returned") return breached(result, sample) ? "breached" : "blocked";
+    return result.kind;
+}
+function display(engine, result, sample) {
     const panel = document.getElementById(engine);
-    const blocked = result.kind === "error" && (result.name === "LimitError" || /memory|mémoire/i.test(result.message));
-    panel.dataset.outcome = blocked ? "blocked" : result.kind;
-    panel.querySelector(".badge").textContent = label(result, engine);
+    panel.dataset.outcome = outcome(result, sample);
+    panel.querySelector(".badge").textContent = label(result, engine, sample);
     panel.querySelector("pre").textContent = result.kind === "returned" ? JSON.stringify(result.value) : result.message || i18n.t("The page stopped the worker, not the Lua engine.", "La page a arrêté le worker, pas le moteur Lua.");
     panel.querySelector(".timing").textContent = result.ms === undefined ? "" : i18n.t("Run: ", "Exécution\u202f: ") + `${result.ms.toFixed(1)} ms`;
 }
@@ -53,7 +65,7 @@ function execute(engine, sample) {
             clearTimeout(timer);
             worker.terminate();
             pending.delete(cancel);
-            display(engine, result);
+            display(engine, result, sample);
             resolve(result);
         }
         pending.add(cancel);
@@ -78,7 +90,7 @@ function updateHistory() {
     body.replaceChildren();
     for (const { sample, upstream, pyroeis } of history.values()) {
         const row = document.createElement("tr");
-        for (const item of [text(sample.title), label(upstream, "upstream"), label(pyroeis, "pyroeis")]) {
+        for (const item of [text(sample.title), label(upstream, "upstream", sample), label(pyroeis, "pyroeis", sample)]) {
             const cell = document.createElement("td");
             cell.textContent = item;
             row.appendChild(cell);
@@ -133,3 +145,6 @@ function selectFromHash() {
 window.addEventListener("hashchange", selectFromHash);
 selectFromHash();
 showSource();
+
+/* The Pyroeis column is the version this site was built from; name it wherever Fengari's is named. */
+for (const node of document.querySelectorAll(".pv")) node.textContent = window.Pyroeis.PYROEIS_VERSION_MAJOR + "." + window.Pyroeis.PYROEIS_VERSION_MINOR + "." + window.Pyroeis.PYROEIS_VERSION_RELEASE;

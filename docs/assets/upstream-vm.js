@@ -2,12 +2,16 @@
 (function(root) {
     "use strict";
     class UpstreamVm {
-        constructor(instructions = null) {
+        constructor(instructions = null, interop = false) {
             const { lua, lauxlib, lualib, to_luastring } = root.FengariUpstream;
             this.api = root.FengariUpstream;
             this.state = lauxlib.luaL_newstate();
             lualib.luaL_openlibs(this.state);
-            // Same restricted library surface used for the demonstrations. No JS interop.
+            // Same restricted library surface used for the demonstrations. No JS interop unless asked for.
+            if (interop) {
+                lauxlib.luaL_requiref(this.state, to_luastring("js"), root.FengariInterop.luaopen_js, 1);
+                lua.lua_pop(this.state, 1);
+            }
             for (const name of ["debug", "io", "os", "package", "require", "dofile", "loadfile"]) {
                 lua.lua_pushnil(this.state);
                 lua.lua_setglobal(this.state, to_luastring(name));

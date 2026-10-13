@@ -55,7 +55,7 @@ button:disabled { opacity: .5; cursor: default; }
 .result { background: var(--surface); border: 1px solid var(--edge); padding: 1.2rem; border-radius: 5px; }
 .result pre { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 5rem; }
 .result[data-outcome="blocked"] { border-color: var(--good); }
-.result[data-outcome="timeout"], .result[data-outcome="returned"] { border-color: var(--accent); }
+.result[data-outcome="timeout"], .result[data-outcome="returned"], .result[data-outcome="breached"] { border-color: var(--accent); }
 .result[data-outcome="setup-error"] { border-color: var(--muted); }
 .badge { display: inline-block; font-size: .85rem; font-weight: 700; margin: .3rem 0; }
 .ok { color: var(--good); }

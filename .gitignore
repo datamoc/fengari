@@ -71,3 +71,5 @@ docs/assets/pyroeis.png
 
 # Personal research material kept out of the repository
 references/
+
+.playwright-mcp/

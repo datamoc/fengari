@@ -57,6 +57,9 @@
         },
         {
             id: "chunk",
+            breach: { match: "forged chunk returned",
+                yes: { en: "A forged chunk was accepted and ran", fr: "Un chunk forgé a été accepté et exécuté" },
+                no: { en: "Forged chunk refused", fr: "Chunk forgé refusé" } },
             title: { en: "A forged binary chunk: one constant rewritten", fr: "Un chunk binaire forgé : une constante réécrite" },
             description: {
                 en: "Both engines dump the same `return 1`, then the script rewrites one byte of its constant. Upstream loads the forged chunk as well-formed and returns the forged value: nothing verifies the operands. The Pyroeis sandbox has no `string.dump` and `load` accepts text only, so a binary chunk can be neither produced nor loaded.",
@@ -75,39 +78,42 @@
         },
         {
             id: "metatable",
-            title: { en: "A metatable reaching for the JavaScript bridge", fr: "Une métatable qui cherche le pont JavaScript" },
+            interop: true,
+            breach: { match: "js is table",
+                yes: { en: "The script reached the JavaScript bridge", fr: "Le script a atteint le pont JavaScript" },
+                no: { en: "No JavaScript bridge", fr: "Aucun pont JavaScript" } },
+            title: { en: "A metatable reaching for the JavaScript bridge (Fengari with interop)", fr: "Une métatable qui cherche le pont JavaScript (Fengari avec interop)" },
             description: {
-                en: "`__index` runs normally on both engines; it can only return what Lua can see. Without fengari-interop there is no `js` module to find, and blocking `__index` would break the standard library itself.",
-                fr: "`__index` s’exécute normalement sur les deux moteurs ; il ne peut renvoyer que ce que Lua voit. Sans fengari-interop, aucun module `js` à trouver, et bloquer `__index` casserait la bibliothèque standard elle-même."
+                en: "`__index` runs normally on both engines; it can only return what Lua can see. With fengari-interop loaded, what Lua sees includes the `js` module, so the metatable hands the bridge to the script. Pyroeis has no such module to find, and blocking `__index` would break the standard library itself.",
+                fr: "`__index` s’exécute normalement sur les deux moteurs ; il ne peut renvoyer que ce que Lua voit. Avec fengari-interop chargé, ce que Lua voit inclut le module `js` : la métatable remet le pont au script. Pyroeis n’a pas de tel module à trouver, et bloquer `__index` casserait la bibliothèque standard elle-même."
             },
-            source: "local t = setmetatable({}, { __index = function() return js end }) return 'js is ' .. tostring(t.anything)", expected: "returned"
+            source: "local t = setmetatable({}, { __index = function() return js end }) return 'js is ' .. type(t.anything)", expected: "returned"
         },
         {
-            id: "jsglobal",
-            title: { en: "The js.global escape, without the interop", fr: "L’évasion js.global, sans l’interop" },
+            id: "jsglobal-interop",
+            breach: { match: "reached JavaScript",
+                yes: { en: "The script ran JavaScript", fr: "Le script a exécuté du JavaScript" },
+                no: { en: "No JavaScript bridge", fr: "Aucun pont JavaScript" } },
+            interop: true,
+            title: { en: "The js.global escape, with the interop (Fengari)", fr: "L’évasion js.global, avec l’interop (Fengari)" },
             description: {
-                en: "fengari-interop would hand `js.global` to the script, and with it `eval`, the DOM and the network. Neither engine here loads it: the escape has nothing to reach, on upstream as on Pyroeis.",
-                fr: "fengari-interop remettrait `js.global` au script, et avec lui `eval`, le DOM et le réseau. Aucun des deux moteurs ne le charge ici : l’évasion n’a rien à atteindre, sur l’amont comme sur Pyroeis."
+                en: "Same script, but the upstream worker now loads fengari-interop 0.1.4, as an application exchanging data with JavaScript would. The script reaches `js.global:eval`: it runs JavaScript in the worker. Pyroeis has no such module, so the script finds no bridge; its data exchange goes through explicit copies.",
+                fr: "Même script, mais le worker amont charge cette fois fengari-interop 0.1.4, comme le ferait une application qui échange des données avec JavaScript. Le script atteint `js.global:eval` : il exécute du JavaScript dans le worker. Pyroeis n’a pas de tel module, le script ne trouve donc aucun pont ; ses échanges de données passent par des copies explicites."
             },
-            source: "local ok, res = pcall(function() return js.global:eval('1+1') end) return ok and 'reached JavaScript' or 'no bridge: ' .. tostring(res)", expected: "returned"
+            source: "local ok, res = pcall(function() return js.global:eval('1+1') end) return ok and 'reached JavaScript: ' .. tostring(res) or 'no bridge: ' .. tostring(res)", expected: "returned"
         },
         {
-            id: "proto",
-            title: { en: "A __proto__ key, from Lua", fr: "Une clé __proto__, depuis Lua" },
+            id: "proto-interop",
+            breach: { match: "inherits: yes",
+                yes: { en: "The script polluted Object.prototype", fr: "Le script a pollué Object.prototype" },
+                no: { en: "Object.prototype untouched", fr: "Object.prototype intact" } },
+            interop: true,
+            title: { en: "A __proto__ key, with the interop (Fengari)", fr: "Une clé __proto__, avec l’interop (Fengari)" },
             description: {
-                en: "In Lua, `__proto__` is an ordinary key: it reads and writes a table slot, never a JavaScript prototype. Values cross as copies, so a `__proto__` key stays an own property; the translator flags it as unsafe.",
-                fr: "En Lua, `__proto__` est une clé ordinaire : elle lit et écrit une case de table, jamais un prototype JavaScript. Les valeurs traversent en copies, une clé `__proto__` reste donc une propriété own ; le traducteur la signale comme unsafe."
+                en: "With fengari-interop, Lua holds real JavaScript objects. The script reads `__proto__` of a plain object, writes a key on it, then checks whether a brand-new `{}` inherits it: that is prototype pollution of the worker. Pyroeis has no `js` module; the same keys stay ordinary table slots.",
+                fr: "Avec fengari-interop, Lua manipule de vrais objets JavaScript. Le script lit `__proto__` d’un objet simple, y écrit une clé, puis vérifie si un `{}` tout neuf en hérite : c’est une pollution de prototype du worker. Pyroeis n’a pas de module `js` ; les mêmes clés restent de simples cases de table."
             },
-            source: "local t = { __proto__ = { x = 1 } } return type(t.__proto__) .. ' ' .. tostring(t.__proto__.x)", expected: "returned"
-        },
-        {
-            id: "eval",
-            title: { en: "A constant mentioning eval", fr: "Une constante mentionnant eval" },
-            description: {
-                en: "The source text contains `eval`, the word that worries a JavaScript host. A Lua string is data: `eval` is not a Lua global, and nothing in the engine executes a constant.",
-                fr: "Le texte source contient `eval`, le mot qui inquiète un hôte JavaScript. Une chaîne Lua est de la donnée : `eval` n’est pas un global Lua, et rien dans le moteur n’exécute une constante."
-            },
-            source: "local f = load(\"return eval('1+1')\") local ok, res = pcall(f) return ok and 'ran' or 'lua-error: ' .. tostring(res)", expected: "returned"
+            source: "if not js then local t = {} t.__proto__ = {} t.__proto__.polluted = 1 return 'table slots only: ' .. tostring(({}).polluted) end local o = js.new(js.global.Object) o.__proto__.polluted = 'yes' return 'new {} inherits: ' .. tostring(js.new(js.global.Object).polluted)", expected: "returned"
         },
         {
             id: "gianttable",
@@ -117,18 +123,6 @@
                 fr: "Un million de cases n’est alloué d’aucun côté : les deux moteurs arrêtent la boucle au budget d’instructions. Une table Lua n’est pas plafonnée par sa taille — les budgets bornent la boucle qui la remplit."
             },
             source: "local t = {} for i = 1, 1e6 do t[i] = i end return #t", expected: "error"
-        },
-        {
-            id: "interop",
-            title: { en: "fengari-interop: required for JS access", fr: "fengari-interop : nécessaire pour accéder à JS" },
-            description: {
-                en: "To access JavaScript objects like js.global, eval, or the DOM, fengari-interop must be loaded. Without it, js is nil. This case verifies that neither engine on this page loads the interop, so Lua cannot reach JavaScript.",
-                fr: "Pour accéder aux objets JavaScript comme js.global, eval ou le DOM, fengari-interop doit être chargé. Sans lui, js vaut nil. Ce cas vérifie qu’aucun des deux moteurs de cette page ne charge l’interop, donc Lua ne peut pas atteindre JavaScript."
-            },
-            source: "local has_js = type(js) ~= 'nil'
-local has_js_global = has_js and type(js.global) ~= 'nil'
-local has_eval = has_js_global and type(js.global.eval) ~= 'nil'
-return 'js=' .. tostring(has_js) .. ' js.global=' .. tostring(has_js_global) .. ' eval=' .. tostring(has_eval)", expected: "returned"
         }
     ];
 })(globalThis);

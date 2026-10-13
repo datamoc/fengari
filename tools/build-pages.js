@@ -16,6 +16,11 @@ const packages = [
         url: "https://registry.npmjs.org/fengari/-/fengari-0.1.5.tgz"
     },
     {
+        name: "fengari-interop", version: "0.1.4", license: "MIT",
+        integrity: "sha512-4/CW/3PJUo3ebD4ACgE1g/3NGEYSq7OQAyETyypsAl/WeySDBbxExikkayNkZzbpgyC9GyJp8v1DU2VOXxNq7Q==",
+        url: "https://registry.npmjs.org/fengari-interop/-/fengari-interop-0.1.4.tgz"
+    },
+    {
         name: "@datamoc/mw_games", version: "0.35.1", license: "MPL-2.0",
         integrity: "sha512-pwhRVC3DyXxTBPWPAF+w6Dteg+SpY/MGNe796IwN3Z4bWaNe8RdHvIPoyutF6if4NtlRw4MXvk7LV4srKF2RKw==",
         url: "https://registry.npmjs.org/@datamoc/mw_games/-/mw_games-0.35.1.tgz"
@@ -43,6 +48,12 @@ async function main() {
                     "FengariUpstream", "Fengari 0.1.5 npm source; browser define process.env.FENGARICONF=undefined; MIT; see fengari-LICENSE.txt",
                     [], { "process.env.FENGARICONF": "undefined" });
                 fs.copyFileSync(path.join(source, "LICENSE"), path.join(assets, "fengari-LICENSE.txt"));
+            } else if (pkg.name === "fengari-interop") {
+                // Share the page's Fengari 0.1.5 instance instead of bundling a second copy.
+                buildBrowser(path.join(source, "src", "js.js"), path.join(assets, "fengari-interop-0.1.4.bundle.js"),
+                    "FengariInterop", "fengari-interop 0.1.4 npm source; requires FengariUpstream; MIT; see fengari-interop-LICENSE.txt",
+                    [], { "require('fengari')": "globalThis.FengariUpstream" });
+                fs.copyFileSync(path.join(source, "LICENSE"), path.join(assets, "fengari-interop-LICENSE.txt"));
             } else {
                 fs.copyFileSync(path.join(source, "dist", "mw_games.global.js"), path.join(assets, "mw_games-0.35.1.global.js"));
                 fs.copyFileSync(path.join(source, "LICENSE"), path.join(assets, "mwg-LICENSE.txt"));
