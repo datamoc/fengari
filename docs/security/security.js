@@ -41,6 +41,22 @@ function label(result, engine, sample) {
     if (engine === "pyroeis" && result.name === "LimitError") return i18n.t("Overrun blocked: ", "Dépassement bloqué\u202f: ") + result.limit;
     return i18n.t("Error reported to the host code", "Erreur signalée au code hôte");
 }
+/* true: the engine contained the script; false: the script went on or got through; null: no verdict. */
+function contained(result, sample) {
+    if (result.kind === "cancelled" || result.kind === "setup-error") return null;
+    if (sample.breach && result.kind === "returned") return !breached(result, sample);
+    return result.kind === "error";
+}
+/* The green tick and the red cross carry a text alternative for screen readers. */
+function verdictMark(ok) {
+    if (ok === null) return document.createTextNode("");
+    const mark = document.createElement("span");
+    mark.className = ok ? "verdict ok" : "verdict ko";
+    mark.textContent = ok ? "✔︎ " : "❌ ";
+    mark.setAttribute("role", "img");
+    mark.setAttribute("aria-label", ok ? i18n.t("Passed", "Réussi") : i18n.t("Failed", "Échoué"));
+    return mark;
+}
 function outcome(result, sample) {
     if (result.kind === "error" && (result.name === "LimitError" || /memory|mémoire/i.test(result.message))) return "blocked";
     if (sample.breach && result.kind === "returned") return breached(result, sample) ? "breached" : "blocked";
@@ -49,7 +65,7 @@ function outcome(result, sample) {
 function display(engine, result, sample) {
     const panel = document.getElementById(engine);
     panel.dataset.outcome = outcome(result, sample);
-    panel.querySelector(".badge").textContent = label(result, engine, sample);
+    panel.querySelector(".badge").replaceChildren(verdictMark(contained(result, sample)), label(result, engine, sample));
     panel.querySelector("pre").textContent = result.kind === "returned" ? JSON.stringify(result.value) : result.message || i18n.t("The page stopped the worker, not the Lua engine.", "La page a arrêté le worker, pas le moteur Lua.");
     panel.querySelector(".timing").textContent = result.ms === undefined ? "" : i18n.t("Run: ", "Exécution\u202f: ") + `${result.ms.toFixed(1)} ms`;
 }
@@ -90,9 +106,9 @@ function updateHistory() {
     body.replaceChildren();
     for (const { sample, upstream, pyroeis } of history.values()) {
         const row = document.createElement("tr");
-        for (const item of [text(sample.title), label(upstream, "upstream", sample), label(pyroeis, "pyroeis", sample)]) {
+        for (const item of [[text(sample.title)], [verdictMark(contained(upstream, sample)), label(upstream, "upstream", sample)], [verdictMark(contained(pyroeis, sample)), label(pyroeis, "pyroeis", sample)]]) {
             const cell = document.createElement("td");
-            cell.textContent = item;
+            cell.replaceChildren(...item);
             row.appendChild(cell);
         }
         body.appendChild(row);

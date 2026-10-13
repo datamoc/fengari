@@ -41,9 +41,9 @@
         }
         const { outcomes, escaped } = result;
         panel.dataset.outcome = outcomes.jsException ? "returned" : "blocked";
-        badge.textContent = outcomes.jsException
+        badge.replaceChildren(verdictMark(!outcomes.jsException), outcomes.jsException
             ? i18n.t(`${outcomes.jsException} JavaScript exceptions escaped Lua`, `${outcomes.jsException} exceptions JavaScript sorties de Lua`)
-            : i18n.t("Every failure stayed in Lua", "Tous les échecs sont restés dans Lua");
+            : i18n.t("Every failure stayed in Lua", "Tous les échecs sont restés dans Lua"));
         const lines = [
             i18n.t(`Chunks tried: ${result.count}`, `Chunks essayés\u202f: ${result.count}`),
             i18n.t(`Refused by load (Lua error): ${outcomes.refused}`, `Refusés par load (erreur Lua)\u202f: ${outcomes.refused}`),
