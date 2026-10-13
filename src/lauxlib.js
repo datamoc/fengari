@@ -511,7 +511,7 @@ const luaL_pushresult = function(B) {
 };
 
 const luaL_addchar = function(B, c) {
-    luaL_prepbuffsize(B, 1);
+    growbuff(B, 1);  /* no view: this runs once per character in gsub and friends */
     B.b[B.n++] = c;
 };
 

@@ -1,6 +1,10 @@
 # Changes in Pyroeis
 
-## Version 0.8.0
+## Unreleased
+
+### Performance
+- **String buffers and copies**: `luaL_addchar` no longer builds a view per character, and `luastring_from` copies typed arrays with `new Uint8Array` (3-4x faster than `Uint8Array.from` on short strings).
+- **Real-world check, World Conquest II** (the campaign's own Lua from Wesnoth 1.19, run by the `mwg-wesnoth` port, map-generation scenario, same seed, same output). Measured in one session: Fengari 0.1.5 4.7 s, Pyroeis 0.5.5 5.0 s, then 2.2 s with the integer, `for`-loop and buffer work. Timings drift with machine load: measured side by side, this change alone is 5 to 10% faster than 0.8.0 on that run (about 2.4 s against 2.5 to 2.7 s). The five `mwg-wesnoth` Lua tests that can run without generated data pass on all three.
 
 ### Security (limits)
 - **`limits.coroutines`**: a script could create a million coroutines (about 1.7 GiB of heap, in 3.5 s) under a generous instruction budget, because `allocation` and `totalAllocation` only see strings and buffers. The new limit caps the coroutines created per top-level call (`coroutine.create`, `coroutine.wrap`, and host coroutines made during the call); the next one raises a `LimitError` (`limit: "coroutines"`) that `pcall` cannot catch. It counts creations, not live coroutines, since the garbage collector is not observable, so a persistent VM can still keep 10,000 new ones per call. 10,000 costs about 17 MiB. Opt-in: without it nothing is counted.
