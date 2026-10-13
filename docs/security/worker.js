@@ -12,12 +12,12 @@ self.onmessage = ({ data }) => {
         if (data.engine === "upstream") {
             importScripts("../assets/fengari-0.1.5.bundle.js", "../assets/upstream-vm.js");
             if (sample.interop) importScripts("../assets/fengari-interop-0.1.4.bundle.js");
-            vm = new UpstreamVm(20000, Boolean(sample.interop));
+            vm = new UpstreamVm(sample.instructions ?? 20000, Boolean(sample.interop));
         } else {
             importScripts("../benchmark/pyroeis.bundle.js");
             vm = new Pyroeis.PyroeisVm(undefined, undefined, {
                 sandbox: true,
-                limits: { instructions: 20000, timeMs: 200, allocation: 1024 * 1024, totalAllocation: 4 * 1024 * 1024 }
+                limits: { instructions: sample.instructions ?? 20000, timeMs: 200, allocation: 1024 * 1024, totalAllocation: 4 * 1024 * 1024, coroutines: 10000 }
             });
         }
     } catch (error) {

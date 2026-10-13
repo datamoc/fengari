@@ -97,6 +97,7 @@ module.exports = function createLstate(dependencies) {
             this.allocf = null;  /* embedder hook, see lmem.js */
             this.allocud = null;
             this.interrupt = null;  /* embedder callback, see lstrlib.js match() */
+            this.onnewthread = null;  /* embedder callback before a coroutine is created, see lua_newthread */
             this.tmname = new Array(ltm.TMS.TM_N);
             this.mt = new Array(LUA_NUMTAGS);
         }
@@ -162,6 +163,7 @@ module.exports = function createLstate(dependencies) {
 
     const lua_newthread = function(L) {
         let g = L.l_G;
+        if (g.onnewthread !== null) g.onnewthread(L);
         let L1 = new lua_State(g);
         L.stack[L.top] = new lobject.TValue(LUA_TTHREAD, L1);
         lapi.api_incr_top(L);

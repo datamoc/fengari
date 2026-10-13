@@ -59,7 +59,7 @@ export class LimitError extends LuaError {
     limit: LimitName;
 }
 
-export type LimitName = 'instructions' | 'time' | 'memory';
+export type LimitName = 'instructions' | 'time' | 'memory' | 'coroutines';
 
 /** The Lua types a LuaRef can designate (tables are always converted to JavaScript values). */
 export type LuaRefType = 'function' | 'thread' | 'userdata';
@@ -112,6 +112,8 @@ export interface VmLimits {
     allocation?: number;
     /** Total bytes allocated per top-level call. */
     totalAllocation?: number;
+    /** Coroutines created per top-level call (`coroutine.create`, `coroutine.wrap`), not live ones. Uncatchable once exceeded. */
+    coroutines?: number;
 }
 
 export interface PyroeisVmOptions {
@@ -188,7 +190,7 @@ export class PyroeisVm {
     lualib: any;
     to_jsstring: (value: any) => string;
     to_luastring: (value: string) => any;
-    /** The limit that stopped the current call ('instructions', 'time', 'memory'), or null. */
+    /** The limit that stopped the current call ('instructions', 'time', 'memory', 'coroutines'), or null. */
     limitHit: LimitName | null;
 
     /** Installs, replaces or removes (`null`) the execution limits. */

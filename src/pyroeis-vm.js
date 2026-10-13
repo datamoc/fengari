@@ -5,7 +5,7 @@ const { transpile } = require('./ltranspile.js');
 const { compileNumeric, FALLBACK, MIN_SAFE: NUMERIC_MIN, MAX_SAFE: NUMERIC_MAX } = require('./lnumeric.js');
 
 const MAX_DEPTH = 128;
-const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation'];
+const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation', 'coroutines'];
 const INTERRUPT_STEPS = 65536; /* pattern-matching steps between two calls to the interrupt point */
 const HOOK_GRANULARITY = 1000; /* Lua instructions between two limit checks */
 const now = () => (typeof performance === 'object' ? performance.now() : Date.now());
@@ -250,7 +250,8 @@ class PyroeisVm {
    *   most every 1000 instructions, and 65536 pattern-matching steps count as 65536
    *   instructions); `timeMs`: real duration in ms, host JS included; `allocation`: maximum
    *   size in bytes of an internal string or buffer allocation ("not enough memory", catchable);
-   *   `totalAllocation`: total of bytes allocated per call. An instruction, time
+   *   `totalAllocation`: total of bytes allocated per call; `coroutines`: number of coroutines created
+   *   per call (not live ones; each costs about 1.7 KiB). An instruction, time, coroutine
    *   or total overrun raises a LimitError and cannot be caught by the script (pcall included).
    *   Only acts on the VM created here: a script with `debug.sethook` can remove the
    *   hook, so combine with `sandbox`. See also setLimits.
@@ -323,6 +324,7 @@ class PyroeisVm {
             this.limits = null;
             lua.lua_sethook(this.state, null, 0, 0);
             this.state.l_G.interrupt = null;
+            this.state.l_G.onnewthread = null;
             lua.lua_setallocf(this.state, null, null);
             return;
         }
@@ -337,6 +339,7 @@ class PyroeisVm {
         /* Native functions (string patterns, allocations) do not go through the counting hook. */
         this.state.l_G.interrupt = (L) => this.checkInterrupt(L);
         lua.lua_setallocf(this.state, (ud, size) => this.checkAllocation(size), null);
+        this.state.l_G.onnewthread = this.limits.coroutines === undefined ? null : (L) => this.checkNewThread(L);
     }
 
     /**
@@ -355,6 +358,7 @@ class PyroeisVm {
     armLimits() {
         this.remaining = this.limits.instructions ?? Infinity;
         this.allocated = 0;
+        this.threadsCreated = 0;
         this.deadline = this.limits.timeMs === undefined ? Infinity : now() + this.limits.timeMs;
         this.limitHit = null;
         for (const thread of this.limitedThreads) this.lua.lua_sethook(thread, this.limitHook, this.lua.LUA_MASKCOUNT, this.hookCount);
@@ -394,6 +398,17 @@ class PyroeisVm {
         const overTotal = this.allocated > (this.limits.totalAllocation ?? Infinity);
         if (overTotal) this.limitHit ??= 'memory';
         if (overTotal || size > (this.limits.allocation ?? Infinity)) throw new RangeError('allocation limit exceeded');
+    }
+
+    /**
+   * Called before each coroutine is created (`coroutine.create`, `coroutine.wrap`, host coroutines).
+   * Creating more than `limits.coroutines` in one top-level call is a 'coroutines' limit, which is not
+   * catchable. It counts creations, not live coroutines: the garbage collector is not observable.
+   */
+    checkNewThread(L) {
+        if (this.limitDepth === 0) return;
+        if (++this.threadsCreated > this.limits.coroutines) this.limitHit ??= 'coroutines';
+        this.raiseIfExceeded(L);
     }
 
     raiseIfExceeded(L) {

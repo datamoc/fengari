@@ -116,6 +116,19 @@
             source: "if not js then local t = {} t.__proto__ = {} t.__proto__.polluted = 1 return 'table slots only: ' .. tostring(({}).polluted) end local o = js.new(js.global.Object) o.__proto__.polluted = 'yes' return 'new {} inherits: ' .. tostring(js.new(js.global.Object).polluted)", expected: "returned"
         },
         {
+            id: "coroutines",
+            instructions: 2000000,
+            breach: { match: "created 100000",
+                yes: { en: "No cap: 100,000 coroutines created", fr: "Aucun plafond : 100 000 coroutines créées" },
+                no: { en: "Coroutine cap respected", fr: "Plafond de coroutines respecté" } },
+            title: { en: "A hundred thousand coroutines, under a generous instruction budget", fr: "Cent mille coroutines, avec un budget d’instructions généreux" },
+            description: {
+                en: "Both engines get the same 2,000,000-instruction budget, enough for this loop. Each coroutine costs about 1.7 KiB of heap that no string ceiling sees: upstream creates all 100,000 (about 170 MiB), Pyroeis stops at its limit of 10,000 coroutines per call with an error the script cannot catch.",
+                fr: "Les deux moteurs reçoivent le même budget de 2 000 000 d’instructions, suffisant pour cette boucle. Chaque coroutine coûte environ 1,7 Kio de tas qu’aucun plafond de chaînes ne voit : l’amont les crée toutes les 100 000 (environ 170 Mio), Pyroeis s’arrête à sa limite de 10 000 coroutines par appel, avec une erreur que le script ne peut pas attraper."
+            },
+            source: "local t = {} for i = 1, 100000 do t[i] = coroutine.create(function() end) end return 'created ' .. #t", expected: "error"
+        },
+        {
             id: "gianttable",
             title: { en: "A giant table, under equal budgets", fr: "Une table géante, à budgets égaux" },
             description: {

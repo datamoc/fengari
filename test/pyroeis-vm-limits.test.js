@@ -4,6 +4,44 @@ const { PyroeisVm, LuaError, LimitError } = require("../src/pyroeis-vm.js");
 
 const limited = (limits, options = {}) => new PyroeisVm(undefined, undefined, { limits, ...options });
 
+describe('limits.coroutines caps the coroutines created by one call', () => {
+    const create = n => `local t = {} for i = 1, ${n} do t[i] = coroutine.create(function() end) end return #t`;
+
+    test('a script creating more coroutines than allowed gets an uncatchable LimitError', () => {
+        const vm = limited({ coroutines: 100 }, { sandbox: true });
+        expect(vm.run(create(100))).toBe(100);
+        const run = () => vm.run('local ok = pcall(function() for i = 1, 1000 do coroutine.create(function() end) end end) return "survived"');
+        expect(run).toThrow(LimitError);
+        expect(vm.limitHit).toBe('coroutines');
+    });
+
+    test('coroutine.wrap counts too, and the budget is renewed by every top-level call', () => {
+        const vm = limited({ coroutines: 10 });
+        expect(() => vm.run('for i = 1, 11 do coroutine.wrap(function() end) end')).toThrow(LimitError);
+        expect(vm.run(create(10))).toBe(10);
+        expect(vm.run(create(10))).toBe(10);
+    });
+
+    test('the count is per call: a coroutine made by a callback of the host counts like the others', () => {
+        const vm = limited({ coroutines: 3 });
+        vm.defineFunction('spawn', () => { vm.coroutineFromSource('return 1'); return 0; });
+        expect(vm.run('for i = 1, 3 do spawn() end return "ok"')).toBe('ok');
+        expect(() => vm.run('for i = 1, 4 do spawn() end return "ok"')).toThrow(LimitError);
+        expect(vm.limitHit).toBe('coroutines');
+    });
+
+    test('without limits.coroutines nothing is counted, and an invalid value is refused', () => {
+        expect(limited({ instructions: 1e8 }).run(create(20000))).toBe(20000);
+        expect(() => limited({ coroutines: 0 })).toThrow(RangeError);
+    });
+
+    test('removing the limits removes the callback', () => {
+        const vm = limited({ coroutines: 1 });
+        vm.setLimits(null);
+        expect(vm.run(create(50))).toBe(50);
+    });
+});
+
 describe('a limit overrun cannot be hidden by the script', () => {
 
     test('a coroutine created by Lua that exceeds the budget fails the host call even if Lua catches it', () => {

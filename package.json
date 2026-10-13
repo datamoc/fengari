@@ -1,6 +1,6 @@
 {
   "name": "@datamoc/pyroeis",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Pyroeis: a Lua 5.4.6 VM and Lua-to-JavaScript translator for browsers and Node.js",
   "main": "src/pyroeis.js",
   "types": "src/pyroeis.d.ts",

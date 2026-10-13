@@ -1,5 +1,15 @@
 # Changes in Pyroeis
 
+## Version 0.8.0
+
+### Security (limits)
+- **`limits.coroutines`**: a script could create a million coroutines (about 1.7 GiB of heap, in 3.5 s) under a generous instruction budget, because `allocation` and `totalAllocation` only see strings and buffers. The new limit caps the coroutines created per top-level call (`coroutine.create`, `coroutine.wrap`, and host coroutines made during the call); the next one raises a `LimitError` (`limit: "coroutines"`) that `pcall` cannot catch. It counts creations, not live coroutines, since the garbage collector is not observable, so a persistent VM can still keep 10,000 new ones per call. 10,000 costs about 17 MiB. Opt-in: without it nothing is counted.
+- **Not covered**: tables and closures cost as much (3 million empty tables: about 2.2 GiB); only the instruction and time budgets bound them.
+- **Tests**: `test/pyroeis-vm-limits.test.js`.
+
+### Documentation
+- **Security page**: the demonstration uses `coroutines: 10000`, with a new case (`coroutines`) comparing it with upstream Fengari under the same instruction budget.
+
 ## Version 0.7.0
 
 ### Security (binary chunks)
