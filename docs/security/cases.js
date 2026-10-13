@@ -117,6 +117,18 @@
                 fr: "Un million de cases n’est alloué d’aucun côté : les deux moteurs arrêtent la boucle au budget d’instructions. Une table Lua n’est pas plafonnée par sa taille — les budgets bornent la boucle qui la remplit."
             },
             source: "local t = {} for i = 1, 1e6 do t[i] = i end return #t", expected: "error"
+        },
+        {
+            id: "interop",
+            title: { en: "fengari-interop: required for JS access", fr: "fengari-interop : nécessaire pour accéder à JS" },
+            description: {
+                en: "To access JavaScript objects like js.global, eval, or the DOM, fengari-interop must be loaded. Without it, js is nil. This case verifies that neither engine on this page loads the interop, so Lua cannot reach JavaScript.",
+                fr: "Pour accéder aux objets JavaScript comme js.global, eval ou le DOM, fengari-interop doit être chargé. Sans lui, js vaut nil. Ce cas vérifie qu’aucun des deux moteurs de cette page ne charge l’interop, donc Lua ne peut pas atteindre JavaScript."
+            },
+            source: "local has_js = type(js) ~= 'nil'
+local has_js_global = has_js and type(js.global) ~= 'nil'
+local has_eval = has_js_global and type(js.global.eval) ~= 'nil'
+return 'js=' .. tostring(has_js) .. ' js.global=' .. tostring(has_js_global) .. ' eval=' .. tostring(has_eval)", expected: "returned"
         }
     ];
 })(globalThis);
