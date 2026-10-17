@@ -4,7 +4,7 @@
 
 ### Dependencies
 - **No runtime dependency left**: `sprintf-js` (an advisory with no fixed release: unbounded precision), `tmp` and `readline-sync` are replaced by built-in code. `src/cformat.js` formats `%e`, `%f`, `%g` and `%s` for `string.format`, `os.tmpname` builds its name from the temp directory and `crypto`, and `debug.debug` reads stdin with `fs.readSync` (end of input acts as `cont`). The browser map of `package.json` now stubs `crypto` instead of `tmp` and `readline-sync`.
-- **`string.format` follows C more closely**: exact ties round to even (`%.0f` of 2.5 is `2`), exponents have two digits at least (`1e+00`), `-0` keeps its sign in `%g`, and `%0e` of zero pads correctly. Checked against `printf` on about 19,500 random formats; `test/cformat.test.js` has 60 cases.
+- **`string.format` follows C more closely**: exact ties round to even (`%.0f` of 2.5 is `2`), exponents have two digits at least (`1e+00`), `-0` keeps its sign in `%g`, and `%0e` of zero pads correctly. Checked against `printf` on about 19,500 random formats, and every legal precision (up to 99) runs without a host exception, `%.99g` and `%.d` included; `test/cformat.test.js` has 62 cases.
 - **Dev dependencies**: eslint 10, espree 11, jest 30.5, playwright-core 1.64.1, and `globals` declared (`eslint.config.mjs` imports it). `yarn audit` still lists `sprintf-js` 1.0.3 through jest (development only, no fix published).
 
 ## Version 0.9.0

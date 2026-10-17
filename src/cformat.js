@@ -51,14 +51,14 @@ const exponential = function(x, prec, alt) {
     return mantissa + "e" + exp[0] + (expDigits.length < 2 ? "0" + expDigits : expDigits);
 };
 
-/* 'toFixed' that keeps plain digits above 1e21 */
+/* 'toFixed' that keeps plain digits above 1e21 and accepts more than 100 decimals */
 const fixed = function(x, prec, alt) {
     let s;
     if (x >= 1e21) {
         s = BigInt(x).toString();
         if (prec > 0) s += "." + "0".repeat(prec);
     } else {
-        s = x.toFixed(prec);
+        s = x.toFixed(Math.min(prec, 100)) + "0".repeat(Math.max(prec - 100, 0));  /* a double has no digit past the 66th decimal when x >= 1e-4 (%g) */
         const exact = x.toFixed(100);
         const point = exact.indexOf(".");
         const digits = exact.slice(0, point) + exact.slice(point + 1);

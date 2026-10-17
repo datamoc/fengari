@@ -91,3 +91,15 @@ describe('formatString', () => {
         expect(formatString(fmt, s)).toBe(expected);
     });
 });
+
+describe('precision limits', () => {
+    test('%g accepts the 99 digits Lua allows, even where JS toFixed stops at 100', () => {
+        expect(formatFloat('%.99g', 0.0001)).toBe('0.000100000000000000004792173602385929598312941379845142364501953125');
+        expect(formatFloat('%.99g', 1)).toBe('1');
+        expect(formatFloat('%#.99g', 1)).toBe('1.' + '0'.repeat(98));
+    });
+    test('%f and %e accept a precision of 99', () => {
+        expect(formatFloat('%.99f', 0.5)).toBe('0.5' + '0'.repeat(98));
+        expect(formatFloat('%.99e', 1)).toBe('1.' + '0'.repeat(99) + 'e+00');
+    });
+});

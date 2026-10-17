@@ -336,10 +336,10 @@ const addlenmod = function(form, lenmod) {
 ** signed argument, while 'u'/'o'/'x'/'X' reinterpret it as unsigned.
 */
 const formatint = function(fmt, n) {
-    const m = /^%([-+ #0]*)([0-9]*)(?:\.([0-9]+))?([diouxX])$/.exec(fmt);
+    const m = /^%([-+ #0]*)([0-9]*)(?:\.([0-9]*))?([diouxX])$/.exec(fmt);
     let flags = m[1];
     const width = m[2] ? parseInt(m[2], 10) : 0;
-    const prec = m[3] === undefined ? -1 : parseInt(m[3], 10);
+    const prec = m[3] === undefined ? -1 : (parseInt(m[3], 10) || 0);  /* '%.d' means precision 0 */
     const spec = m[4];
     const signed = spec === "d" || spec === "i";
     const v = integer.wrap(n);  /* canonical signed 64-bit value */

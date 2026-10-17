@@ -451,3 +451,16 @@ test('string.gsub (table)', () => {
     expect(lua.lua_tojsstring(L, -2)).toBe("lua-5.3.tar.gz");
     expect(lua.lua_tointeger(L, -1)).toBe(2);
 });
+
+test('string.format: an empty precision means 0, and no format makes the host throw', () => {
+    const L = lauxlib.luaL_newstate();
+    lualib.luaL_openlibs(L);
+    const luaCode = `
+        return string.format('[%.d][%.d][%5.d][%.x]', 5, 0, 0, 255),
+               string.format('%.99g|%.s|%.f', 0.0001, 'abc', 2.5)
+    `;
+    expect(lauxlib.luaL_loadstring(L, to_luastring(luaCode))).toBe(lua.LUA_OK);
+    lua.lua_call(L, 0, 2);
+    expect(lua.lua_tojsstring(L, -2)).toBe('[5][][     ][ff]');
+    expect(lua.lua_tojsstring(L, -1)).toBe('0.000100000000000000004792173602385929598312941379845142364501953125||2');
+});
