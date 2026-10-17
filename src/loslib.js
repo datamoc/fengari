@@ -489,7 +489,8 @@ if (!isnode) {
 } else {
     /* Only with Node */
     const fs = require('fs');
-    const tmp = require('tmp');
+    const path = require('path');
+    const { randomBytes } = require('crypto');
     const child_process = require('child_process');
 
     syslib.exit = function(L) {
@@ -521,7 +522,7 @@ if (!isnode) {
     };
 
     const lua_tmpname = function() {
-        return tmp.tmpNameSync();
+        return path.join(process.env.TMPDIR || process.env.TEMP || process.env.TMP || '/tmp', `lua_${randomBytes(6).toString('hex')}`);
     };
 
     syslib.remove = function(L) {

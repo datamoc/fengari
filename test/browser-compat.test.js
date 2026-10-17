@@ -6,7 +6,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const entry = path.join(__dirname, '..', 'src', 'pyroeis.js');
-const NODE_ONLY = ['fs', 'os', 'path', 'tmp', 'child_process', 'readline-sync'];
+const NODE_ONLY = ['fs', 'os', 'path', 'crypto', 'child_process'];
 
 /* Runs a script in a fresh Node whose `process` looks like a browser bundler's shim and where
  * any require() of a Node-only module from the library fails, as it would in a bundle. */

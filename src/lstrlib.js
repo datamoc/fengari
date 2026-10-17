@@ -1,6 +1,6 @@
 "use strict";
 
-const { sprintf } = require('sprintf-js');
+const { formatFloat, formatString } = require('./cformat.js');
 
 const integer = require('./linteger.js');
 
@@ -8,7 +8,6 @@ const {
     LUA_INTEGER_FMT,
     LUA_INTEGER_FRMLEN,
     LUA_MININTEGER,
-    LUA_NUMBER_FMT,
     LUA_NUMBER_FRMLEN,
     frexp,
     lua_getlocaledecpoint
@@ -172,10 +171,7 @@ const num2straux = function(x) {
         return to_luastring('nan');
     else if (x === 0) {  /* can be -0... */
         /* create "0" or "-0" followed by exponent */
-        let zero = sprintf(LUA_NUMBER_FMT + "x0p+0", x);
-        if (Object.is(x, -0))
-            zero = "-" + zero;
-        return to_luastring(zero);
+        return to_luastring(Object.is(x, -0) ? "-0x0p+0" : "0x0p+0");
     } else {
         let buff = "";
         let fe = frexp(x);  /* 'x' fraction and exponent */
@@ -188,7 +184,7 @@ const num2straux = function(x) {
         buff += "0x";  /* add "0x" */
         buff += (m * (1<<L_NBFD)).toString(16);
         e -= L_NBFD;  /* this digit goes before the radix point */
-        buff += sprintf("p%+d", e);  /* add exponent */
+        buff += "p" + (e < 0 ? "-" : "+") + Math.abs(e);  /* add exponent */
         return to_luastring(buff);
     }
 };
@@ -335,14 +331,12 @@ const addlenmod = function(form, lenmod) {
 /*
 ** Format the integer 'n' according to the printf-style format 'fmt'.
 ** Lua integers are 64-bit and wide ones are host BigInts (see
-** linteger.js), which 'sprintf-js' cannot format. Integer conversions
+** linteger.js), which JS number formatting cannot handle. Integer conversions
 ** are therefore implemented here with C semantics: 'd'/'i' take a
 ** signed argument, while 'u'/'o'/'x'/'X' reinterpret it as unsigned.
 */
 const formatint = function(fmt, n) {
     const m = /^%([-+ #0]*)([0-9]*)(?:\.([0-9]+))?([diouxX])$/.exec(fmt);
-    if (!m)
-        return sprintf(fmt, Number(n));  /* not a plain integer conversion */
     let flags = m[1];
     const width = m[2] ? parseInt(m[2], 10) : 0;
     const prec = m[3] === undefined ? -1 : parseInt(m[3], 10);
@@ -401,7 +395,6 @@ const str_format = function(L) {
             i = scanformat(L, strfrmt, i, form);
             switch (String.fromCharCode(strfrmt[i++])) {
                 case 'c': {
-                    // sprintf(String.fromCharCode(...form), luaL_checkinteger(L, arg));
                     luaL_addchar(b, luaL_checkinteger(L, arg));
                     break;
                 }
@@ -421,7 +414,7 @@ const str_format = function(L) {
                 case 'g': case 'G': {
                     let n = luaL_checknumber(L, arg);
                     addlenmod(form, to_luastring(LUA_INTEGER_FRMLEN, true));
-                    luaL_addstring(b, to_luastring(sprintf(String.fromCharCode(...form), n)));
+                    luaL_addstring(b, to_luastring(formatFloat(String.fromCharCode(...form), n)));
                     break;
                 }
                 case 'q': {
@@ -439,7 +432,7 @@ const str_format = function(L) {
                             luaL_addvalue(b);  /* keep entire string */
                         } else {  /* format the string into 'buff' */
                             // TODO: will fail if s is not valid UTF-8
-                            luaL_addstring(b, to_luastring(sprintf(String.fromCharCode(...form), to_jsstring(s))));
+                            luaL_addstring(b, to_luastring(formatString(String.fromCharCode(...form), to_jsstring(s))));
                             lua_pop(L, 1);  /* remove result from 'luaL_tolstring' */
                         }
                     }

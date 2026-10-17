@@ -474,12 +474,25 @@ const dblib = {
 
 let getinput;
 if (isnode) { // Only with Node
-    const readlineSync = require('readline-sync');
-    readlineSync.setDefaultOptions({
-        prompt: 'lua_debug> '
-    });
+    const fs = require('fs');
+    /* reads a line from stdin synchronously; end of input acts as "cont" */
     getinput = function() {
-        return readlineSync.prompt();
+        process.stdout.write('lua_debug> ');
+        const byte = Buffer.alloc(1);
+        let line = "";
+        for (;;) {
+            let n;
+            try {
+                n = fs.readSync(0, byte, 0, 1, null);
+            } catch (e) {
+                if (e.code === 'EAGAIN') continue;  /* non-blocking stdin: wait for data */
+                if (e.code === 'EOF') n = 0;
+                else throw e;
+            }
+            if (n === 0) return line === "" ? "cont" : line;
+            if (byte[0] === 10) return line;
+            if (byte[0] !== 13) line += String.fromCharCode(byte[0]);  /* drop the CR of CRLF */
+        }
     };
 } else if (typeof window !== "undefined") {
     /* if in browser use window.prompt. Doesn't work from web workers.

@@ -13,7 +13,6 @@ const {
 const ljstype  = require('../../src/ljstype.js');
 const lopcodes = require('../../src/lopcodes.js');
 const { pushobj2s } = require('../../src/lobject.js');
-const sprintf  = require('sprintf-js').sprintf;
 
 const delimits = [" ", "\t", "\n", ",", ";"].map(e => e.charCodeAt(0));
 
@@ -791,19 +790,19 @@ const buildop = function(p, pc) {
     let o = lopcodes.GET_OPCODE(i);
     let name = lopcodes.OpCodes[o];
     let line = p.lineinfo.length !== 0 ? p.lineinfo[pc] : -1;
-    let result = sprintf("(%4d) %4d - ", line, pc); //`(${line}) ${pc} - `;
+    let result = `(${String(line).padStart(4)}) ${String(pc).padStart(4)} - `; //`(${line}) ${pc} - `;
     switch (lopcodes.getOpMode(o)) {
         case lopcodes.iABC:
-            result += sprintf("%-12s%4d %4d %4d", name, lopcodes.GETARG_A(i), lopcodes.GETARG_B(i), lopcodes.GETARG_C(i)); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_B(i)} ${lopcodes.GETARG_C(i)}`;
+            result += name.padEnd(12) + [lopcodes.GETARG_A(i), lopcodes.GETARG_B(i), lopcodes.GETARG_C(i)].map(n => String(n).padStart(4)).join(" "); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_B(i)} ${lopcodes.GETARG_C(i)}`;
             break;
         case lopcodes.iABx:
-            result += sprintf("%-12s%4d %4d", name, lopcodes.GETARG_A(i), lopcodes.GETARG_Bx(i)); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_Bx(i)}`;
+            result += name.padEnd(12) + [lopcodes.GETARG_A(i), lopcodes.GETARG_Bx(i)].map(n => String(n).padStart(4)).join(" "); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_Bx(i)}`;
             break;
         case lopcodes.iAsBx:
-            result += sprintf("%-12s%4d %4d", name, lopcodes.GETARG_A(i), lopcodes.GETARG_sBx(i)); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_sBx(i)}`;
+            result += name.padEnd(12) + [lopcodes.GETARG_A(i), lopcodes.GETARG_sBx(i)].map(n => String(n).padStart(4)).join(" "); // `${name} ${lopcodes.GETARG_A(i)} ${lopcodes.GETARG_sBx(i)}`;
             break;
         case lopcodes.iAx:
-            result += sprintf("%-12s%4d", name, lopcodes.GETARG_Ax(i)); // `${name} ${lopcodes.GETARG_Ax(i)}`;
+            result += name.padEnd(12) + String(lopcodes.GETARG_Ax(i)).padStart(4); // `${name} ${lopcodes.GETARG_Ax(i)}`;
             break;
     }
 
