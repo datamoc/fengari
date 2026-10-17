@@ -5,7 +5,7 @@ const path = require("path");
 
 /** Bundle CommonJS modules without adding a browser build dependency. */
 function buildBrowser(entry, output, globalName, banner, aliases = [], defines = {}) {
-    const nodeOnly = new Set(["fs", "os", "path", "crypto", "child_process", "util"]);
+    const nodeOnly = new Set(["fs", "os", "path", "crypto", "tmp", "child_process", "readline-sync", "util"]);
     const modules = new Map();
     function add(filename) {
         if (modules.has(filename)) return modules.get(filename).id;
