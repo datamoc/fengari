@@ -172,6 +172,7 @@ module.exports = function createLtable(dependencies) {
     };
 
     const luaH_new = function(L) {
+        if (L.l_G.onnewtable !== null) L.l_G.onnewtable(L);
         return new Table(L);
     };
 

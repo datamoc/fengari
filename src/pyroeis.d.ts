@@ -59,7 +59,7 @@ export class LimitError extends LuaError {
     limit: LimitName;
 }
 
-export type LimitName = 'instructions' | 'time' | 'memory' | 'coroutines';
+export type LimitName = 'instructions' | 'time' | 'memory' | 'coroutines' | 'tables' | 'closures';
 
 /** The Lua types a LuaRef can designate (tables are always converted to JavaScript values). */
 export type LuaRefType = 'function' | 'thread' | 'userdata';
@@ -114,6 +114,10 @@ export interface VmLimits {
     totalAllocation?: number;
     /** Coroutines created per top-level call (`coroutine.create`, `coroutine.wrap`), not live ones. Uncatchable once exceeded. */
     coroutines?: number;
+    /** Tables created per top-level call (not live ones; about 0.7 KiB each when empty). Uncatchable once exceeded. */
+    tables?: number;
+    /** Lua closures created per top-level call (not live ones). Uncatchable once exceeded. */
+    closures?: number;
 }
 
 export interface PyroeisVmOptions {
@@ -190,8 +194,13 @@ export class PyroeisVm {
     lualib: any;
     to_jsstring: (value: any) => string;
     to_luastring: (value: string) => any;
-    /** The limit that stopped the current call ('instructions', 'time', 'memory', 'coroutines'), or null. */
+    /** The limit that stopped the current call ('instructions', 'time', 'memory', 'coroutines', 'tables', 'closures'), or null. */
     limitHit: LimitName | null;
+
+    /** Pushes a strictly JSON value (numbers are Lua floats); anything else is a TypeError, nesting beyond `maxDepth` (default 20) a RangeError. */
+    pushJson(value: unknown, L?: any, maxDepth?: number): void;
+    /** Reads the Lua value at `index` as strictly JSON (tables become plain objects, or arrays with `arrays`); anything else is an Error and no Lua reference is created. */
+    readJson(index: number, options?: { L?: any; maxDepth?: number; arrays?: boolean }): unknown;
 
     /** Installs, replaces or removes (`null`) the execution limits. */
     setLimits(limits: VmLimits | null | undefined): void;

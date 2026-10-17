@@ -5,7 +5,8 @@ const { transpile } = require('./ltranspile.js');
 const { compileNumeric, FALLBACK, MIN_SAFE: NUMERIC_MIN, MAX_SAFE: NUMERIC_MAX } = require('./lnumeric.js');
 
 const MAX_DEPTH = 128;
-const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation', 'coroutines'];
+const JSON_MAX_DEPTH = 20;
+const LIMIT_KEYS = ['instructions', 'timeMs', 'allocation', 'totalAllocation', 'coroutines', 'tables', 'closures'];
 const INTERRUPT_STEPS = 65536; /* pattern-matching steps between two calls to the interrupt point */
 const HOOK_GRANULARITY = 1000; /* Lua instructions between two limit checks */
 const now = () => (typeof performance === 'object' ? performance.now() : Date.now());
@@ -90,7 +91,8 @@ class LuaError extends Error {
 
 /**
  * A script exceeded its instruction or time limit (see the `limits` option).
- * `limit` is 'instructions', 'time' or 'memory'.
+ * `limit` is 'instructions', 'time', 'memory', 'coroutines', 'tables' or 'closures'; the message
+ * is always `<limit> limit exceeded`, whichever entry point raised it.
  */
 class LimitError extends LuaError {
     constructor(limit, message, traceback) {
@@ -250,8 +252,8 @@ class PyroeisVm {
    *   most every 1000 instructions, and 65536 pattern-matching steps count as 65536
    *   instructions); `timeMs`: real duration in ms, host JS included; `allocation`: maximum
    *   size in bytes of an internal string or buffer allocation ("not enough memory", catchable);
-   *   `totalAllocation`: total of bytes allocated per call; `coroutines`: number of coroutines created
-   *   per call (not live ones; each costs about 1.7 KiB). An instruction, time, coroutine
+   *   `totalAllocation`: total of bytes allocated per call; `coroutines`, `tables`, `closures`: number of coroutines, tables and
+   *   Lua closures created per call (not live ones; a coroutine costs about 1.7 KiB, an empty table about 0.7 KiB). An instruction, time, coroutine, table, closure
    *   or total overrun raises a LimitError and cannot be caught by the script (pcall included).
    *   Only acts on the VM created here: a script with `debug.sethook` can remove the
    *   hook, so combine with `sandbox`. See also setLimits.
@@ -283,6 +285,7 @@ class PyroeisVm {
         this.limitHit = null; /* 'instructions' or 'time' once the limit is exceeded */
         this.limitedThreads = new Set(); /* threads switched to "one check per instruction" mode */
         const sandbox = options.sandbox === true;
+        this.loadMode = sandbox ? this.to_luastring('t') : null; /* sandbox: the host's own chunks are text-only too */
         const libs = options.libs ?? (sandbox ? SANDBOX_LIBS : undefined);
         if (sandbox) {
             const forbidden = (libs ?? []).filter((name) => SANDBOX_FORBIDDEN_LIBS.includes(name));
@@ -325,6 +328,8 @@ class PyroeisVm {
             lua.lua_sethook(this.state, null, 0, 0);
             this.state.l_G.interrupt = null;
             this.state.l_G.onnewthread = null;
+            this.state.l_G.onnewtable = null;
+            this.state.l_G.onnewclosure = null;
             lua.lua_setallocf(this.state, null, null);
             return;
         }
@@ -340,6 +345,8 @@ class PyroeisVm {
         this.state.l_G.interrupt = (L) => this.checkInterrupt(L);
         lua.lua_setallocf(this.state, (ud, size) => this.checkAllocation(size), null);
         this.state.l_G.onnewthread = this.limits.coroutines === undefined ? null : (L) => this.checkNewThread(L);
+        this.state.l_G.onnewtable = this.limits.tables === undefined ? null : (L) => this.checkCreated(L, 'tables');
+        this.state.l_G.onnewclosure = this.limits.closures === undefined ? null : (L) => this.checkCreated(L, 'closures');
     }
 
     /**
@@ -359,6 +366,7 @@ class PyroeisVm {
         this.remaining = this.limits.instructions ?? Infinity;
         this.allocated = 0;
         this.threadsCreated = 0;
+        this.created = { tables: 0, closures: 0 };
         this.deadline = this.limits.timeMs === undefined ? Infinity : now() + this.limits.timeMs;
         this.limitHit = null;
         for (const thread of this.limitedThreads) this.lua.lua_sethook(thread, this.limitHook, this.lua.LUA_MASKCOUNT, this.hookCount);
@@ -411,6 +419,16 @@ class PyroeisVm {
         this.raiseIfExceeded(L);
     }
 
+    /**
+   * Called before each table (`tables`) or Lua closure (`closures`) is created. Like coroutines, it
+   * counts creations per top-level call, not live objects; exceeding the limit is not catchable.
+   */
+    checkCreated(L, kind) {
+        if (this.limitDepth === 0) return;
+        if (++this.created[kind] > this.limits[kind]) this.limitHit ??= kind;
+        this.raiseIfExceeded(L);
+    }
+
     raiseIfExceeded(L) {
         if (this.limitHit === null) return;
         if (L.basehookcount !== 1) {
@@ -427,7 +445,10 @@ class PyroeisVm {
    * Builds the JavaScript error for a Lua failure: LimitError if a limit was exceeded.
    */
     luaError(message, traceback) {
-        return this.limitHit === null ? new LuaError(message, traceback) : new LimitError(this.limitHit, message, traceback);
+        if (this.limitHit === null) return new LuaError(message, traceback);
+        /* A limit raised in the middle of an instruction (table or closure creation) can leave no message behind. */
+        const named = message || `${this.limitHit} limit exceeded`;
+        return new LimitError(this.limitHit, named, traceback || named);
     }
 
     /**
@@ -661,6 +682,90 @@ class PyroeisVm {
     }
 
     /**
+   * Pushes a strictly JSON value (null, boolean, number, string, array, plain object): the
+   * exchange format for a host that runs untrusted scripts. Numbers are always Lua floats,
+   * and anything else (undefined, function, bigint, Map, typed array...) is a TypeError, where
+   * `push` would convert it. Nesting beyond `maxDepth` is a RangeError (so a cycle is refused).
+   */
+    pushJson(value, L = this.thread ?? this.state, maxDepth = JSON_MAX_DEPTH, depth = 0) {
+        const { lua } = this;
+        if (value === null) return lua.lua_pushnil(L);
+        if (typeof value === 'boolean') return lua.lua_pushboolean(L, value);
+        if (typeof value === 'number') return lua.lua_pushnumber(L, value);
+        if (typeof value === 'string') return lua.lua_pushstring(L, this.to_luastring(value));
+        const isArray = Array.isArray(value);
+        const plain = typeof value === 'object' && (isArray || Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);
+        if (!plain) throw new TypeError(`Not a JSON value: ${typeof value}`);
+        if (depth >= maxDepth) throw new RangeError('JSON value nested too deeply');
+        lua.lua_checkstack(L, 8);
+        lua.lua_createtable(L, isArray ? value.length : 0, isArray ? 0 : Object.keys(value).length);
+        if (isArray) {
+            value.forEach((entry, index) => {
+                this.pushJson(entry, L, maxDepth, depth + 1);
+                lua.lua_seti(L, -2, index + 1);
+            });
+        } else {
+            for (const [key, entry] of Object.entries(value)) {
+                this.pushJson(entry, L, maxDepth, depth + 1);
+                lua.lua_setfield(L, -2, this.to_luastring(key));
+            }
+        }
+    }
+
+    /**
+   * Reads the Lua value at `index` as strictly JSON: nil → null, boolean, number (always a
+   * JavaScript number, integers included), string; a table → a plain object whose keys are
+   * the string or integer keys (an array when `arrays` is set and the keys are 1..n).
+   * A function, thread, userdata, non-UTF-8 string or other key is an Error, nesting beyond
+   * `maxDepth` a RangeError, and no Lua reference is created (the registry is untouched).
+   */
+    readJson(index, { L = this.thread ?? this.state, maxDepth = JSON_MAX_DEPTH, arrays = false } = {}, depth = 0) {
+        const { lua } = this;
+        const type = lua.lua_type(L, index);
+        if (type === lua.LUA_TNIL) return null;
+        if (type === lua.LUA_TBOOLEAN) return lua.lua_toboolean(L, index);
+        if (type === lua.LUA_TNUMBER) return Number(lua.lua_tonumber(L, index));
+        if (type === lua.LUA_TSTRING) {
+            const text = this.readString(L, index);
+            if (typeof text !== 'string') throw new Error('Lua string is not valid UTF-8');
+            return text;
+        }
+        if (type !== lua.LUA_TTABLE) throw new Error(`Lua ${this.to_jsstring(lua.lua_typename(L, type))} is not a JSON value`);
+        if (depth >= maxDepth) throw new RangeError('Lua value nested too deeply');
+        lua.lua_checkstack(L, 8);
+        const table = index < 0 ? lua.lua_gettop(L) + index + 1 : index;
+        const result = {};
+        let count = 0;
+        let sequence = true;
+        lua.lua_pushnil(L);
+        while (lua.lua_next(L, table) !== 0) {
+            let key;
+            if (lua.lua_type(L, -2) === lua.LUA_TSTRING) key = this.readString(L, -2);
+            else if (lua.lua_isinteger(L, -2)) key = String(lua.lua_tointeger(L, -2));
+            if (typeof key !== 'string') {
+                lua.lua_pop(L, 2);
+                throw new Error('Lua table keys must be strings or integers');
+            }
+            count++;
+            if (lua.lua_type(L, -2) !== lua.LUA_TNUMBER) sequence = false;
+            let entry;
+            try {
+                entry = this.readJson(-1, { L, maxDepth, arrays }, depth + 1);
+            } catch (error) {
+                lua.lua_pop(L, 2);
+                throw error;
+            }
+            /* "__proto__" must stay an ordinary key */
+            Object.defineProperty(result, key, { value: entry, enumerable: true, writable: true, configurable: true });
+            lua.lua_pop(L, 1);
+        }
+        if (arrays && sequence && count > 0 && Object.keys(result).every((key) => /^[1-9][0-9]*$/.test(key) && Number(key) <= count)) {
+            return Array.from({ length: count }, (_, i) => result[String(i + 1)]);
+        }
+        return result;
+    }
+
+    /**
    * Reads a Lua string: a JavaScript string if it is valid UTF-8, otherwise a Uint8Array.
    */
     readString(L, index) {
@@ -853,7 +958,7 @@ class PyroeisVm {
         const base = this.lua.lua_gettop(L);
         const handler = this.pushTracebackHandler();
         const bytes = this.to_luastring(source);
-        const loaded = this.lauxlib.luaL_loadbuffer(L, bytes, bytes.length, this.to_luastring(chunkName));
+        const loaded = this.lauxlib.luaL_loadbufferx(L, bytes, bytes.length, this.to_luastring(chunkName), this.loadMode);
         if (loaded !== this.lua.LUA_OK) {
             const message = this.to_jsstring(this.lua.lua_tostring(L, -1));
             this.lua.lua_settop(L, base);
@@ -990,7 +1095,7 @@ class PyroeisVm {
         const T = this.lua.lua_newthread(this.state);
         this.lua.lua_pop(this.state, 1);
         const bytes = this.to_luastring(source);
-        if (this.lauxlib.luaL_loadbuffer(T, bytes, bytes.length, this.to_luastring(chunkName)) !== this.lua.LUA_OK) {
+        if (this.lauxlib.luaL_loadbufferx(T, bytes, bytes.length, this.to_luastring(chunkName), this.loadMode) !== this.lua.LUA_OK) {
             const message = this.to_jsstring(this.lua.lua_tostring(T, -1));
             throw new LuaError(message, message);
         }
